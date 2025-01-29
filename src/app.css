@@ -1,3 +1,10 @@
+@import '@fontsource/roboto';
+@import '@fontsource/material-icons';
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+:root {
+  font-family: 'Roboto', sans-serif;
+}
