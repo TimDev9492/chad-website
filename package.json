@@ -34,6 +34,10 @@
     "@fontsource/material-icons": "^5.1.1",
     "@fontsource/roboto": "^5.1.1",
     "@material/dom": "^14.0.0",
+    "@smui/button": "^8.0.0-beta.3",
+    "@smui/icon-button": "^8.0.0-beta.3",
+    "@smui/textfield": "^8.0.0-beta.3",
+    "@smui/top-app-bar": "^8.0.0-beta.3",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.48.1"
   }

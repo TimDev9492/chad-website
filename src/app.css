@@ -5,10 +5,16 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* Fonts */
 :root {
   font-family: 'Roboto', sans-serif;
 }
-
 .material-icons {
   font-family: 'Material Icons';
+}
+
+/* CSS */
+html,
+body {
+  @apply h-full;
 }
