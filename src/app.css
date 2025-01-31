@@ -1,16 +1,20 @@
 @import '@fontsource/roboto';
-@import '@fontsource/material-icons';
 
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* Svelte Material UI + TailwindCSS compatibility */
+.mdc-notched-outline--notched .mdc-notched-outline__notch {
+  @apply !border-t-0 !border-l-0 !border-r-0;
+}
+.mdc-text-field__input {
+  box-shadow: none !important;
+}
+
 /* Fonts */
 :root {
   font-family: 'Roboto', sans-serif;
-}
-.material-icons {
-  font-family: 'Material Icons';
 }
 
 /* CSS */
