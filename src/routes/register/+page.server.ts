@@ -8,6 +8,9 @@ export const actions: Actions = {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
+    const url = new URL(request.url);
+    const baseName = `${url.protocol}//${url.host}`;
+
     if (!isValidEmailAddress(email)) {
       return fail(400, { message: 'The email you provided is invalid!' });
     }
@@ -15,7 +18,11 @@ export const actions: Actions = {
       return fail(400, { message: 'You need to provide a password!' });
     }
 
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: new URL('/user', baseName).toString() },
+    });
     if (error) {
       console.error(error);
       return fail(500, { message: error.message });

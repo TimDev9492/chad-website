@@ -14,6 +14,6 @@ export const actions: Actions = {
       console.error(error);
       return fail(401, { message: error.message });
     }
-    return redirect(303, '/');
+    return redirect(303, '/user');
   },
 };
