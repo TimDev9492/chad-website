@@ -1,18 +1,18 @@
 <script lang="ts">
   import Snackbar, { Actions, Label } from '@smui/snackbar';
   import IconButton from '@smui/icon-button';
-
-  type Level = 'info' | 'success' | 'warning' | 'error';
+  import { toastStore, type Level } from '$lib/toastStore';
 
   let snackbar: Snackbar;
   let level = $state<Level>('info');
   let content = $state('');
 
-  export const raise: (level: Level, message?: string) => void = (l, c) => {
-    level = l;
-    if (c) content = c;
+  toastStore.subscribe((data) => {
+    if (data === null) return;
+    level = data.level;
+    content = data.message;
     snackbar.open();
-  };
+  });
 </script>
 
 <Snackbar

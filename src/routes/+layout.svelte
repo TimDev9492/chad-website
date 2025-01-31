@@ -4,6 +4,7 @@
   import '../app.css';
   import TopAppBar, { AutoAdjust } from '@smui/top-app-bar';
   import AppBar from '$lib/components/AppBar.svelte';
+  import NotificationToast from '$lib/components/NotificationToast.svelte';
 
   let { data, children } = $props();
   let { session, supabase } = $derived(data);
@@ -36,3 +37,5 @@
   <!-- footer -->
   <footer>(footer)</footer>
 </div>
+
+<NotificationToast />

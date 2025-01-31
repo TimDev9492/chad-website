@@ -5,24 +5,27 @@
   import { isHttpSuccess, isValidEmailAddress } from '$lib/utils.js';
   import { applyAction, enhance } from '$app/forms';
   import LinearProgress from '@smui/linear-progress';
-  import Card, { Content } from '@smui/card';
+  import Card from '@smui/card';
   import Divider from '$lib/components/Divider.svelte';
+  import { toastStore } from '$lib/toastStore';
 
   let waitingForResponse = $state(false);
   let email = $state('');
   let validEmail = $derived(isValidEmailAddress(email));
-
-  let toast: NotificationToast;
 </script>
 
+<LinearProgress
+  color="secondary"
+  indeterminate
+  closed={!waitingForResponse} />
 <div class="size-full flex justify-center items-center">
-  <div class="card-container max-w-[80vw]">
+  <div class="card-container max-w-[80vw] portrait:min-h-[80vh]">
     <Card
       variant="outlined"
       padded>
       <form
         method="POST"
-        class="flex flex-col justify-evenly items-center gap-4"
+        class="flex flex-col justify-evenly items-center gap-4 portrait:gap-8"
         use:enhance={() => {
           waitingForResponse = true;
 
@@ -34,10 +37,10 @@
             if (!result.status) return;
             const success: boolean = isHttpSuccess(result.status);
             if (success) update({ invalidateAll: true });
-            toast.raise(
-              success ? 'success' : 'error',
-              (result as any).data?.message,
-            );
+            toastStore.set({
+              level: success ? 'success' : 'error',
+              message: (result as any).data?.message,
+            });
           };
         }}>
         <div class="mdc-typography--headline6">Create an account</div>
@@ -71,8 +74,3 @@
     </Card>
   </div>
 </div>
-
-{#if waitingForResponse}
-  <LinearProgress indeterminate />
-{/if}
-<NotificationToast bind:this={toast} />
