@@ -4,7 +4,7 @@
   let { children } = $props();
 </script>
 
-<div class="w-full min-h-full flex justify-center items-center">
+<div class="w-full min-h-full flex justify-center items-center py-4 px-8">
   <div class="card-container max-w-[80vw]">
     <Card
       variant="outlined"

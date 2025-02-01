@@ -16,7 +16,10 @@
   },
   "devDependencies": {
     "@material/typography": "^14.0.0",
+    "@smui-extra/autocomplete": "^8.0.0-beta.3",
+    "@smui/checkbox": "^8.0.0-beta.3",
     "@smui/chips": "^8.0.0-beta.3",
+    "@smui/dialog": "^8.0.0-beta.3",
     "@smui/fab": "^8.0.0-beta.3",
     "@smui/form-field": "^8.0.0-beta.3",
     "@smui/list": "^8.0.0-beta.3",
@@ -52,6 +55,7 @@
     "@smui/top-app-bar": "^8.0.0-beta.3",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.48.1",
-    "base64-arraybuffer": "^1.0.2"
+    "base64-arraybuffer": "^1.0.2",
+    "svelte-easy-crop": "^4.0.0"
   }
 }

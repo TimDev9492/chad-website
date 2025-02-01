@@ -15,7 +15,8 @@
 
 <TopAppBar
   bind:this={smuiBar}
-  variant="fixed">
+  variant="fixed"
+  color="secondary">
   <Row>
     <Section>
       <IconButton class="material-icons">menu</IconButton>

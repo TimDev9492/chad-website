@@ -21,4 +21,5 @@
 html,
 body {
   @apply h-full;
+  overflow-x: hidden;
 }

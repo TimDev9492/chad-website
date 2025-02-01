@@ -7,8 +7,13 @@
 
   let {
     genders,
+    disabled,
     selected = $bindable(),
-  }: { genders: Gender[]; selected: Gender | null } = $props();
+  }: {
+    genders: Gender[];
+    disabled: boolean;
+    selected: Gender | null;
+  } = $props();
 </script>
 
 <div class="margins">
@@ -16,9 +21,12 @@
     <FormField style="margin-right: 1em;">
       <Radio
         bind:group={selected}
+        {disabled}
         value={gender} />
       {#snippet label()}
-        {`${gender[0].toUpperCase()}${gender.slice(1)}`}
+        <span class={disabled ? 'opacity-50 select-none' : ''}>
+          {`${gender[0].toUpperCase()}${gender.slice(1)}`}
+        </span>
       {/snippet}
     </FormField>
   {/each}

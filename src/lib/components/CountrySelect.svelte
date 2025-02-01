@@ -4,16 +4,25 @@
 
   type Country = Database['public']['Tables']['countries']['Row'];
 
-  let { countries, selectedCountry = $bindable(), displayTransform, classes, label }: {
+  let {
+    countries,
+    selectedCountry = $bindable(),
+    displayTransform,
+    classes,
+    label,
+    disabled,
+  }: {
     countries: Country[];
     selectedCountry: Country | null;
     displayTransform: (country: Country) => string;
     classes?: string;
     label?: string;
+    disabled: boolean;
   } = $props();
 </script>
 
 <Select
+  {disabled}
   required
   invalid={!selectedCountry}
   key={(country: Country) => (country != null ? country.country_code : '')}

@@ -10,10 +10,12 @@
     countries,
     selectedCountry = $bindable(),
     phoneNumber = $bindable(),
+    disabled,
   }: {
     countries: Country[];
     selectedCountry: Country | null;
     phoneNumber: string | null;
+    disabled: boolean;
   } = $props();
 
   // check if phoneNumber consists of only digits
@@ -34,6 +36,7 @@
       value shouldn't have any text, or the floating label will overlap it.
     -->
   <CountrySelect
+  {disabled}
     {countries}
     bind:selectedCountry
     label="Vorwahl"
@@ -41,6 +44,7 @@
     displayTransform={(country) =>
       `${country.flag_emoji} ${country.country_code}`} />
   <Textfield
+  {disabled}
     required
     invalid={!validPhoneSuffix}
     bind:value={phoneNumber}
