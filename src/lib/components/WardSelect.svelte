@@ -12,23 +12,23 @@
     wards: {
       id: number;
       name: string;
-    }[]
+    }[];
   };
 
   type Ward = {
     id: number;
     name: string;
     stake: StakeData;
-  }
+  };
 
   let {
     stakes,
-    selected = $bindable(),
+    value = $bindable(),
     disabled = false,
   }: {
     stakes: Stake[];
-    selected: Ward | null;
-    disabled?: boolean
+    value: Ward | null;
+    disabled?: boolean;
   } = $props();
 
   // When options are objects, you need to wrap them in a $state rune, so that
@@ -49,11 +49,11 @@
   }
   let options: Ward[] = $state<Ward[]>(wards);
 
-  let value: Ward | undefined = $state();
+  // let value: Ward | undefined = $state();
 
-  $effect(() => {
-    selected = value ?? null;
-  });
+  // $effect(() => {
+  //   selected = value ?? null;
+  // });
 </script>
 
 <div class="w-full grid grid-cols-1">

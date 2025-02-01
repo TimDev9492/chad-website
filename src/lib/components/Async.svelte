@@ -1,21 +1,3 @@
-<div>
-  <Autocomplete
-    search={searchItems}
-    bind:value
-    showMenuWithNoInput={false}
-    label="Fruit"
-  >
-    {#snippet loading()}
-      <Text
-        style="display: flex; width: 100%; justify-content: center; align-items: center;"
-      >
-        <CircularProgress style="height: 24px; width: 24px;" indeterminate />
-      </Text>
-    {/snippet}
-  </Autocomplete>
-  <pre class="status">Selected: {value || ''}</pre>
-</div>
-
 <script lang="ts">
   import Autocomplete from '@smui-extra/autocomplete';
   import { Text } from '@smui/list';
@@ -68,3 +50,21 @@
     );
   }
 </script>
+
+<div>
+  <Autocomplete
+    search={searchItems}
+    bind:value
+    showMenuWithNoInput={false}
+    label="Fruit">
+    {#snippet loading()}
+      <Text
+        style="display: flex; width: 100%; justify-content: center; align-items: center;">
+        <CircularProgress
+          style="height: 24px; width: 24px;"
+          indeterminate />
+      </Text>
+    {/snippet}
+  </Autocomplete>
+  <pre class="status">Selected: {value || ''}</pre>
+</div>

@@ -51,6 +51,19 @@
   ]);
   let newLabel = $state('');
 
+  for (const selectedPreference of selectedPreferences) {
+    if (options.findIndex((el) => el.label === selectedPreference) === -1) {
+      options = [
+        ...options,
+        {
+          id: options[options.length - 1].id + 1,
+          label: selectedPreference,
+          icon: 'local_hospital',
+        },
+      ];
+    }
+  }
+
   let selected: Item[] = $state(
     options.filter((option) => selectedPreferences.includes(option.label)),
   );

@@ -36,7 +36,7 @@
       value shouldn't have any text, or the floating label will overlap it.
     -->
   <CountrySelect
-  {disabled}
+    {disabled}
     {countries}
     bind:selectedCountry
     label="Vorwahl"
@@ -44,7 +44,7 @@
     displayTransform={(country) =>
       `${country.flag_emoji} ${country.country_code}`} />
   <Textfield
-  {disabled}
+    {disabled}
     required
     invalid={!validPhoneSuffix}
     bind:value={phoneNumber}

@@ -17,7 +17,8 @@
 <LinearProgress
   color="secondary"
   indeterminate
-  closed={!waitingForResponse} />
+  closed={!waitingForResponse}
+/>
 <PageFormWrapper>
   <form
     method="POST"
@@ -39,7 +40,8 @@
             message: (result as any).data?.message,
           });
       };
-    }}>
+    }}
+  >
     <div class="mdc-typography--headline6">Anmelden</div>
     <Divider />
     <IconInput
@@ -51,7 +53,8 @@
       required
       invalid={email && !validEmail}
       disabled={waitingForResponse}
-      bind:value={email}></IconInput>
+      bind:value={email}
+    ></IconInput>
     <IconInput
       iconName="key"
       text="Password"
@@ -59,7 +62,8 @@
       input$name="password"
       variant="outlined"
       disabled={waitingForResponse}
-      required>
+      required
+    >
       {#snippet helper()}
         <HelperText persistent>
           <a href="/">Passwort vergessen?</a>
@@ -70,13 +74,15 @@
       <Button
         variant="raised"
         color="primary"
-        disabled={waitingForResponse}>
+        disabled={waitingForResponse}
+      >
         <Icon class="material-icons">person</Icon>
         <Label>Anmelden</Label>
       </Button>
       <a
         class="mdc-typography--caption text-center"
-        href="/register">Du hast noch keinen Account?</a>
+        href="/register">Du hast noch keinen Account?</a
+      >
     </span>
   </form>
 </PageFormWrapper>

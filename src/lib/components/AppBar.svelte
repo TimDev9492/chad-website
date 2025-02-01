@@ -1,9 +1,5 @@
 <script lang="ts">
-  import TopAppBar, {
-    Row,
-    Section,
-    Title,
-  } from '@smui/top-app-bar';
+  import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
   import IconButton from '@smui/icon-button';
   import { goto } from '$app/navigation';
   import UserIcon from './UserIcon.svelte';
@@ -32,7 +28,9 @@
       toolbar>
       {#if user}
         <div class="mdc-typography--overline">{user!.email}</div>
-        <UserIcon {user} {supabase} />
+        <UserIcon
+          {user}
+          {supabase} />
       {:else}
         <IconButton
           onclick={() => goto('/login')}

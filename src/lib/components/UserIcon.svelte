@@ -2,7 +2,6 @@
   import Menu from '@smui/menu';
   import { Anchor } from '@smui/menu-surface';
   import List, { Item, Separator, Text } from '@smui/list';
-  import Button, { Label } from '@smui/button';
   import IconButton, { Icon } from '@smui/icon-button';
   import { goto } from '$app/navigation';
 

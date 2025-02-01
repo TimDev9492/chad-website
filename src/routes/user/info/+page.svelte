@@ -25,6 +25,7 @@
   import FoodPreferencesSelect from '$lib/components/FoodPreferencesSelect.svelte';
   import Button, { Icon, Label } from '@smui/button';
   import LinearProgress from '@smui/linear-progress';
+  import { onMount } from 'svelte';
 
   let { data } = $props();
   let {
@@ -45,15 +46,26 @@
   let userInfoState =
     $state<Database['public']['Tables']['user_infos']['Row']>(userInfo);
   let addressState = $state(residencyAddress);
-  let phoneCountry = $state<Country | null>(null);
-  let phoneSuffix = $state<string | null>('');
 
-  let addressCountry = $state<Country | null>(null);
+  const intialPhoneCountry =
+    countries.find((country) =>
+      userInfoState.phone_number?.startsWith(country.country_code),
+    ) ?? null;
+  const initialPhoneSuffix = userInfoState.phone_number?.slice(
+    intialPhoneCountry?.country_code?.length ?? 0,
+  );
+
+  let phoneCountry = $state<Country | null>(intialPhoneCountry);
+  let phoneSuffix = $state<string | null>(initialPhoneSuffix ?? null);
+
+  const initialAddressCountry =
+    countries.find(
+      (country) => country.iso_code === residencyAddress.country,
+    ) ?? null;
+  let addressCountry = $state<Country | null>(initialAddressCountry);
 
   let imageUpload = $state<HTMLInputElement | null>(null);
-
   let imageSrc = $state<string | null>(userInfoState.avatar_url);
-
   let imageCropOpen = $state(false);
   let imageToCrop = $state({
     data: '',
@@ -61,13 +73,25 @@
   });
 
   const minAge = 18;
-  let birthDateValue = $state(null);
+  let birthDateValue = $state(userInfoState.date_of_birth ?? null);
   let birthDateValid = $derived(
     getAgeByBirthdate(birthDateValue ?? new Date()) >= minAge,
   );
 
+  let initialWard = null;
+  for (const stake of stakes) {
+    if (initialWard !== null) break;
+    for (const ward of stake.wards) {
+      if (ward.id === userInfo.ward_id) {
+        initialWard = ward;
+        break;
+      }
+    }
+  }
   let selectedWard = $state(null);
   let notAMember = $state(userInfo.ward_id == null);
+
+  $inspect(selectedWard);
 
   let selectedFoodPreferences = $state<string[]>(foodPreferences);
 
@@ -87,6 +111,26 @@
   $effect(() => {
     if (notAMember) userInfoState.ward_id = null;
     else userInfoState.ward_id = (selectedWard as any)?.id ?? null;
+  });
+
+  // textfield value states
+  let firstName = $state<string | null>(null);
+  let lastName = $state<string | null>(null);
+  let streetNameAndNumber = $state<string | null>(null);
+  let cityName = $state<string | null>(null);
+  let postalCode = $state<string | null>(null);
+
+  onMount(() => {
+    phoneCountry = intialPhoneCountry;
+    addressCountry = initialAddressCountry;
+
+    selectedWard = initialWard;
+
+    firstName = userInfo.first_name;
+    lastName = userInfo.last_name;
+    streetNameAndNumber = residencyAddress.street_name_and_number;
+    cityName = residencyAddress.city;
+    postalCode = residencyAddress.postal_code?.toString() ?? null;
   });
 
   const onImageSelected = (e: any) => {
@@ -122,13 +166,15 @@
         console.error(error);
         toastStore.set({ level: 'error', message: error.message });
       });
-  }} />
+  }}
+/>
 
 <div class="absolute w-full z-10">
   <LinearProgress
     color="secondary"
     indeterminate
-    closed={!waitingForResponse} />
+    closed={!waitingForResponse}
+  />
 </div>
 <PageFormWrapper>
   <form
@@ -137,16 +183,13 @@
     use:enhance={(form_element) => {
       // populate form data
       const formData = form_element.formData;
-      formData.set('first_name', userInfoState.first_name ?? '');
-      formData.set('last_name', userInfoState.last_name ?? '');
+      formData.set('first_name', firstName ?? '');
+      formData.set('last_name', lastName ?? '');
       formData.set('gender', userInfoState.gender ?? '');
       formData.set('phone_number', userInfoState.phone_number ?? '');
-      formData.set(
-        'street_name_and_number',
-        addressState.street_name_and_number ?? '',
-      );
-      formData.set('city', addressState.city ?? '');
-      formData.set('postal_code', addressState.postal_code?.toString() ?? '');
+      formData.set('street_name_and_number', streetNameAndNumber ?? '');
+      formData.set('city', cityName ?? '');
+      formData.set('postal_code', postalCode?.toString() ?? '');
       formData.set('country', addressState.country ?? '');
       formData.set('date_of_birth', userInfoState.date_of_birth ?? '');
       formData.set('ward_id', `${userInfoState.ward_id}`);
@@ -167,27 +210,32 @@
         await applyAction(result);
         if (!result.status) return;
         const success: boolean = isHttpSuccess(result.status);
-        if (success) update({ invalidateAll: true });
+        // if (success) update({ invalidateAll: false });
         toastStore.set({
           level: success ? 'success' : 'error',
           message: (result as any).data?.message,
         });
       };
-    }}>
+    }}
+  >
     <div class="mdc-typography--headline4">Deine Infos</div>
     <Divider />
-    <div class="grid grid-cols-[1fr_auto] items-center gap-12">
+    <div
+      class="grid grid-cols-[1fr_auto] items-center gap-12 portrait:flex portrait:flex-col portrait:gap-4 portrait:items-center"
+    >
       <div class="mdc-typography--overline">Wie siehst du aus?</div>
       <div class="flex justify-center">
         <div class="h-48 relative">
           <img
             class="h-full aspect-[1/1] object-cover object-center rounded-full"
             alt="avatar"
-            src={imageSrc} />
+            src={imageSrc}
+          />
           <div class="absolute -bottom-4 left-1/2 -translate-x-1/2">
             <Chip
               chip="uploadChip"
-              onclick={() => imageUpload?.click()}>
+              onclick={() => imageUpload?.click()}
+            >
               <LeadingIcon class="material-icons">upload</LeadingIcon>
               <Text tabindex={0}>Hochladen</Text>
             </Chip>
@@ -197,98 +245,136 @@
             type="file"
             accept="image/*"
             onchange={onImageSelected}
-            bind:this={imageUpload} />
+            bind:this={imageUpload}
+          />
         </div>
       </div>
 
+      <div class="col-span-2 portrait:w-full portrait:mt-8">
+        <Divider />
+      </div>
+
       <div class="mdc-typography--overline">Wie heißt du?</div>
-      <div>
+      <div class="portrait:flex portrait:flex-col portrait:gap-4">
         <Textfield
           variant="outlined"
-          bind:value={userInfoState.first_name}
+          bind:value={firstName}
           label="Vorname"
           disabled={waitingForResponse}
-          required />
+          required
+        />
         <Textfield
           variant="outlined"
-          bind:value={userInfoState.last_name}
+          bind:value={lastName}
           label="Nachname"
           disabled={waitingForResponse}
-          required />
+          required
+        />
+      </div>
+
+      <div class="col-span-2 portrait:w-full">
+        <Divider />
       </div>
 
       <div class="mdc-typography--overline">Was bist du?</div>
       <GenderSelect
         genders={genders.map((gender) => gender.name)}
         disabled={waitingForResponse}
-        bind:selected={userInfoState.gender} />
+        bind:selected={userInfoState.gender}
+      />
+
+      <div class="col-span-2 portrait:w-full">
+        <Divider />
+      </div>
 
       <div class="mdc-typography--overline">Was ist deine Handynummer?</div>
       <PhoneNumberInput
         {countries}
         disabled={waitingForResponse}
         bind:selectedCountry={phoneCountry}
-        bind:phoneNumber={phoneSuffix} />
+        bind:phoneNumber={phoneSuffix}
+      />
+
+      <div class="col-span-2 portrait:w-full">
+        <Divider />
+      </div>
 
       <div class="mdc-typography--overline">Wo wohnst du?</div>
       <div class="grid grid-cols-[1fr_auto] gap-2">
         <Textfield
           class="col-span-2"
           variant="outlined"
-          bind:value={addressState.street_name_and_number}
+          bind:value={streetNameAndNumber}
           label="Straße und Hausnummer"
           disabled={waitingForResponse}
-          required />
+          required
+        />
 
         <Textfield
           class="col-span-2"
           variant="outlined"
-          bind:value={addressState.city}
+          bind:value={cityName}
           label="Stadt"
           disabled={waitingForResponse}
-          required />
+          required
+        />
         <Textfield
           type="number"
           variant="outlined"
-          bind:value={addressState.postal_code}
+          bind:value={postalCode}
           label="Postleitzahl"
           disabled={waitingForResponse}
-          required />
+          required
+        />
         <CountrySelect
           disabled={waitingForResponse}
           {countries}
           label="Land"
           bind:selectedCountry={addressCountry}
           displayTransform={(country) =>
-            `${country.flag_emoji} ${country.name}`} />
+            `${country.flag_emoji} ${country.name}`}
+        />
+      </div>
+
+      <div class="col-span-2 portrait:w-full">
+        <Divider />
       </div>
 
       <div class="mdc-typography--overline">Wie alt bist du?</div>
       <div>
         <Textfield
+          style="width: 100%"
+          input$style="width: 100%"
           type="date"
           variant="outlined"
           bind:value={birthDateValue}
           label="Geburtsdatum"
           disabled={waitingForResponse}
           required
-          invalid={!birthDateValid}>
+          invalid={!birthDateValid}
+        >
           {#snippet helper()}
             <HelperText>Du musst midestens {minAge} Jahre alt sein!</HelperText>
           {/snippet}
         </Textfield>
       </div>
 
+      <div class="col-span-2 portrait:w-full">
+        <Divider />
+      </div>
+
       <div class="mdc-typography--overline">In welche Gemeinde gehst du?</div>
-      <div class="w-full flex">
+      <div class="w-full flex portrait:flex-col portrait:items-center">
         <WardSelect
           {stakes}
-          bind:selected={selectedWard}
-          disabled={notAMember || waitingForResponse} />
+          bind:value={selectedWard}
+          disabled={notAMember || waitingForResponse}
+        />
         <FormField>
           <Checkbox
             disabled={waitingForResponse}
-            bind:checked={notAMember} />
+            bind:checked={notAMember}
+          />
           {#snippet label()}
             <div class={disabledText('', waitingForResponse)}>
               Ich bin kein Mitglied
@@ -297,15 +383,21 @@
         </FormField>
       </div>
 
+      <div class="col-span-2 portrait:w-full">
+        <Divider />
+      </div>
+
       <div class="mdc-typography--overline">Wie sieht es mit Essen aus?</div>
-      <div class="w-full flex">
+      <div class="w-full flex portrait:flex-col">
         <FoodPreferencesSelect
           disabled={waitingForResponse}
-          bind:selectedPreferences={selectedFoodPreferences} />
-        <FormField>
+          bind:selectedPreferences={selectedFoodPreferences}
+        />
+        <FormField class="portrait:mt-24">
           <Checkbox
             disabled={waitingForResponse}
-            bind:checked={userInfoState.wants_breakfast} />
+            bind:checked={userInfoState.wants_breakfast}
+          />
           {#snippet label()}
             <div class={disabledText('', waitingForResponse)}>
               Ich esse Frühstück
@@ -316,12 +408,17 @@
 
       <div class="col-span-2 spacer w-16"></div>
 
+      <div class="col-span-2 portrait:w-full">
+        <Divider />
+      </div>
+
       <div class="mdc-typography--overline">Wo schläfst du?</div>
-      <div class="w-full flex">
+      <div class="w-full flex portrait:justify-center">
         <FormField>
           <Checkbox
             disabled={waitingForResponse}
-            bind:checked={userInfoState.needs_place_to_sleep} />
+            bind:checked={userInfoState.needs_place_to_sleep}
+          />
           {#snippet label()}
             <div class={disabledText('', waitingForResponse)}>
               Ich brauche eine Übernachtungsmöglichkeit
@@ -335,7 +432,8 @@
       <Button
         variant="raised"
         color="primary"
-        disabled={waitingForResponse}>
+        disabled={waitingForResponse}
+      >
         <Icon class="material-icons">save</Icon>
         <Label>Speichern</Label>
       </Button>
