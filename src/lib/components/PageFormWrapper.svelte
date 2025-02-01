@@ -1,5 +1,7 @@
 <script lang="ts">
   import Card from '@smui/card';
+
+  let { children } = $props();
 </script>
 
 <div class="w-full min-h-full flex justify-center items-center">
@@ -7,7 +9,7 @@
     <Card
       variant="outlined"
       padded>
-      <slot></slot>
+      {@render children()}
     </Card>
   </div>
 </div>

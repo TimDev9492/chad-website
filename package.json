@@ -11,10 +11,18 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "format": "prettier --write .",
-    "lint": "prettier --check ."
+    "lint": "prettier --check .",
+    "types": "npx supabase gen types typescript --project-id \"przfigmcivbydgrusirj\" > src/types/database.types.d.ts"
   },
   "devDependencies": {
     "@material/typography": "^14.0.0",
+    "@smui/chips": "^8.0.0-beta.3",
+    "@smui/fab": "^8.0.0-beta.3",
+    "@smui/form-field": "^8.0.0-beta.3",
+    "@smui/list": "^8.0.0-beta.3",
+    "@smui/menu": "^8.0.0-beta.3",
+    "@smui/radio": "^8.0.0-beta.3",
+    "@smui/select": "^8.0.0-beta.3",
     "@sveltejs/adapter-vercel": "^5.5.2",
     "@sveltejs/kit": "^2.16.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
@@ -25,6 +33,7 @@
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-svelte": "^3.3.3",
     "smui-theme": "^8.0.0-beta.3",
+    "supabase": "^2.9.6",
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
     "tailwindcss": "^3.4.17",
@@ -42,6 +51,7 @@
     "@smui/textfield": "^8.0.0-beta.3",
     "@smui/top-app-bar": "^8.0.0-beta.3",
     "@supabase/ssr": "^0.5.2",
-    "@supabase/supabase-js": "^2.48.1"
+    "@supabase/supabase-js": "^2.48.1",
+    "base64-arraybuffer": "^1.0.2"
   }
 }

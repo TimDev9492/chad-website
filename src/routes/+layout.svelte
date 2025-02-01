@@ -26,7 +26,7 @@
 <div class="min-h-screen grid grid-rows-[auto_1fr_auto]">
   <!-- header -->
   <header>
-    <AppBar bind:smuiBar={topAppBar} />
+    <AppBar bind:smuiBar={topAppBar} {data} />
   </header>
   <!-- main content -->
   <AutoAdjust {topAppBar}>

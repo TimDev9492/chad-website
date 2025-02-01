@@ -38,7 +38,7 @@
         });
       };
     }}>
-    <div class="mdc-typography--headline6">Create an account</div>
+    <div class="mdc-typography--headline6">Account erstellen</div>
     <Divider />
     <IconInput
       iconName="email"
@@ -63,7 +63,7 @@
       color="primary"
       disabled={waitingForResponse}>
       <Icon class="material-icons">person</Icon>
-      <Label>Sign up</Label>
+      <Label>Registrieren</Label>
     </Button>
   </form>
 </PageFormWrapper>

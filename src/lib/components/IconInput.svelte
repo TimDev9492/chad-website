@@ -1,13 +1,16 @@
 <script lang="ts">
   import TextField from '@smui/textfield';
   import { Icon } from '@smui/common';
+  import type { Snippet } from 'svelte';
 
   let {
+    children,
     iconName,
     text,
     value = $bindable(''),
     ...textFieldProps
   }: {
+    children?: Snippet<[]>;
     iconName: string;
     text: string;
     value?: string;
@@ -26,5 +29,8 @@
         >{iconName}</Icon>
       {text}
     {/snippet}
+    {#if children}
+      {@render children()}
+    {/if}
   </TextField>
 </div>

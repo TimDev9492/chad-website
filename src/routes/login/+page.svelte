@@ -7,6 +7,7 @@
   import Divider from '$lib/components/Divider.svelte';
   import { toastStore } from '$lib/toastStore';
   import PageFormWrapper from '$lib/components/PageFormWrapper.svelte';
+  import HelperText from '@smui/textfield/helper-text';
 
   let waitingForResponse = $state(false);
   let email = $state('');
@@ -39,7 +40,7 @@
           });
       };
     }}>
-    <div class="mdc-typography--headline6">Create an account</div>
+    <div class="mdc-typography--headline6">Anmelden</div>
     <Divider />
     <IconInput
       iconName="email"
@@ -58,13 +59,24 @@
       input$name="password"
       variant="outlined"
       disabled={waitingForResponse}
-      required></IconInput>
-    <Button
-      variant="raised"
-      color="primary"
-      disabled={waitingForResponse}>
-      <Icon class="material-icons">person</Icon>
-      <Label>Sign up</Label>
-    </Button>
+      required>
+      {#snippet helper()}
+        <HelperText persistent>
+          <a href="/">Passwort vergessen?</a>
+        </HelperText>
+      {/snippet}
+    </IconInput>
+    <span class="flex flex-col gap-1">
+      <Button
+        variant="raised"
+        color="primary"
+        disabled={waitingForResponse}>
+        <Icon class="material-icons">person</Icon>
+        <Label>Anmelden</Label>
+      </Button>
+      <a
+        class="mdc-typography--caption text-center"
+        href="/register">Du hast noch keinen Account?</a>
+    </span>
   </form>
 </PageFormWrapper>

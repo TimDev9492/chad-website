@@ -3,11 +3,14 @@
     Row,
     Section,
     Title,
-    AutoAdjust,
   } from '@smui/top-app-bar';
   import IconButton from '@smui/icon-button';
+  import { goto } from '$app/navigation';
+  import UserIcon from './UserIcon.svelte';
 
-  let { smuiBar = $bindable() } = $props();
+  let { smuiBar = $bindable(), data } = $props();
+
+  let { user, supabase } = $derived(data);
 </script>
 
 <TopAppBar
@@ -26,15 +29,15 @@
     <Section
       align="end"
       toolbar>
-      <IconButton
-        class="material-icons"
-        aria-label="Download">file_download</IconButton>
-      <IconButton
-        class="material-icons"
-        aria-label="Print this page">print</IconButton>
-      <IconButton
-        class="material-icons"
-        aria-label="Bookmark this page">bookmark</IconButton>
+      {#if user}
+        <div class="mdc-typography--overline">{user!.email}</div>
+        <UserIcon {user} {supabase} />
+      {:else}
+        <IconButton
+          onclick={() => goto('/login')}
+          class="material-icons"
+          aria-label="Account">account_circle</IconButton>
+      {/if}
     </Section>
   </Row>
 </TopAppBar>
