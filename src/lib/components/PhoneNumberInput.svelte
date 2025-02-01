@@ -42,12 +42,14 @@
     label="Vorwahl"
     classes="w-[120px]"
     displayTransform={(country) =>
-      `${country.flag_emoji} ${country.country_code}`} />
+      `${country.flag_emoji} ${country.country_code}`}
+  />
   <Textfield
     {disabled}
     required
     invalid={!validPhoneSuffix}
     bind:value={phoneNumber}
     label="Nummer"
-    type="tel" />
+    type="tel"
+  />
 </div>

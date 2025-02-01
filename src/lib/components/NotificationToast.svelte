@@ -17,11 +17,13 @@
 
 <Snackbar
   bind:this={snackbar}
-  class={level}>
+  class={level}
+>
   <Label>{content}</Label>
   <Actions>
     <IconButton
       class="material-icons"
-      title="Dismiss">close</IconButton>
+      title="Dismiss">close</IconButton
+    >
   </Actions>
 </Snackbar>

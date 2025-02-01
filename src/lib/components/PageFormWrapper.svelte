@@ -8,7 +8,8 @@
   <div class="card-container max-w-[80vw]">
     <Card
       variant="outlined"
-      padded>
+      padded
+    >
       {@render children()}
     </Card>
   </div>

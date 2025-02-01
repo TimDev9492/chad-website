@@ -64,7 +64,8 @@
     {disabled}
     getOptionLabel={(option: Ward) => (option ? option.name : '')}
     bind:value
-    label="Deine Gemeinde">
+    label="Deine Gemeinde"
+  >
     {#snippet loading()}
       <!--
         This doesn't get used except for async loading, but I'm putting it in

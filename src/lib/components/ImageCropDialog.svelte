@@ -74,12 +74,14 @@
 <div class={'margin' + (open ? '' : ' hidden')}>
   <canvas
     bind:this={canvas}
-    class="hidden"></canvas>
+    class="hidden"
+  ></canvas>
   <Dialog
     bind:open
     aria-labelledby="simple-title"
     aria-describedby="simple-content"
-    surface$class="size-auto">
+    surface$class="size-auto"
+  >
     <Title id="simple-title">Dialog Title</Title>
     <Content id="simple-content">
       <div class="relative aspect-[1/1] portrait:w-[80vw] landscape:h-[50vh]">
@@ -89,7 +91,8 @@
           {image}
           {aspect}
           {cropShape}
-          oncropcomplete={(e) => (cropPixelData = e.pixels)} />
+          oncropcomplete={(e) => (cropPixelData = e.pixels)}
+        />
       </div>
     </Content>
     <Actions>

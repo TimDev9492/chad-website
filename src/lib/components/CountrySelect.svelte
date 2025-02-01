@@ -28,7 +28,8 @@
   key={(country: Country) => (country != null ? country.country_code : '')}
   bind:value={selectedCountry}
   {label}
-  class={classes}>
+  class={classes}
+>
   {#each countries as country (country.iso_code)}
     <Option value={country}>{displayTransform(country)}</Option>
   {/each}

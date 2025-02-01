@@ -12,7 +12,8 @@
 <TopAppBar
   bind:this={smuiBar}
   variant="fixed"
-  color="secondary">
+  color="secondary"
+>
   <Row>
     <Section>
       <IconButton class="material-icons">menu</IconButton>
@@ -25,17 +26,20 @@
     </Section>
     <Section
       align="end"
-      toolbar>
+      toolbar
+    >
       {#if user}
         <div class="mdc-typography--overline">{user!.email}</div>
         <UserIcon
           {user}
-          {supabase} />
+          {supabase}
+        />
       {:else}
         <IconButton
           onclick={() => goto('/login')}
           class="material-icons"
-          aria-label="Account">account_circle</IconButton>
+          aria-label="Account">account_circle</IconButton
+        >
       {/if}
     </Section>
   </Row>

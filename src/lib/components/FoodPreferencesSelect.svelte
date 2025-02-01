@@ -113,7 +113,8 @@
     dialogOpen = true;
   }}
   onSMUIAutocompleteSelected={handleSelection}
-  label="Darauf achte ich">
+  label="Darauf achte ich"
+>
   {#snippet noMatches()}
     <Text>Hinzufügen</Text>
   {/snippet}
@@ -123,11 +124,13 @@
   class={'absolute translate-y-14' + (disabled ? ' opacity-50' : '')}
   style="display: inline-block;"
   key={(item) => (item && item?.id ? item.id.toString() : '')}
-  bind:chips={selected}>
+  bind:chips={selected}
+>
   {#snippet chip(item)}
     <Chip
       chip={item.id}
-      onclick={() => (selected = selected.filter((el) => el.id !== item.id))}>
+      onclick={() => (selected = selected.filter((el) => el.id !== item.id))}
+    >
       <LeadingIcon class="material-icons">{item.icon}</LeadingIcon>
       <Text tabindex={item.id}>{item.label}</Text>
       <TrailingAction icon$class="material-icons">cancel</TrailingAction>
@@ -138,23 +141,27 @@
 <Dialog
   bind:open={dialogOpen}
   aria-labelledby="autocomplete-dialog-title"
-  aria-describedby="autocomplete-dialog-content">
+  aria-describedby="autocomplete-dialog-content"
+>
   <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
   <Title id="autocomplete-dialog-title">Ernährungsbedürfnisse</Title>
   <Content id="autocomplete-dialog-content">
     <Textfield
       bind:value={newLabel}
-      label="Label" />
+      label="Label"
+    />
   </Content>
   <Actions>
     <Chip
       chip="cancel"
-      onclick={() => (dialogOpen = false)}>
+      onclick={() => (dialogOpen = false)}
+    >
       <Label>Abbrechen</Label>
     </Chip>
     <Chip
       chip="add"
-      onclick={addObject}>
+      onclick={addObject}
+    >
       <Label>Hinzufügen</Label>
     </Chip>
   </Actions>

@@ -14,7 +14,7 @@
         "parser": "svelte",
         "singleQuote": true,
         "svelteAllowShorthand": true,
-        "svelteBracketNewLine": false
+        "svelteBracketNewLine": true
       }
     }
   ]

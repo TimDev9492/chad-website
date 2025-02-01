@@ -22,7 +22,8 @@
       <Radio
         bind:group={selected}
         {disabled}
-        value={gender} />
+        value={gender}
+      />
       {#snippet label()}
         <span class={disabled ? 'opacity-50 select-none' : ''}>
           {`${gender[0].toUpperCase()}${gender.slice(1)}`}

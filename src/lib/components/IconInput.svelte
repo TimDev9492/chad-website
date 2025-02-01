@@ -21,12 +21,14 @@
 <div class="margins">
   <TextField
     bind:value
-    {...textFieldProps}>
+    {...textFieldProps}
+  >
     {#snippet label()}
       <Icon
         class="material-icons"
         style="font-size: 1em; line-height: normal; vertical-align: top;"
-        >{iconName}</Icon>
+        >{iconName}</Icon
+      >
       {text}
     {/snippet}
     {#if children}

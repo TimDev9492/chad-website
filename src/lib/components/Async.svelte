@@ -56,13 +56,16 @@
     search={searchItems}
     bind:value
     showMenuWithNoInput={false}
-    label="Fruit">
+    label="Fruit"
+  >
     {#snippet loading()}
       <Text
-        style="display: flex; width: 100%; justify-content: center; align-items: center;">
+        style="display: flex; width: 100%; justify-content: center; align-items: center;"
+      >
         <CircularProgress
           style="height: 24px; width: 24px;"
-          indeterminate />
+          indeterminate
+        />
       </Text>
     {/snippet}
   </Autocomplete>

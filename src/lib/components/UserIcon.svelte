@@ -35,7 +35,8 @@
       }
     },
   }}
-  bind:this={anchor}>
+  bind:this={anchor}
+>
   <IconButton
     onclick={() => menu.setOpen(true)}
     class="material-icons"
@@ -46,7 +47,8 @@
     bind:this={menu}
     anchor={false}
     anchorElement={anchor}
-    anchorCorner="BOTTOM_LEFT">
+    anchorCorner="BOTTOM_LEFT"
+  >
     <List>
       <Item onSMUIAction={() => goto('/user/info')}>
         <Icon class="material-icons">settings</Icon>
@@ -55,7 +57,8 @@
       <Separator />
       <Item
         onSMUIAction={logout}
-        class="text-red-600">
+        class="text-red-600"
+      >
         <Icon class="material-icons">exit_to_app</Icon>
         <Text class="ml-2">Abmelden</Text>
       </Item>
