@@ -1,17 +1,18 @@
 <script lang="ts">
-  import IconInput from '$lib/components/IconInput.svelte';
-  import Button, { Label, Icon } from '@smui/button';
-  import { isHttpSuccess, isValidEmailAddress } from '$lib/utils.js';
   import { applyAction, enhance } from '$app/forms';
-  import LinearProgress from '@smui/linear-progress';
   import Divider from '$lib/components/Divider.svelte';
-  import { toastStore } from '$lib/toastStore';
+  import IconInput from '$lib/components/IconInput.svelte';
   import PageFormWrapper from '$lib/components/PageFormWrapper.svelte';
-  import HelperText from '@smui/textfield/helper-text';
+  import { isHttpSuccess, isValidEmailAddress } from '$lib/utils';
+  import Button, { Icon, Label } from '@smui/button';
+  import LinearProgress from '@smui/linear-progress';
+  import { toastStore } from '$lib/toastStore';
 
   let waitingForResponse = $state(false);
-  let email = $state('');
-  let validEmail = $derived(isValidEmailAddress(email));
+  let password1 = $state('');
+  let password2 = $state('');
+
+  let validPassword = $derived(password1 && password1 === password2);
 </script>
 
 <LinearProgress
@@ -42,47 +43,43 @@
       };
     }}
   >
-    <div class="mdc-typography--headline6">Anmelden</div>
+    <div class="mdc-typography--headline6">Password zurücksetzen</div>
     <Divider />
     <IconInput
-      iconName="email"
-      text="Email"
-      type="email"
-      input$name="email"
-      variant="outlined"
-      required
-      invalid={email && !validEmail}
-      disabled={waitingForResponse}
-      bind:value={email}
-    ></IconInput>
-    <IconInput
       iconName="key"
-      text="Password"
+      text="Neues Passwort"
       type="password"
       input$name="password"
       variant="outlined"
-      disabled={waitingForResponse}
       required
-    >
-      {#snippet helper()}
-        <HelperText persistent>
-          <a href="/login/reset-password">Passwort vergessen?</a>
-        </HelperText>
-      {/snippet}
-    </IconInput>
-    <span class="flex flex-col gap-1">
+      invalid={!password1}
+      disabled={waitingForResponse}
+      bind:value={password1}
+    />
+    <IconInput
+      iconName="replay"
+      text="Password wiederholen"
+      type="password"
+      variant="outlined"
+      required
+      invalid={!validPassword}
+      disabled={waitingForResponse}
+      bind:value={password2}
+    />
+    <span class="flex flex-col items-center">
       <Button
         variant="raised"
         color="primary"
-        disabled={waitingForResponse}
+        disabled={!validPassword || waitingForResponse}
       >
-        <Icon class="material-icons">person</Icon>
-        <Label>Anmelden</Label>
+        <Icon class="material-icons">lock_reset</Icon>
+        <Label>Password ändern</Label>
       </Button>
-      <a
-        class="mdc-typography--caption text-center"
-        href="/register">Du hast noch keinen Account?</a
-      >
+      {#if password2 && !validPassword}
+        <div class="mdc-typography--caption text-red-600">
+          Passwörter stimmen nicht überein!
+        </div>
+      {/if}
     </span>
   </form>
 </PageFormWrapper>

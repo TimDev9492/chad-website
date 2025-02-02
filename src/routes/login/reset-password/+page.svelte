@@ -1,12 +1,12 @@
 <script lang="ts">
-  import IconInput from '$lib/components/IconInput.svelte';
-  import Button, { Label, Icon } from '@smui/button';
-  import { isHttpSuccess, isValidEmailAddress } from '$lib/utils.js';
   import { applyAction, enhance } from '$app/forms';
-  import LinearProgress from '@smui/linear-progress';
   import Divider from '$lib/components/Divider.svelte';
-  import { toastStore } from '$lib/toastStore';
+  import IconInput from '$lib/components/IconInput.svelte';
   import PageFormWrapper from '$lib/components/PageFormWrapper.svelte';
+  import { isHttpSuccess, isValidEmailAddress } from '$lib/utils';
+  import Button, { Icon, Label } from '@smui/button';
+  import LinearProgress from '@smui/linear-progress';
+  import { toastStore } from '$lib/toastStore';
 
   let waitingForResponse = $state(false);
   let email = $state('');
@@ -33,14 +33,15 @@
         if (!result.status) return;
         const success: boolean = isHttpSuccess(result.status);
         if (success) update({ invalidateAll: true });
-        toastStore.set({
-          level: success ? 'success' : 'error',
-          message: (result as any).data?.message,
-        });
+        if ((result as any).data?.message)
+          toastStore.set({
+            level: success ? 'success' : 'error',
+            message: (result as any).data?.message,
+          });
       };
     }}
   >
-    <div class="mdc-typography--headline6">Account erstellen</div>
+    <div class="mdc-typography--headline6">Password zurücksetzen</div>
     <Divider />
     <IconInput
       iconName="email"
@@ -52,29 +53,14 @@
       invalid={email && !validEmail}
       disabled={waitingForResponse}
       bind:value={email}
-    ></IconInput>
-    <IconInput
-      iconName="key"
-      text="Password"
-      type="password"
-      input$name="password"
-      variant="outlined"
+    />
+    <Button
+      variant="raised"
+      color="primary"
       disabled={waitingForResponse}
-      required
-    ></IconInput>
-    <span class="flex flex-col gap-1">
-      <Button
-        variant="raised"
-        color="primary"
-        disabled={waitingForResponse}
-      >
-        <Icon class="material-icons">person</Icon>
-        <Label>Registrieren</Label>
-      </Button>
-      <a
-        class="mdc-typography--caption text-center"
-        href="/login">Du hast bereits einen Account?</a
-      >
-    </span>
+    >
+      <Icon class="material-icons">lock_reset</Icon>
+      <Label>Passwort zurücksetzen</Label>
+    </Button>
   </form>
 </PageFormWrapper>
