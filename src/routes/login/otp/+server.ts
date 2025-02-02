@@ -34,6 +34,6 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
     }
   }
 
-  redirectTo.pathname = '/auth/error';
+  redirectTo.pathname = '/login/otp/error';
   redirect(303, redirectTo);
 };
