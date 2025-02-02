@@ -13,11 +13,19 @@ export const JsonError = (
     }),
     {
       status,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json', ...options?.headers },
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
     },
   );
 
-export const JsonResponse = (status: number, message: string, options?: { headers?: HeadersInit }): Response =>
+export const JsonResponse = (
+  status: number,
+  message: string,
+  options?: { headers?: HeadersInit },
+): Response =>
   new Response(
     JSON.stringify({
       success: true,
@@ -25,6 +33,10 @@ export const JsonResponse = (status: number, message: string, options?: { header
     }),
     {
       status,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json', ...options?.headers },
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
     },
   );

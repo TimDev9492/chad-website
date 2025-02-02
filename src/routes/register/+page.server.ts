@@ -12,10 +12,10 @@ export const actions: Actions = {
     const baseName = `${url.protocol}//${url.host}`;
 
     if (!isValidEmailAddress(email)) {
-      return fail(400, { message: 'The email you provided is invalid!' });
+      return fail(400, { message: 'Die angegeben E-Mail ist ungültig!' });
     }
     if (password.length == 0) {
-      return fail(400, { message: 'You need to provide a password!' });
+      return fail(400, { message: 'Kein Passwort angegeben!' });
     }
 
     const { error } = await supabase.auth.signUp({
@@ -27,7 +27,10 @@ export const actions: Actions = {
       console.error(error);
       return fail(500, { message: error.message });
     } else {
-      return { message: 'Success! Check your email for a confirmation link.' };
+      return {
+        message:
+          'Registrierung erfolgreich! Bestätige deine E-Mail um die Registrierung abzuschließen.',
+      };
     }
   },
 };

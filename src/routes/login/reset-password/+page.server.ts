@@ -17,7 +17,7 @@ export const actions: Actions = {
     }
     return {
       success: true,
-      message: 'Check your email for a password reset link!',
+      message: 'Du solltest eine E-Mail zum Zurücksetzen erhalten haben!',
     };
   },
 };

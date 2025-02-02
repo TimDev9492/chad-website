@@ -60,7 +60,7 @@
       disabled={waitingForResponse}
     >
       <Icon class="material-icons">lock_reset</Icon>
-      <Label>Passwort zurücksetzen</Label>
+      <Label>Zurücksetzen</Label>
     </Button>
   </form>
 </PageFormWrapper>

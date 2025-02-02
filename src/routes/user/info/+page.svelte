@@ -139,7 +139,7 @@
     // update avatar image
     unsubscribe = avatarStore.subscribe((newAvatar) => {
       imageSrc = newAvatar;
-    })
+    });
   });
 
   onDestroy(() => unsubscribe && unsubscribe());

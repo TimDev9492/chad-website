@@ -6,7 +6,7 @@ export const actions: Actions = {
     const password = formData.get('password') as string;
 
     if (password.length == 0) {
-      return fail(400, { message: 'You need to provide a password!' });
+      return fail(400, { message: 'Kein Passwort angegeben!' });
     }
 
     const { error } = await supabase.auth.updateUser({

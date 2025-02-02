@@ -27,13 +27,16 @@ export const actions: Actions = {
     if (!firstName || !lastName)
       return fail(400, {
         success: false,
-        message: 'Missing first or last name!',
+        message: 'Vor- oder Nachname fehlt!',
       });
     if (!gender)
-      return fail(400, { success: false, message: 'Missing gender!' });
+      return fail(400, {
+        success: false,
+        message: 'Kein Geschlecht angegeben!',
+      });
     const phoneNumberParsed = phone(phoneNumber);
     if (!phoneNumberParsed.isValid)
-      return fail(400, { success: false, message: 'Invalid phone number!' });
+      return fail(400, { success: false, message: 'Ungültige Handynummer!' });
     if (
       !isValidPostalAddress(
         streetNameAndNumber,
@@ -42,18 +45,18 @@ export const actions: Actions = {
         countryISOCode,
       )
     )
-      return fail(400, { success: false, message: 'Invalid postal address!' });
+      return fail(400, { success: false, message: 'Ungültige Postleitzahl!' });
     if (!isValidDate(dateOfBirth))
-      return fail(400, { message: 'Invalid date of birth!' });
+      return fail(400, { success: false, message: 'Ungültiges Geburtsdatum!' });
     if (wardId !== 'null' && isNaN(parseInt(wardId)))
-      return fail(400, { success: false, message: 'Invalid ward!' });
+      return fail(400, { success: false, message: 'Ungültige Gemeinde!' });
     let foodPrefs;
     try {
       foodPrefs = JSON.parse(foodPreferences);
     } catch (e) {
       return fail(400, {
         success: false,
-        message: 'Unable to parse food preferences!',
+        message: 'Ernährungsbedürfnisse konnten nicht verarbeitet werden!',
       });
     }
     let wantsBreakfastParsed;
@@ -62,7 +65,7 @@ export const actions: Actions = {
     } catch (e) {
       return fail(400, {
         success: false,
-        message: 'Unable to parse wants breakfast!',
+        message: 'Fehlerhafte Angabe für Frühstück!',
       });
     }
     let needsPlaceToSleepParsed;
@@ -71,7 +74,7 @@ export const actions: Actions = {
     } catch (e) {
       return fail(400, {
         success: false,
-        message: 'Unable to parse needs place to sleep!',
+        message: 'Fehlerhafte Angabe für Übernachtungsmöglichkeit!',
       });
     }
 
@@ -92,7 +95,7 @@ export const actions: Actions = {
       console.error(addressError);
       return fail(400, {
         success: false,
-        message: 'Failed to save address to database!',
+        message: 'Speichern der Wohnadresse fehlgeschlagen!',
       });
     }
 
@@ -116,7 +119,7 @@ export const actions: Actions = {
       console.error(userInfoError);
       return fail(400, {
         success: false,
-        message: 'Failed to save user info to database!',
+        message: 'Speichern der Nutzerdaten fehlgeschlagen!',
       });
     }
 
@@ -132,7 +135,7 @@ export const actions: Actions = {
       console.error(deleteFoodPrefsError);
       return fail(400, {
         success: false,
-        message: 'Failed to delete old food preferences!',
+        message: 'Alte Ernährungsbedürfnisse konnten nicht gelöscht werden!',
       });
     }
     const { error: foodPreferencesError } = await supabase
@@ -147,11 +150,11 @@ export const actions: Actions = {
       console.error(foodPreferencesError);
       return fail(400, {
         success: false,
-        message: 'Failed to save food preferences to database!',
+        message: 'Speichern der neuen Ernährungsbedürfnisse fehlgeschlagen!',
       });
     }
 
-    return { success: true, message: 'User info updated successfully!' };
+    return { success: true, message: 'Nutzerdaten erfolgreich aktualisiert!' };
   },
 };
 
