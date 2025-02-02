@@ -88,10 +88,8 @@
       }
     }
   }
-  let selectedWard = $state(null);
+  let selectedWard = $state<typeof initialWard | null>(null);
   let notAMember = $state(userInfo.ward_id == null);
-
-  $inspect(selectedWard);
 
   let selectedFoodPreferences = $state<string[]>(foodPreferences);
 
@@ -160,7 +158,7 @@
       .then(({ message, url }) => {
         toastStore.set({ level: 'success', message });
         userInfoState.avatar_url = url;
-        imageSrc = `${url}?t=${Date.now()}`;
+        imageSrc = `${url}`;
       })
       .catch((error) => {
         console.error(error);

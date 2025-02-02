@@ -59,7 +59,7 @@ export const uploadAvatar = async (
 
   const { error: updateAvatarError } = await supabase
     .from('user_infos')
-    .update({ avatar_url: publicUrl })
+    .update({ avatar_url: `${publicUrl}?t=${Date.now()}` })
     .eq('user_id', userId);
   if (updateAvatarError) {
     console.error(updateAvatarError);

@@ -6,7 +6,14 @@
 
   let { smuiBar = $bindable(), data } = $props();
 
-  let { user, supabase } = $derived(data);
+  let { user, supabase, userInfo } = $derived(data);
+
+  let profileName = $derived.by(() => {
+    if (userInfo && userInfo.first_name && userInfo.last_name) {
+      return `${userInfo.first_name} ${userInfo.last_name}`;
+    }
+    return user?.email ?? 'Unkown User';
+  });
 </script>
 
 <TopAppBar
@@ -29,9 +36,10 @@
       toolbar
     >
       {#if user}
-        <div class="mdc-typography--overline">{user!.email}</div>
+        <div class="mdc-typography--overline">{profileName}</div>
         <UserIcon
           {user}
+          {userInfo}
           {supabase}
         />
       {:else}

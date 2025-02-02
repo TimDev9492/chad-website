@@ -43,7 +43,7 @@ const supabase: Handle = async ({ event, resolve }) => {
       data: { session },
     } = await event.locals.supabase.auth.getSession();
     if (!session) {
-      return { session: null, user: null };
+      return { session: null, user: null, userInfo: null };
     }
 
     const {
@@ -52,10 +52,25 @@ const supabase: Handle = async ({ event, resolve }) => {
     } = await event.locals.supabase.auth.getUser();
     if (error) {
       // JWT validation has failed
-      return { session: null, user: null };
+      return { session: null, user: null, userInfo: null };
     }
 
-    return { session, user };
+    const { data: userInfo, error: userInfoError } =
+      await event.locals.supabase
+        .from('user_infos')
+        .select(
+          `*, 
+          food_preferences(*), 
+          residency_addresses(*)
+          `,
+        )
+        .single();
+      if (userInfoError) {
+        console.error('Error getting user info', userInfoError);
+        return { session, user, userInfo: null };
+      }
+    
+    return { session, user, userInfo };
   };
 
   return resolve(event, {
@@ -70,9 +85,10 @@ const supabase: Handle = async ({ event, resolve }) => {
 };
 
 const authGuard: Handle = async ({ event, resolve }) => {
-  const { session, user } = await event.locals.safeGetSession();
+  const { session, user, userInfo } = await event.locals.safeGetSession();
   event.locals.session = session;
   event.locals.user = user;
+  event.locals.userInfo = userInfo;
 
   const privateRoutes = ['/user'];
   const anonymousRoutes = ['/login', '/register'];

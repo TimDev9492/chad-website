@@ -3,13 +3,14 @@
   import { Anchor } from '@smui/menu-surface';
   import List, { Item, Separator, Text } from '@smui/list';
   import IconButton, { Icon } from '@smui/icon-button';
+  import Ripple from '@smui/ripple';
   import { goto } from '$app/navigation';
 
   let menu: Menu;
   let anchor: HTMLDivElement | undefined = $state();
   let anchorClasses: { [k: string]: boolean } = $state({});
 
-  let { supabase, user } = $props();
+  let { supabase, user, userInfo } = $props();
 
   const logout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -37,12 +38,26 @@
   }}
   bind:this={anchor}
 >
-  <IconButton
-    onclick={() => menu.setOpen(true)}
-    class="material-icons"
-    aria-label="Account"
-    >account_circle
-  </IconButton>
+  {#if userInfo?.avatar_url}
+    <button
+      class="rounded-full cursor-pointer ml-2"
+      onclick={() => menu.setOpen(true)}
+      use:Ripple={{ surface: true }}
+    >
+      <img
+        src={userInfo.avatar_url}
+        alt="Avatar"
+        class="size-10 rounded-full"
+      />
+    </button>
+  {:else}
+    <IconButton
+      onclick={() => menu.setOpen(true)}
+      class="material-icons"
+      aria-label="Account"
+      >account_circle
+    </IconButton>
+  {/if}
   <Menu
     bind:this={menu}
     anchor={false}
