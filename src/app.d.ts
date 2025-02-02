@@ -9,17 +9,35 @@ declare global {
       safeGetSession: () => Promise<{
         session: Session | null;
         user: User | null;
-        userInfo: Database['public']['Tables']['user_infos']['Row'] & {
-          residency_addresses: Database['public']['Tables']['residency_addresses']['Row'] | null;
-          food_preferences: Database['public']['Tables']['food_preferences']['Row'] | null;
-        } | null;
+        userInfo:
+          | (Database['public']['Tables']['user_infos']['Row'] & {
+              residency_addresses:
+                | Database['public']['Tables']['residency_addresses']['Row']
+                | null;
+              food_preferences:
+                | Database['public']['Tables']['food_preferences']['Row']
+                | null;
+              roles: {
+                role: Database['public']['Tables']['roles']['Row']['role'];
+              } | null;
+            })
+          | null;
       }>;
       session: Session | null;
       user: User | null;
-      userInfo: Database['public']['Tables']['user_infos']['Row'] & {
-        residency_addresses: Database['public']['Tables']['residency_addresses']['Row'] | null;
-        food_preferences: Database['public']['Tables']['food_preferences']['Row'] | null;
-      } | null;
+      userInfo:
+        | (Database['public']['Tables']['user_infos']['Row'] & {
+            residency_addresses:
+              | Database['public']['Tables']['residency_addresses']['Row']
+              | null;
+            food_preferences:
+              | Database['public']['Tables']['food_preferences']['Row']
+              | null;
+            roles: {
+              role: Database['public']['Tables']['roles']['Row']['role'];
+            } | null;
+          })
+        | null;
     }
     interface PageData {
       session: Session | null;

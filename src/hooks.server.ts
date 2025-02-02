@@ -55,21 +55,21 @@ const supabase: Handle = async ({ event, resolve }) => {
       return { session: null, user: null, userInfo: null };
     }
 
-    const { data: userInfo, error: userInfoError } =
-      await event.locals.supabase
-        .from('user_infos')
-        .select(
-          `*, 
+    const { data: userInfo, error: userInfoError } = await event.locals.supabase
+      .from('user_infos')
+      .select(
+        `*,
+          roles(role),
           food_preferences(*), 
           residency_addresses(*)
           `,
-        )
-        .single();
-      if (userInfoError) {
-        console.error('Error getting user info', userInfoError);
-        return { session, user, userInfo: null };
-      }
-    
+      )
+      .single();
+    if (userInfoError) {
+      console.error('Error getting user info', userInfoError);
+      return { session, user, userInfo: null };
+    }
+
     return { session, user, userInfo };
   };
 
@@ -90,9 +90,22 @@ const authGuard: Handle = async ({ event, resolve }) => {
   event.locals.user = user;
   event.locals.userInfo = userInfo;
 
+  const adminRoutes = ['/admin'];
   const privateRoutes = ['/user'];
   const anonymousRoutes = ['/login', '/register'];
 
+  // protect admin routes
+  if (
+    adminRoutes.find((route) => event.url.pathname.startsWith(route)) &&
+    (!event.locals.session ||
+      !event.locals.user ||
+      !event.locals.userInfo ||
+      event.locals.userInfo.roles?.role !== 'admin')
+  ) {
+    redirect(303, '/');
+  }
+
+  // protect private routes
   if (
     !event.locals.session &&
     privateRoutes.find((route) => event.url.pathname.startsWith(route))
@@ -100,6 +113,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
     redirect(303, '/login');
   }
 
+  // protect anonymous routes
   if (event.locals.session && anonymousRoutes.includes(event.url.pathname)) {
     redirect(303, '/user');
   }

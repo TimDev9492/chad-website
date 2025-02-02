@@ -119,6 +119,21 @@ export type Database = {
           },
         ]
       }
+      roles: {
+        Row: {
+          role: Database["public"]["Enums"]["role"]
+          user_id: string
+        }
+        Insert: {
+          role?: Database["public"]["Enums"]["role"]
+          user_id: string
+        }
+        Update: {
+          role?: Database["public"]["Enums"]["role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_infos: {
         Row: {
           avatar_url: string
@@ -177,7 +192,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      role: "user" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
