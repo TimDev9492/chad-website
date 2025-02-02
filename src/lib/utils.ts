@@ -5,7 +5,7 @@ export const isValidEmailAddress: (email: string) => boolean = (
   email: string,
 ) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 
-export const getAgeByBirthdate: (birthdate: Date | string) => number = (
+export const getAgeByBirthdate: (birthdate: string) => number = (
   birthdate,
 ) => {
   const today = new Date();

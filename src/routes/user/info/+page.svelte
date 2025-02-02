@@ -39,96 +39,100 @@
     supabase,
   } = $derived(data);
 
+  /**
+   * Constant Variables
+   */
+  const MIN_AGE = 18;
+
   type Country = Database['public']['Tables']['countries']['Row'];
+  type Ward = { id: number; name: string };
 
-  let waitingForResponse = $state(false);
+  /**
+   * UI States - initialize with `null` and set in onMount to update the UI.
+   *
+   * State prefixed with `_` gets sent to the server and is used to update the database.
+   */
+  let _firstName = $state<typeof userInfo.first_name>(null);
+  let _lastName = $state<typeof userInfo.last_name>(null);
+  let _gender = $state<typeof userInfo.gender>(null);
+  let _phoneNumber = $state<{
+    country: Country | null;
+    suffix: string | null;
+  }>({
+    country: null,
+    suffix: null,
+  });
+  let _streetNameAndNumber =
+    $state<typeof residencyAddress.street_name_and_number>(null);
+  let _cityName = $state<typeof residencyAddress.city>(null);
+  let _postalCode = $state<string | null>(null);
+  let _countryOfResidency = $state<Country | null>(null);
+  let _dateOfBirth = $state<typeof userInfo.date_of_birth>(null);
+  let _ward = $state<Ward | null>(null);
+  let _foodPreferences = $state<string[]>(foodPreferences);
+  let _wantsBreakfast = $state<boolean | null>(null);
+  let _needsPlaceToSleep = $state<boolean | null>(null);
 
-  let userInfoState =
-    $state<Database['public']['Tables']['user_infos']['Row']>(userInfo);
-  let addressState = $state(residencyAddress);
-
+  // parse initial states from database values
+  // phone
   const intialPhoneCountry =
     countries.find((country) =>
-      userInfoState.phone_number?.startsWith(country.country_code),
+      userInfo.phone_number?.startsWith(country.country_code),
     ) ?? null;
-  const initialPhoneSuffix = userInfoState.phone_number?.slice(
-    intialPhoneCountry?.country_code?.length ?? 0,
-  );
-
-  let phoneCountry = $state<Country | null>(intialPhoneCountry);
-  let phoneSuffix = $state<string | null>(initialPhoneSuffix ?? null);
-
+  const initialPhoneSuffix =
+    userInfo.phone_number?.slice(
+      intialPhoneCountry?.country_code?.length ?? 0,
+    ) ?? null;
+  // country of residency
   const initialAddressCountry =
     countries.find(
       (country) => country.iso_code === residencyAddress.country,
     ) ?? null;
-  let addressCountry = $state<Country | null>(initialAddressCountry);
+  // ward
+  const initialWard: Ward | null =
+    stakes
+      .map((stake) => stake.wards)
+      .flat()
+      .find((ward) => ward.id === userInfo.ward_id) ?? null;
 
+  /**
+   * Page States
+   */
+  // request loading
+  let waitingForResponse = $state(false);
+  // image cropping
   let imageUpload = $state<HTMLInputElement | null>(null);
-  let imageSrc = $state<string | null>(userInfoState.avatar_url);
+  let imageSrc = $state<string>(userInfo.avatar_url);
   let imageCropOpen = $state(false);
   let imageToCrop = $state({
     data: '',
     type: '',
   });
-
-  const minAge = 18;
-  let birthDateValue = $state(userInfoState.date_of_birth ?? null);
+  // birth data validation
   let birthDateValid = $derived(
-    getAgeByBirthdate(birthDateValue ?? new Date()) >= minAge,
+    _dateOfBirth == null ? false : getAgeByBirthdate(_dateOfBirth) >= MIN_AGE,
   );
-
-  let initialWard = null;
-  for (const stake of stakes) {
-    if (initialWard !== null) break;
-    for (const ward of stake.wards) {
-      if (ward.id === userInfo.ward_id) {
-        initialWard = ward;
-        break;
-      }
-    }
-  }
-  let selectedWard = $state<typeof initialWard | null>(null);
+  // ward selection
   let notAMember = $state(userInfo.ward_id == null);
 
-  let selectedFoodPreferences = $state<string[]>(foodPreferences);
-
-  $effect(() => {
-    userInfoState.phone_number =
-      (phoneCountry?.country_code ?? '') + (phoneSuffix ?? '');
-  });
-  $effect(() => {
-    addressState.country = addressCountry?.iso_code ?? null;
-  });
-  $effect(() => {
-    if (birthDateValue)
-      userInfoState.date_of_birth = new Date(birthDateValue)
-        .toISOString()
-        .split('T')[0];
-  });
-  $effect(() => {
-    if (notAMember) userInfoState.ward_id = null;
-    else userInfoState.ward_id = (selectedWard as any)?.id ?? null;
-  });
-
-  // textfield value states
-  let firstName = $state<string | null>(null);
-  let lastName = $state<string | null>(null);
-  let streetNameAndNumber = $state<string | null>(null);
-  let cityName = $state<string | null>(null);
-  let postalCode = $state<string | null>(null);
-
   onMount(() => {
-    phoneCountry = intialPhoneCountry;
-    addressCountry = initialAddressCountry;
-
-    selectedWard = initialWard;
-
-    firstName = userInfo.first_name;
-    lastName = userInfo.last_name;
-    streetNameAndNumber = residencyAddress.street_name_and_number;
-    cityName = residencyAddress.city;
-    postalCode = residencyAddress.postal_code?.toString() ?? null;
+    // set initial state values
+    _firstName = userInfo.first_name;
+    _lastName = userInfo.last_name;
+    _gender = userInfo.gender;
+    _phoneNumber = {
+      country: intialPhoneCountry,
+      suffix: initialPhoneSuffix,
+    };
+    _streetNameAndNumber = residencyAddress.street_name_and_number;
+    _cityName = residencyAddress.city;
+    _postalCode = residencyAddress.postal_code?.toString() ?? null;
+    _countryOfResidency = initialAddressCountry;
+    _dateOfBirth = userInfo.date_of_birth;
+    _ward = initialWard;
+    _foodPreferences = foodPreferences;
+    _wantsBreakfast = userInfo.wants_breakfast;
+    _needsPlaceToSleep = userInfo.needs_place_to_sleep;
   });
 
   const onImageSelected = (e: any) => {
@@ -157,7 +161,6 @@
     uploadAvatar(croppedDataUrl, mimeType, supabase, user!.id)
       .then(({ message, url }) => {
         toastStore.set({ level: 'success', message });
-        userInfoState.avatar_url = url;
         imageSrc = `${url}`;
       })
       .catch((error) => {
@@ -181,27 +184,26 @@
     use:enhance={(form_element) => {
       // populate form data
       const formData = form_element.formData;
-      formData.set('first_name', firstName ?? '');
-      formData.set('last_name', lastName ?? '');
-      formData.set('gender', userInfoState.gender ?? '');
-      formData.set('phone_number', userInfoState.phone_number ?? '');
-      formData.set('street_name_and_number', streetNameAndNumber ?? '');
-      formData.set('city', cityName ?? '');
-      formData.set('postal_code', postalCode?.toString() ?? '');
-      formData.set('country', addressState.country ?? '');
-      formData.set('date_of_birth', userInfoState.date_of_birth ?? '');
-      formData.set('ward_id', `${userInfoState.ward_id}`);
-      formData.set('food_preferences', JSON.stringify(selectedFoodPreferences));
-      formData.set('wants_breakfast', `${userInfoState.wants_breakfast}`);
+      formData.set('first_name', _firstName ?? '');
+      formData.set('last_name', _lastName ?? '');
+      formData.set('gender', _gender ?? '');
       formData.set(
-        'needs_place_to_sleep',
-        `${userInfoState.needs_place_to_sleep}`,
+        'phone_number',
+        `${_phoneNumber.country?.country_code}${_phoneNumber.suffix}`,
       );
+      formData.set('street_name_and_number', _streetNameAndNumber ?? '');
+      formData.set('city', _cityName ?? '');
+      formData.set('postal_code', _postalCode ?? '');
+      formData.set('country', _countryOfResidency?.iso_code ?? '');
+      formData.set('date_of_birth', _dateOfBirth ?? '');
+      formData.set('ward_id', `${notAMember ? null : _ward?.id}`);
+      formData.set('food_preferences', JSON.stringify(_foodPreferences));
+      formData.set('wants_breakfast', `${_wantsBreakfast}`);
+      formData.set('needs_place_to_sleep', `${_needsPlaceToSleep}`);
 
       waitingForResponse = true;
 
       return async ({ result, update }) => {
-        // waitingForResponse = false;
         // `result` is an `ActionResult` object
         // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
         waitingForResponse = false;
@@ -256,14 +258,14 @@
       <div class="portrait:flex portrait:flex-col portrait:gap-4">
         <Textfield
           variant="outlined"
-          bind:value={firstName}
+          bind:value={_firstName}
           label="Vorname"
           disabled={waitingForResponse}
           required
         />
         <Textfield
           variant="outlined"
-          bind:value={lastName}
+          bind:value={_lastName}
           label="Nachname"
           disabled={waitingForResponse}
           required
@@ -278,7 +280,7 @@
       <GenderSelect
         genders={genders.map((gender) => gender.name)}
         disabled={waitingForResponse}
-        bind:selected={userInfoState.gender}
+        bind:selected={_gender}
       />
 
       <div class="col-span-2 portrait:w-full">
@@ -289,8 +291,8 @@
       <PhoneNumberInput
         {countries}
         disabled={waitingForResponse}
-        bind:selectedCountry={phoneCountry}
-        bind:phoneNumber={phoneSuffix}
+        bind:selectedCountry={_phoneNumber.country}
+        bind:phoneNumber={_phoneNumber.suffix}
       />
 
       <div class="col-span-2 portrait:w-full">
@@ -302,7 +304,7 @@
         <Textfield
           class="col-span-2"
           variant="outlined"
-          bind:value={streetNameAndNumber}
+          bind:value={_streetNameAndNumber}
           label="Straße und Hausnummer"
           disabled={waitingForResponse}
           required
@@ -311,7 +313,7 @@
         <Textfield
           class="col-span-2"
           variant="outlined"
-          bind:value={cityName}
+          bind:value={_cityName}
           label="Stadt"
           disabled={waitingForResponse}
           required
@@ -319,7 +321,7 @@
         <Textfield
           type="number"
           variant="outlined"
-          bind:value={postalCode}
+          bind:value={_postalCode}
           label="Postleitzahl"
           disabled={waitingForResponse}
           required
@@ -328,7 +330,7 @@
           disabled={waitingForResponse}
           {countries}
           label="Land"
-          bind:selectedCountry={addressCountry}
+          bind:selectedCountry={_countryOfResidency}
           displayTransform={(country) =>
             `${country.flag_emoji} ${country.name}`}
         />
@@ -345,14 +347,15 @@
           input$style="width: 100%"
           type="date"
           variant="outlined"
-          bind:value={birthDateValue}
+          bind:value={_dateOfBirth}
           label="Geburtsdatum"
           disabled={waitingForResponse}
           required
           invalid={!birthDateValid}
         >
           {#snippet helper()}
-            <HelperText>Du musst midestens {minAge} Jahre alt sein!</HelperText>
+            <HelperText>Du musst midestens {MIN_AGE} Jahre alt sein!</HelperText
+            >
           {/snippet}
         </Textfield>
       </div>
@@ -365,7 +368,7 @@
       <div class="w-full flex portrait:flex-col portrait:items-center">
         <WardSelect
           {stakes}
-          bind:value={selectedWard}
+          bind:value={_ward as any}
           disabled={notAMember || waitingForResponse}
         />
         <FormField>
@@ -389,12 +392,12 @@
       <div class="w-full flex portrait:flex-col">
         <FoodPreferencesSelect
           disabled={waitingForResponse}
-          bind:selectedPreferences={selectedFoodPreferences}
+          bind:selectedPreferences={_foodPreferences}
         />
         <FormField class="portrait:mt-24">
           <Checkbox
             disabled={waitingForResponse}
-            bind:checked={userInfoState.wants_breakfast}
+            bind:checked={_wantsBreakfast}
           />
           {#snippet label()}
             <div class={disabledText('', waitingForResponse)}>
@@ -415,7 +418,7 @@
         <FormField>
           <Checkbox
             disabled={waitingForResponse}
-            bind:checked={userInfoState.needs_place_to_sleep}
+            bind:checked={_needsPlaceToSleep}
           />
           {#snippet label()}
             <div class={disabledText('', waitingForResponse)}>

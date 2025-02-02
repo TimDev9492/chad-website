@@ -48,23 +48,25 @@ export const uploadAvatar = async (
       contentType: mimeType,
       upsert: true,
     });
-
   if (error) {
     throw { message: error.message };
   }
 
   const {
     data: { publicUrl },
-  } = await supabase.storage.from('avatars').getPublicUrl(filename);
+  } = supabase.storage.from('avatars').getPublicUrl(filename);
+
+  // add a timestamp to the url to bust the cache
+  const updatedUrl = `${publicUrl}?t=${Date.now()}`;
 
   const { error: updateAvatarError } = await supabase
     .from('user_infos')
-    .update({ avatar_url: `${publicUrl}?t=${Date.now()}` })
+    .update({ avatar_url: updatedUrl })
     .eq('user_id', userId);
   if (updateAvatarError) {
     console.error(updateAvatarError);
     throw { message: 'Failed to update profile picture' };
   }
 
-  return { message: 'Image uploaded successfully', url: publicUrl };
+  return { message: 'Image uploaded successfully', url: updatedUrl };
 };

@@ -48,12 +48,6 @@
     }
   }
   let options: Ward[] = $state<Ward[]>(wards);
-
-  // let value: Ward | undefined = $state();
-
-  // $effect(() => {
-  //   selected = value ?? null;
-  // });
 </script>
 
 <div class="w-full grid grid-cols-1">
