@@ -25,7 +25,8 @@
   import FoodPreferencesSelect from '$lib/components/FoodPreferencesSelect.svelte';
   import Button, { Icon, Label } from '@smui/button';
   import LinearProgress from '@smui/linear-progress';
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
+  import { avatarStore } from '$lib/avatarStore.js';
 
   let { data } = $props();
   let {
@@ -102,7 +103,7 @@
   let waitingForResponse = $state(false);
   // image cropping
   let imageUpload = $state<HTMLInputElement | null>(null);
-  let imageSrc = $state<string>(userInfo.avatar_url);
+  let imageSrc = $state<string | null>(userInfo.avatar_url);
   let imageCropOpen = $state(false);
   let imageToCrop = $state({
     data: '',
@@ -115,6 +116,7 @@
   // ward selection
   let notAMember = $state(userInfo.ward_id == null);
 
+  let unsubscribe: () => void | null;
   onMount(() => {
     // set initial state values
     _firstName = userInfo.first_name;
@@ -133,7 +135,14 @@
     _foodPreferences = foodPreferences;
     _wantsBreakfast = userInfo.wants_breakfast;
     _needsPlaceToSleep = userInfo.needs_place_to_sleep;
+
+    // update avatar image
+    unsubscribe = avatarStore.subscribe((newAvatar) => {
+      imageSrc = newAvatar;
+    })
   });
+
+  onDestroy(() => unsubscribe && unsubscribe());
 
   const onImageSelected = (e: any) => {
     let image = e.target.files[0];
@@ -161,7 +170,7 @@
     uploadAvatar(croppedDataUrl, mimeType, supabase, user!.id)
       .then(({ message, url }) => {
         toastStore.set({ level: 'success', message });
-        imageSrc = `${url}`;
+        avatarStore.set(url);
       })
       .catch((error) => {
         console.error(error);

@@ -5,12 +5,16 @@
   import IconButton, { Icon } from '@smui/icon-button';
   import Ripple from '@smui/ripple';
   import { goto } from '$app/navigation';
+  import { onDestroy, onMount } from 'svelte';
+  import { avatarStore } from '$lib/avatarStore';
 
   let menu: Menu;
   let anchor: HTMLDivElement | undefined = $state();
   let anchorClasses: { [k: string]: boolean } = $state({});
 
-  let { supabase, user, userInfo } = $props();
+  let { supabase, userInfo } = $props();
+
+  let displayedAvatarUrl = $state<string | null>(userInfo?.avatar_url ?? null);
 
   const logout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -20,6 +24,17 @@
       goto('/');
     }
   };
+
+  let unsubscribe: () => void | null;
+  onMount(() => {
+    avatarStore.set(userInfo?.avatar_url ?? null);
+
+    unsubscribe = avatarStore.subscribe((newAvatar) => {
+      displayedAvatarUrl = newAvatar;
+    });
+  });
+
+  onDestroy(() => unsubscribe && unsubscribe());
 </script>
 
 <div
@@ -38,14 +53,14 @@
   }}
   bind:this={anchor}
 >
-  {#if userInfo?.avatar_url}
+  {#if displayedAvatarUrl}
     <button
       class="rounded-full cursor-pointer ml-2"
       onclick={() => menu.setOpen(true)}
       use:Ripple={{ surface: true }}
     >
       <img
-        src={userInfo.avatar_url}
+        src={displayedAvatarUrl}
         alt="Avatar"
         class="size-10 rounded-full"
       />
