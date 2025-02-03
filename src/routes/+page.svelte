@@ -1,5 +1,4 @@
-<h1>Welcome to SvelteKit</h1>
-<p>
-  Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the
-  documentation
-</p>
+<div class="size-full flex justify-end items-end p-8">
+  <div class="mdc-typography--subtitle1">Maya will nicht kuscheln</div>
+</div>
+
