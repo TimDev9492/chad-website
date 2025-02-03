@@ -1,4 +1,3 @@
-<div class="size-full flex justify-end items-end p-8">
-  <div class="mdc-typography--subtitle1">Maya will nicht kuscheln</div>
+<div class="size-full flex justify-center items-center p-8">
+  <div class="mdc-typography--headline4">Moin Moin!</div>
 </div>
-
