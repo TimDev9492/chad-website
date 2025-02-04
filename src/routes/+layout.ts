@@ -2,6 +2,7 @@ import {
   PUBLIC_SUPABASE_ANON_KEY,
   PUBLIC_SUPABASE_URL,
 } from '$env/static/public';
+import { getUserAppData } from '$lib/utils';
 import {
   createBrowserClient,
   createServerClient,
@@ -46,10 +47,7 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: userInfo } = await supabase
-    .from('user_infos')
-    .select('*, residency_addresses(*), food_preferences(*)')
-    .single();
+  const userAppData = await getUserAppData(supabase, { throwOnError: false });
 
-  return { session, supabase, user, userInfo };
+  return { session, supabase, user, userAppData };
 };

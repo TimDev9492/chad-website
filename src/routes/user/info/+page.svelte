@@ -29,16 +29,8 @@
   import { avatarStore } from '$lib/avatarStore.js';
 
   let { data } = $props();
-  let {
-    user,
-    userInfo,
-    genders,
-    countries,
-    stakes,
-    foodPreferences,
-    residencyAddress,
-    supabase,
-  } = $derived(data);
+  let { user, userAppData, genders, countries, stakes, supabase } =
+    $derived(data);
 
   /**
    * Constant Variables
@@ -53,9 +45,9 @@
    *
    * State prefixed with `_` gets sent to the server and is used to update the database.
    */
-  let _firstName = $state<typeof userInfo.first_name>(null);
-  let _lastName = $state<typeof userInfo.last_name>(null);
-  let _gender = $state<typeof userInfo.gender>(null);
+  let _firstName = $state<typeof userAppData.first_name>(null);
+  let _lastName = $state<typeof userAppData.last_name>(null);
+  let _gender = $state<typeof userAppData.gender>(null);
   let _phoneNumber = $state<{
     country: Country | null;
     suffix: string | null;
@@ -64,13 +56,16 @@
     suffix: null,
   });
   let _streetNameAndNumber =
-    $state<typeof residencyAddress.street_name_and_number>(null);
-  let _cityName = $state<typeof residencyAddress.city>(null);
+    $state<typeof userAppData.residential_address.street_name_and_number>(null);
+  let _cityName =
+    $state<typeof userAppData.residential_address.city_name>(null);
   let _postalCode = $state<string | null>(null);
   let _countryOfResidency = $state<Country | null>(null);
-  let _dateOfBirth = $state<typeof userInfo.date_of_birth>(null);
+  let _dateOfBirth = $state<typeof userAppData.date_of_birth>(null);
   let _ward = $state<Ward | null>(null);
-  let _foodPreferences = $state<string[]>(foodPreferences);
+  let _foodPreferences = $state<string[]>(
+    userAppData.food_preferences?.map((pref) => pref.description) ?? [],
+  );
   let _wantsBreakfast = $state<boolean | null>(null);
   let _needsPlaceToSleep = $state<boolean | null>(null);
 
@@ -78,23 +73,24 @@
   // phone
   const intialPhoneCountry =
     countries.find((country) =>
-      userInfo.phone_number?.startsWith(country.country_code),
+      userAppData.phone_number?.startsWith(country.country_code),
     ) ?? null;
   const initialPhoneSuffix =
-    userInfo.phone_number?.slice(
+    userAppData.phone_number?.slice(
       intialPhoneCountry?.country_code?.length ?? 0,
     ) ?? null;
   // country of residency
   const initialAddressCountry =
     countries.find(
-      (country) => country.iso_code === residencyAddress.country,
+      (country) =>
+        country.iso_code === userAppData.residential_address.country_iso,
     ) ?? null;
   // ward
   const initialWard: Ward | null =
     stakes
       .map((stake) => stake.wards)
       .flat()
-      .find((ward) => ward.id === userInfo.ward_id) ?? null;
+      .find((ward) => ward.id === userAppData.ward_id) ?? null;
 
   /**
    * Page States
@@ -103,7 +99,7 @@
   let waitingForResponse = $state(false);
   // image cropping
   let imageUpload = $state<HTMLInputElement | null>(null);
-  let imageSrc = $state<string | null>(userInfo.avatar_url);
+  let imageSrc = $state<string | null>(userAppData.avatar_url ?? null);
   let imageCropOpen = $state(false);
   let imageToCrop = $state({
     data: '',
@@ -114,27 +110,30 @@
     _dateOfBirth == null ? false : getAgeByBirthdate(_dateOfBirth) >= MIN_AGE,
   );
   // ward selection
-  let notAMember = $state(userInfo.ward_id == null);
+  let notAMember = $state(userAppData.ward_id == null);
 
   let unsubscribe: () => void | null;
   onMount(() => {
     // set initial state values
-    _firstName = userInfo.first_name;
-    _lastName = userInfo.last_name;
-    _gender = userInfo.gender;
+    _firstName = userAppData.first_name;
+    _lastName = userAppData.last_name;
+    _gender = userAppData.gender;
     _phoneNumber = {
       country: intialPhoneCountry,
       suffix: initialPhoneSuffix,
     };
-    _streetNameAndNumber = residencyAddress.street_name_and_number;
-    _cityName = residencyAddress.city;
-    _postalCode = residencyAddress.postal_code?.toString() ?? null;
+    _streetNameAndNumber =
+      userAppData.residential_address.street_name_and_number;
+    _cityName = userAppData.residential_address.city_name;
+    _postalCode =
+      userAppData.residential_address.postal_code?.toString() ?? null;
     _countryOfResidency = initialAddressCountry;
-    _dateOfBirth = userInfo.date_of_birth;
+    _dateOfBirth = userAppData.date_of_birth;
     _ward = initialWard;
-    _foodPreferences = foodPreferences;
-    _wantsBreakfast = userInfo.wants_breakfast;
-    _needsPlaceToSleep = userInfo.needs_place_to_sleep;
+    _foodPreferences =
+      userAppData.food_preferences?.map((pref) => pref.description) ?? [];
+    _wantsBreakfast = userAppData.wants_breakfast!;
+    _needsPlaceToSleep = userAppData.needs_place_to_sleep!;
 
     // update avatar image
     unsubscribe = avatarStore.subscribe((newAvatar) => {
@@ -167,7 +166,7 @@
   aspect={1}
   cropShape="round"
   onimagecropped={(croppedDataUrl, mimeType) => {
-    uploadAvatar(croppedDataUrl, mimeType, supabase, user!.id)
+    uploadAvatar(croppedDataUrl, mimeType, supabase, userAppData.public_id!)
       .then(({ message, url }) => {
         toastStore.set({ level: 'success', message });
         avatarStore.set(url);

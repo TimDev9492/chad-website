@@ -1,3 +1,8 @@
+import {
+  updateUserInfo,
+  upsertFoodPreferences,
+  upsertUserAddress,
+} from '$lib/server/databaseAdapter';
 import { isValidDate, isValidPostalAddress, strToBool } from '$lib/utils';
 import { fail, type Actions } from '@sveltejs/kit';
 import { phone } from 'phone';
@@ -50,9 +55,9 @@ export const actions: Actions = {
       return fail(400, { success: false, message: 'Ungültiges Geburtsdatum!' });
     if (wardId !== 'null' && isNaN(parseInt(wardId)))
       return fail(400, { success: false, message: 'Ungültige Gemeinde!' });
-    let foodPrefs;
+    let foodPrefs: string[];
     try {
-      foodPrefs = JSON.parse(foodPreferences);
+      foodPrefs = JSON.parse(foodPreferences) as string[];
     } catch (e) {
       return fail(400, {
         success: false,
@@ -81,17 +86,14 @@ export const actions: Actions = {
     /**
      * 1. Upsert address
      **/
-    const { data: addressData, error: addressError } = await supabase
-      .from('residency_addresses')
-      .upsert({
-        user_id: user?.id,
+    try {
+      await upsertUserAddress(supabase, user!.id, {
         street_name_and_number: streetNameAndNumber,
-        city,
-        postal_code: postalCode,
-        country: countryISOCode,
-      })
-      .eq('user_id', user?.id);
-    if (addressError) {
+        city_name: city,
+        postal_code: parseInt(postalCode),
+        country_iso: countryISOCode,
+      });
+    } catch (addressError) {
       console.error(addressError);
       return fail(400, {
         success: false,
@@ -102,20 +104,30 @@ export const actions: Actions = {
     /**
      * 2. Upsert user infos
      **/
-    const { error: userInfoError } = await supabase
-      .from('user_infos')
-      .update({
-        first_name: firstName,
-        last_name: lastName,
-        phone_number: phoneNumberParsed.phoneNumber,
-        date_of_birth: dateOfBirth,
-        ward_id: wardId === 'null' ? null : parseInt(wardId),
-        needs_place_to_sleep: needsPlaceToSleepParsed,
-        wants_breakfast: wantsBreakfastParsed,
-        gender,
-      })
-      .eq('user_id', user?.id);
-    if (userInfoError) {
+    try {
+      await updateUserInfo(
+        supabase,
+        {
+          user_id: user!.id,
+          first_name: firstName,
+          last_name: lastName,
+          ward_id: wardId === 'null' ? null : parseInt(wardId),
+          phone_number: phoneNumberParsed.phoneNumber,
+          date_of_birth: dateOfBirth,
+          needs_place_to_sleep: needsPlaceToSleepParsed,
+          wants_breakfast: wantsBreakfastParsed,
+          gender,
+          // don't update these
+          public_id: undefined,
+          email: undefined,
+          avatar_url: undefined,
+        },
+        {
+          throwOnError: true,
+          useDynamicPublicId: true,
+        },
+      );
+    } catch (userInfoError) {
       console.error(userInfoError);
       return fail(400, {
         success: false,
@@ -126,31 +138,21 @@ export const actions: Actions = {
     /**
      * 3. Upsert food preferences
      **/
-    // delete old food preferences
-    const { error: deleteFoodPrefsError } = await supabase
-      .from('food_preferences')
-      .delete()
-      .eq('user_id', user?.id);
-    if (deleteFoodPrefsError) {
-      console.error(deleteFoodPrefsError);
-      return fail(400, {
-        success: false,
-        message: 'Alte Ernährungsbedürfnisse konnten nicht gelöscht werden!',
-      });
-    }
-    const { error: foodPreferencesError } = await supabase
-      .from('food_preferences')
-      .insert(
-        foodPrefs.map((description: string) => ({
-          user_id: user?.id,
-          description,
-        })),
+    try {
+      await upsertFoodPreferences(
+        supabase,
+        user!.id,
+        foodPrefs.map((description) => ({ description })),
+        {
+          throwOnError: true,
+          deleteFormer: true,
+        },
       );
-    if (foodPreferencesError) {
+    } catch (foodPreferencesError) {
       console.error(foodPreferencesError);
       return fail(400, {
         success: false,
-        message: 'Speichern der neuen Ernährungsbedürfnisse fehlgeschlagen!',
+        message: 'Speichern der Ernährungsbedürfnisse fehlgeschlagen!',
       });
     }
 

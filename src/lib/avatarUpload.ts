@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { updateAvatarUrl } from './utils';
 
 const mimeToExtension: Record<string, string> = {
   'image/jpeg': 'jpg',
@@ -25,18 +26,19 @@ const mimeToExtension: Record<string, string> = {
  * @param image The image data in base64 as a Data URL
  * @param mimeType The mime type of the image
  * @param supabase The supabase client
- * @param userId The user id to use as the filename
+ * @param publicId The user's public_id to use as the filename
  */
+
 export const uploadAvatar = async (
   imageData: string,
   mimeType: string,
   supabase: SupabaseClient,
-  userId: string,
+  publicId: string,
 ) => {
   // get file extension from data url string
   const ext = mimeToExtension[mimeType];
 
-  const filename = `${userId}.${ext}`;
+  const filename = `${publicId}.${ext}`;
 
   const response = await fetch(imageData);
   const blob = await response.blob();
@@ -59,11 +61,9 @@ export const uploadAvatar = async (
   // add a timestamp to the url to bust the cache
   const updatedUrl = `${publicUrl}?t=${Date.now()}`;
 
-  const { error: updateAvatarError } = await supabase
-    .from('user_infos')
-    .update({ avatar_url: updatedUrl })
-    .eq('user_id', userId);
-  if (updateAvatarError) {
+  try {
+    await updateAvatarUrl(supabase, publicId, updatedUrl);
+  } catch (updateAvatarError) {
     console.error(updateAvatarError);
     throw { message: 'Failed to update profile picture' };
   }

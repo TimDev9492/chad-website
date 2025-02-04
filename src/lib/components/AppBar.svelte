@@ -6,13 +6,13 @@
 
   let { smuiBar = $bindable(), data } = $props();
 
-  let { user, supabase, userInfo } = $derived(data);
+  let { user, supabase, userAppData } = $derived(data);
 
   let profileName = $derived.by(() => {
-    if (userInfo && userInfo.first_name && userInfo.last_name) {
-      return `${userInfo.first_name} ${userInfo.last_name}`;
+    if (userAppData && userAppData.first_name && userAppData.last_name) {
+      return `${userAppData.first_name} ${userAppData.last_name}`;
     }
-    return user?.email ?? 'Unkown User';
+    return userAppData.email ?? 'Unkown User';
   });
 </script>
 
@@ -38,8 +38,7 @@
       {#if user}
         <div class="mdc-typography--overline">{profileName}</div>
         <UserIcon
-          {user}
-          {userInfo}
+          {userAppData}
           {supabase}
         />
       {:else}

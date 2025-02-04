@@ -6,6 +6,8 @@ import {
   PUBLIC_SUPABASE_ANON_KEY,
   PUBLIC_SUPABASE_URL,
 } from '$env/static/public';
+import { getUserAppData } from '$lib/utils';
+import type { UserAppData } from './app';
 
 const supabase: Handle = async ({ event, resolve }) => {
   /**
@@ -43,7 +45,7 @@ const supabase: Handle = async ({ event, resolve }) => {
       data: { session },
     } = await event.locals.supabase.auth.getSession();
     if (!session) {
-      return { session: null, user: null, userInfo: null };
+      return { session: null, user: null, userAppData: null };
     }
 
     const {
@@ -52,25 +54,18 @@ const supabase: Handle = async ({ event, resolve }) => {
     } = await event.locals.supabase.auth.getUser();
     if (error) {
       // JWT validation has failed
-      return { session: null, user: null, userInfo: null };
+      return { session: null, user: null, userAppData: null };
     }
 
-    const { data: userInfo, error: userInfoError } = await event.locals.supabase
-      .from('user_infos')
-      .select(
-        `*,
-          roles(role),
-          food_preferences(*), 
-          residency_addresses(*)
-          `,
-      )
-      .single();
-    if (userInfoError) {
-      console.error('Error getting user info', userInfoError);
-      return { session, user, userInfo: null };
+    // parse user data for the app
+    let userAppData: UserAppData | undefined;
+    try {
+      userAppData = await getUserAppData(event.locals.supabase);
+    } catch (error) {
+      console.error('Error getting user app data:', error);
     }
 
-    return { session, user, userInfo };
+    return { session, user, userAppData: userAppData ?? null };
   };
 
   return resolve(event, {
@@ -85,10 +80,10 @@ const supabase: Handle = async ({ event, resolve }) => {
 };
 
 const authGuard: Handle = async ({ event, resolve }) => {
-  const { session, user, userInfo } = await event.locals.safeGetSession();
+  const { session, user, userAppData } = await event.locals.safeGetSession();
   event.locals.session = session;
   event.locals.user = user;
-  event.locals.userInfo = userInfo;
+  event.locals.userAppData = userAppData;
 
   const adminRoutes = ['/admin'];
   const privateRoutes = ['/user'];
@@ -99,8 +94,8 @@ const authGuard: Handle = async ({ event, resolve }) => {
     adminRoutes.find((route) => event.url.pathname.startsWith(route)) &&
     (!event.locals.session ||
       !event.locals.user ||
-      !event.locals.userInfo ||
-      event.locals.userInfo.roles?.role !== 'admin')
+      !event.locals.userAppData ||
+      event.locals.userAppData.role !== 'admin')
   ) {
     redirect(303, '/');
   }

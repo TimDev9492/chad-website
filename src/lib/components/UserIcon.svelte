@@ -12,9 +12,11 @@
   let anchor: HTMLDivElement | undefined = $state();
   let anchorClasses: { [k: string]: boolean } = $state({});
 
-  let { supabase, userInfo } = $props();
+  let { supabase, userAppData } = $props();
 
-  let displayedAvatarUrl = $state<string | null>(userInfo?.avatar_url ?? null);
+  let displayedAvatarUrl = $state<string | null>(
+    userAppData.avatar_url ?? null,
+  );
 
   const logout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -27,7 +29,7 @@
 
   let unsubscribe: () => void | null;
   onMount(() => {
-    avatarStore.set(userInfo?.avatar_url ?? null);
+    avatarStore.set(userAppData.avatar_url ?? null);
 
     unsubscribe = avatarStore.subscribe((newAvatar) => {
       displayedAvatarUrl = newAvatar;
