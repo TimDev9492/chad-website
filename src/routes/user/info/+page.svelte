@@ -47,7 +47,7 @@
    */
   let _firstName = $state<typeof userAppData.first_name>(null);
   let _lastName = $state<typeof userAppData.last_name>(null);
-  let _gender = $state<typeof userAppData.gender>(null);
+  let _gender = $state<string | null>(null);
   let _phoneNumber = $state<{
     country: Country | null;
     suffix: string | null;
@@ -117,7 +117,7 @@
     // set initial state values
     _firstName = userAppData.first_name;
     _lastName = userAppData.last_name;
-    _gender = userAppData.gender;
+    _gender = userAppData.gender ?? null;
     _phoneNumber = {
       country: intialPhoneCountry,
       suffix: initialPhoneSuffix,
