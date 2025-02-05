@@ -1,6 +1,6 @@
 <script lang="ts">
   import Autocomplete from '@smui-extra/autocomplete';
-  import Button, { Label } from '@smui/button';
+  import { Label } from '@smui/button';
   import Dialog, { Title, Content, Actions } from '@smui/dialog';
   import Textfield from '@smui/textfield';
   import Chip, { Set, TrailingAction, Text, LeadingIcon } from '@smui/chips';
@@ -22,7 +22,7 @@
   let dialogOpen = $state(false);
   // When options are objects, you need to wrap them in a $state rune, so that
   // Svelte can compare the objects properly.
-  let options: Item[] = $state([
+  let options: Item[] = [
     {
       id: 0,
       label: 'Vegan',
@@ -48,7 +48,7 @@
       label: 'Nussallergie',
       icon: 'no_meals',
     },
-  ]);
+  ];
   let newLabel = $state('');
 
   for (const selectedPreference of selectedPreferences) {

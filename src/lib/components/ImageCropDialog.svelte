@@ -38,10 +38,6 @@
   let canvas = $state<HTMLCanvasElement | null>(null);
   let croppedData = $state<string>('');
 
-  $effect(() => {
-    if (croppedData) onimagecropped(croppedData, imageType);
-  });
-
   export const cropImage = () => {
     if (canvas == null || !image) throw new Error('no canvas or image!');
     const img = new Image();
@@ -65,13 +61,14 @@
       );
 
       croppedData = canvas!.toDataURL(imageType);
+      onimagecropped(croppedData, imageType);
     };
 
     img.src = image;
   };
 </script>
 
-<div class={'margin' + (open ? '' : ' hidden')}>
+<div class={open ? '' : ' hidden'}>
   <canvas
     bind:this={canvas}
     class="hidden"
@@ -84,7 +81,7 @@
   >
     <Title id="simple-title">Dialog Title</Title>
     <Content id="simple-content">
-      <div class="relative aspect-[1/1] portrait:w-[80vw] landscape:h-[50vh]">
+      <div class="relative aspect-[1/1] portrait:w-[70vw] landscape:h-[50vh]">
         <Cropper
           {crop}
           {zoom}

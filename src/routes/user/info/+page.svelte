@@ -27,10 +27,11 @@
   import LinearProgress from '@smui/linear-progress';
   import { onDestroy, onMount } from 'svelte';
   import { avatarStore } from '$lib/avatarStore.js';
+  import Ripple from '@smui/ripple';
 
   let { data } = $props();
-  let { user, userAppData, genders, countries, stakes, supabase } =
-    $derived(data);
+  const { userAppData, countries, stakes } = data;
+  let { genders, supabase } = $derived(data);
 
   /**
    * Constant Variables
@@ -145,6 +146,8 @@
 
   const onImageSelected = (e: any) => {
     let image = e.target.files[0];
+    // reset the selected file
+    imageUpload!.value = '';
     if (!image) return;
     let reader = new FileReader();
     reader.onload = (e) => {
@@ -239,6 +242,13 @@
             alt="avatar"
             src={imageSrc}
           />
+          <!-- svelte-ignore a11y_no_static_element_interactions -->
+          <!-- svelte-ignore a11y_click_events_have_key_events -->
+          <div
+            use:Ripple={{ surface: true }}
+            onclick={() => imageUpload?.click()}
+            class="size-full absolute top-0 left-0 rounded-full cursor-pointer"
+          ></div>
           <div class="absolute -bottom-4 left-1/2 -translate-x-1/2">
             <Chip
               chip="uploadChip"
