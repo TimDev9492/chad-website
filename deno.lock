@@ -1,9 +1,13 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@std/encoding@*": "1.0.7",
     "jsr:@supabase/supabase-js@2": "2.48.1"
   },
   "jsr": {
+    "@std/encoding@1.0.7": {
+      "integrity": "f631247c1698fef289f2de9e2a33d571e46133b38d042905e3eac3715030a82d"
+    },
     "@supabase/supabase-js@2.48.1": {
       "integrity": "747e85c2a546efcc9f84b343b08e10e3818d468ae214506b59dc65a36fd2d702"
     }
