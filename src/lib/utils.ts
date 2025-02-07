@@ -1,3 +1,4 @@
+import { goto } from '$app/navigation';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { UserAppData } from '../app';
 import type { Database } from '../types/database.types';
@@ -122,4 +123,13 @@ export const updateAvatarUrl = async (
     .eq('public_id', public_id);
   if (error && options.throwOnError) throw error;
   return data;
+};
+
+export const logout = async (supabase: SupabaseClient) => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error(error);
+  } else {
+    goto('/');
+  }
 };

@@ -3,6 +3,7 @@
   import IconButton from '@smui/icon-button';
   import { goto } from '$app/navigation';
   import UserIcon from './UserIcon.svelte';
+  import { drawerStore } from '$lib/drawerStore';
 
   let { smuiBar = $bindable(), data } = $props();
 
@@ -23,7 +24,10 @@
 >
   <Row>
     <Section>
-      <IconButton class="material-icons">menu</IconButton>
+      <IconButton
+        onclick={() => drawerStore.set(true)}
+        class="material-icons">menu</IconButton
+      >
       <Title>Fixed</Title>
     </Section>
     <Section>

@@ -7,6 +7,7 @@
   import { goto } from '$app/navigation';
   import { onDestroy, onMount } from 'svelte';
   import { avatarStore } from '$lib/avatarStore';
+  import { logout } from '$lib/utils';
 
   let menu: Menu;
   let anchor: HTMLDivElement | undefined = $state();
@@ -17,15 +18,6 @@
   let displayedAvatarUrl = $state<string | null>(
     userAppData.avatar_url ?? null,
   );
-
-  const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error(error);
-    } else {
-      goto('/');
-    }
-  };
 
   let unsubscribe: () => void | null;
   onMount(() => {
@@ -88,7 +80,9 @@
       </Item>
       <Separator />
       <Item
-        onSMUIAction={logout}
+        onSMUIAction={() => {
+          logout(supabase);
+        }}
         class="text-red-600"
       >
         <Icon class="material-icons">exit_to_app</Icon>

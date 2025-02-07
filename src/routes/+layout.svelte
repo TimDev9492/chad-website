@@ -5,9 +5,11 @@
   import TopAppBar, { AutoAdjust } from '@smui/top-app-bar';
   import AppBar from '$lib/components/AppBar.svelte';
   import NotificationToast from '$lib/components/NotificationToast.svelte';
+  import AppDrawer from '$lib/components/AppDrawer.svelte';
+  import { drawerStore } from '$lib/drawerStore';
 
   let { data, children } = $props();
-  let { session, supabase } = $derived(data);
+  let { session, supabase, userAppData } = $derived(data);
 
   let topAppBar: TopAppBar | null = $state(null);
 
@@ -22,6 +24,11 @@
   });
 </script>
 
+<AppDrawer
+  {userAppData}
+  {supabase}
+/>
+
 <!-- divide page into 3 rows: header, main content, and footer -->
 <div class="min-h-full grid grid-rows-[auto_1fr_auto] w-[100vw]">
   <!-- header -->
@@ -33,7 +40,13 @@
   </header>
   <!-- main content -->
   <AutoAdjust {topAppBar}>
-    <main class="size-full">
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+    <main
+      onclick={() => drawerStore.set(false)}
+      class="size-full"
+    >
       {@render children()}
     </main>
   </AutoAdjust>
