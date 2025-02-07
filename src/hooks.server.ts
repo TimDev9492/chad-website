@@ -86,7 +86,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
   event.locals.userAppData = userAppData;
 
   const adminRoutes = ['/admin'];
-  const privateRoutes = ['/user'];
+  const privateRoutes = ['/user', '/participants'];
   const anonymousRoutes = ['/login', '/register'];
 
   // protect admin routes

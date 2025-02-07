@@ -81,7 +81,6 @@ type DeletePayload = DatabaseWebhookPayload & {
 };
 
 Deno.serve(async (req) => {
-  console.log('database-events-webhook invocation!');
   if (req.method !== 'POST') {
     return JsonError(405, 'Method Not Allowed');
   }

@@ -74,6 +74,30 @@ export type Database = {
         }
         Relationships: []
       }
+      mock_public_infos: {
+        Row: {
+          avatar_url: string | null
+          first_name: string | null
+          last_name: string | null
+          public_id: string
+          ward_id: number | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          first_name?: string | null
+          last_name?: string | null
+          public_id?: string
+          ward_id?: number | null
+        }
+        Update: {
+          avatar_url?: string | null
+          first_name?: string | null
+          last_name?: string | null
+          public_id?: string
+          ward_id?: number | null
+        }
+        Relationships: []
+      }
       public_infos: {
         Row: {
           avatar_url: string

@@ -24,6 +24,7 @@
     "@smui/form-field": "^8.0.0-beta.3",
     "@smui/list": "^8.0.0-beta.3",
     "@smui/menu": "^8.0.0-beta.3",
+    "@smui/paper": "^8.0.0-beta.3",
     "@smui/radio": "^8.0.0-beta.3",
     "@smui/ripple": "^8.0.0-beta.3",
     "@smui/select": "^8.0.0-beta.3",
