@@ -1,6 +1,5 @@
 <script lang="ts">
   import Chip, { LeadingIcon, Text } from '@smui/chips';
-  import Dialog, { Content } from '@smui/dialog';
   import Ripple from '@smui/ripple';
   import RoundImage from './RoundImage.svelte';
 
@@ -22,7 +21,6 @@
   } = $props();
 
   let loading = $state(true);
-  let open = $state(false);
 
   const updateComponent = (newParticipant: ParticipantData | null) => {
     loading = true;
@@ -51,19 +49,21 @@
         participant.public_id,
         loading,
       )}
-      {@render info('church', participant.ward_name, 'body2')}
-      {@render info(
-        'location_on',
-        `Pfahl ${participant.stake_name}`,
-        'caption',
-      )}
+      <span class="-translate-y-1/4 text-nowrap">
+        {@render info(
+          'church',
+          `${participant.ward_name.replace('Gemeinde ', '')}`,
+          'body2',
+        )}
+        {@render info('', `Pfahl ${participant.stake_name}`, 'caption')}
+      </span>
     </div>
   {/if}
 </div>
 
 {#snippet skeleton()}
   <div class="flex flex-col items-center animate-pulse">
-    <div class="relative mb-3">
+    <div class="size-full relative mb-3">
       {@render avatarSvg()}
       <div class="absolute left-1/2 -translate-x-1/2 -translate-y-2/3">
         <div
@@ -76,9 +76,11 @@
   </div>
 {/snippet}
 {#snippet info(icon: string, text: string, mdc_class: string)}
-  <span class="flex justify-stretch gap-2">
-    <LeadingIcon class="material-icons">{icon}</LeadingIcon>
-    <div class={`mdc-typography--${mdc_class} w-full text-center text-nowrap`}>
+  <span class="flex justify-stretch items-center gap-2">
+    {#if icon}
+      <LeadingIcon class="material-icons">{icon}</LeadingIcon>
+    {/if}
+    <div class={`mdc-typography--${mdc_class} w-full text-center`}>
       {text}
     </div>
   </span>
@@ -89,13 +91,13 @@
   chip: string,
   imgLoading: boolean,
 )}
-  <div class="relative mb-3">
+  <div class="relative max-w-full flex flex-col items-center">
     {#if imgLoading}
-      <div class="size-28 relative animate-pulse">
+      <div class="size-full relative animate-pulse">
         {@render avatarSvg()}
       </div>
     {:else}
-      <div class="size-28 relative">
+      <div class="size-full relative">
         <RoundImage
           src={avatar_url}
           alt="avatar"
@@ -106,22 +108,23 @@
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div
       use:Ripple={{ surface: true }}
-      class="size-full absolute top-0 left-0 rounded-full cursor-pointer"
+      class="w-full aspect-square absolute top-0 left-0 rounded-full cursor-pointer"
       onclick={() => onclick(participant!)}
     ></div>
     <div
-      class="absolute left-1/2 -translate-x-1/2 -translate-y-2/3 pointer-events-none"
+      class="py-1 px-3 rounded-full bg-gray-300 flex items-center -translate-y-2/3 select-none max-w-full"
     >
-      <Chip {chip}>
-        <LeadingIcon class="material-icons">person</LeadingIcon>
-        <Text tabindex={0}>{name}</Text>
-      </Chip>
+      <div
+        class="mdc-typography--caption whitespace-nowrap overflow-ellipsis overflow-hidden"
+      >
+        {name}
+      </div>
     </div>
   </div>
 {/snippet}
 {#snippet avatarSvg()}
   <svg
-    class="size-28 text-gray-200"
+    class="size-full text-gray-200"
     aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     fill="currentColor"

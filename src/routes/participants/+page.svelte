@@ -63,17 +63,21 @@
     Angemeldete Teilnehmer
   </div>
   <div
-    class="grid landscape:min-w-[800px] landscape:w-[50vw] landscape:grid-cols-5 portrait:w-full portrait:grid-cols-3 items-center justify-items-center gap-y-4"
+    class={`grid landscape:min-w-[800px] landscape:w-[50vw]
+    landscape:grid-cols-5 portrait:w-full portrait:grid-cols-3
+    items-center justify-items-center gap-4`}
   >
     {#if participants}
       {#each participants as participant}
-        <ParticipantIcon
-          {participant}
-          onclick={(participant) => {
-            closeUpSrc = participant.avatar_url;
-            open = true;
-          }}
-        />
+        <div class="size-full">
+          <ParticipantIcon
+            {participant}
+            onclick={(participant) => {
+              closeUpSrc = participant.avatar_url;
+              open = true;
+            }}
+          />
+        </div>
       {/each}
     {:else}
       {#each { length: 5 }}
