@@ -23,7 +23,7 @@
 </script>
 
 <!-- divide page into 3 rows: header, main content, and footer -->
-<div class="min-h-screen grid grid-rows-[auto_1fr_auto] w-[100vw]">
+<div class="min-h-full grid grid-rows-[auto_1fr_auto] w-[100vw]">
   <!-- header -->
   <header>
     <AppBar
