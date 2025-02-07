@@ -7,11 +7,14 @@
   import NotificationToast from '$lib/components/NotificationToast.svelte';
   import AppDrawer from '$lib/components/AppDrawer.svelte';
   import { drawerStore } from '$lib/drawerStore';
+  import LinearProgress from '@smui/linear-progress';
+  import { navigating } from '$app/state';
 
   let { data, children } = $props();
   let { session, supabase, userAppData } = $derived(data);
 
   let topAppBar: TopAppBar | null = $state(null);
+  let loadingBarOpen = $derived(navigating && navigating.complete !== null);
 
   onMount(() => {
     const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
@@ -30,7 +33,13 @@
 />
 
 <!-- divide page into 3 rows: header, main content, and footer -->
-<div class="min-h-full grid grid-rows-[auto_1fr_auto] w-[100vw]">
+<div class="relative min-h-full grid grid-rows-[auto_1fr_auto] w-[100vw]">
+  <div class="fixed w-full page-loading-bar z-50">
+    <LinearProgress
+      closed={!loadingBarOpen}
+      indeterminate
+    />
+  </div>
   <!-- header -->
   <header>
     <AppBar
