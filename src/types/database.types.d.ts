@@ -245,6 +245,39 @@ export type Database = {
           },
         ]
       }
+      workshops: {
+        Row: {
+          created_at: string
+          description: string
+          event_duration: number
+          event_start: string
+          id: string
+          metadata: Json
+          thumbnail_url: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          event_duration?: number
+          event_start: string
+          id?: string
+          metadata?: Json
+          thumbnail_url?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          event_duration?: number
+          event_start?: string
+          id?: string
+          metadata?: Json
+          thumbnail_url?: string
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       participants: {
@@ -274,6 +307,17 @@ export type Database = {
             referencedColumns: ["name"]
           },
         ]
+      }
+      public_participants: {
+        Row: {
+          avatar_url: string | null
+          first_name: string | null
+          last_name: string | null
+          public_id: string | null
+          stake_name: string | null
+          ward_name: string | null
+        }
+        Relationships: []
       }
     }
     Functions: {

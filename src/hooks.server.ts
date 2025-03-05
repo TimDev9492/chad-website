@@ -6,7 +6,7 @@ import {
   PUBLIC_SUPABASE_ANON_KEY,
   PUBLIC_SUPABASE_URL,
 } from '$env/static/public';
-import { getUserAppData } from '$lib/utils';
+import { getUserAppData } from '$lib/appAdapter';
 import type { UserAppData } from './app';
 
 const supabase: Handle = async ({ event, resolve }) => {

@@ -1,4 +1,5 @@
 import type { Session, SupabaseClient, User } from '@supabase/supabase-js';
+import type { Database } from './types/database.types';
 
 declare global {
   namespace App {
@@ -54,4 +55,14 @@ type UserAppData = UserInfoData & {
   food_preferences: FoodPreference[] | null | undefined;
 };
 
-export { FoodPreference, ResidentialAddressData, UserAppData, UserInfoData };
+type Workshop = Database['public']['Tables']['workshops']['Row'];
+type WorkshopsByTime = { [timeslot: string]: Workshop[] };
+
+export {
+  FoodPreference,
+  ResidentialAddressData,
+  UserAppData,
+  UserInfoData,
+  Workshop,
+  WorkshopsByTime,
+};
