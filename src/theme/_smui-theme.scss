@@ -2,12 +2,18 @@
 
 @use '@material/theme/color-palette';
 
+// Store colors in global variables
+$color1: #fe5c3b;
+$color2: #6198e7;
+$color3: #f7dadf;
+$color4: #c0e1e6;
+
 // Svelte Colors!
 @use '@material/theme/index' as theme with (
-  $primary: #ff3e00,
-  $secondary: #676778,
+  $primary: $color1,
+  $secondary: $color2,
   $surface: #fff,
-  $background: #fff,
+  $background: $color3,
   $error: color-palette.$red-900
 );
 

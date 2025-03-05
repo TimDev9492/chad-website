@@ -32,7 +32,8 @@
 </script>
 
 <div
-  class={Object.keys(anchorClasses).join(' ')}
+  class={Object.keys(anchorClasses).join(' ') +
+    ' flex justify-center items-center'}
   use:Anchor={{
     addClass: (className) => {
       if (!anchorClasses[className]) {

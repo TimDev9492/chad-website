@@ -22,25 +22,23 @@
   variant="fixed"
   color="secondary"
 >
-  <Row>
-    <Section>
+  <Row class="grid grid-cols-3">
+    <Section align="start">
       <IconButton
         onclick={() => drawerStore.set(true)}
         class="material-icons">menu</IconButton
       >
-      <Title>Fixed</Title>
     </Section>
-    <Section>
-      <div class="flex justify-center items-center size-full">
-        <Title class="p-0">Title</Title>
-      </div>
+    <Section class="flex justify-center items-center">
+      <Title class="p-0">CHAD Tagung</Title>
     </Section>
-    <Section
-      align="end"
-      toolbar
-    >
+    <Section align="end">
       {#if user}
-        <div class="mdc-typography--overline">{profileName}</div>
+        <div
+          class="mdc-typography--overline overflow-hidden whitespace-nowrap text-ellipsis max-w-[70%]"
+        >
+          {profileName}
+        </div>
         <UserIcon
           {userAppData}
           {supabase}
