@@ -57,6 +57,8 @@ type UserAppData = UserInfoData & {
 
 type Workshop = Database['public']['Tables']['workshops']['Row'];
 type WorkshopsByTime = { [timeslot: string]: Workshop[] };
+type WorkshopParticipant =
+  Database['public']['Tables']['workshop_participants']['Row'];
 
 export {
   FoodPreference,
@@ -64,5 +66,6 @@ export {
   UserAppData,
   UserInfoData,
   Workshop,
+  WorkshopParticipant,
   WorkshopsByTime,
 };

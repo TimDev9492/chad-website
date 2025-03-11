@@ -245,8 +245,39 @@ export type Database = {
           },
         ]
       }
+      workshop_participants: {
+        Row: {
+          public_id: string
+          workshop_id: string
+        }
+        Insert: {
+          public_id: string
+          workshop_id: string
+        }
+        Update: {
+          public_id?: string
+          workshop_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workshop_participants_public_id_fkey"
+            columns: ["public_id"]
+            isOneToOne: false
+            referencedRelation: "public_infos"
+            referencedColumns: ["public_id"]
+          },
+          {
+            foreignKeyName: "workshop_participants_workshop_id_fkey"
+            columns: ["workshop_id"]
+            isOneToOne: false
+            referencedRelation: "workshops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workshops: {
         Row: {
+          capacity: number
           created_at: string
           description: string
           event_duration: number
@@ -257,6 +288,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          capacity?: number
           created_at?: string
           description: string
           event_duration?: number
@@ -267,6 +299,7 @@ export type Database = {
           title: string
         }
         Update: {
+          capacity?: number
           created_at?: string
           description?: string
           event_duration?: number
@@ -327,6 +360,23 @@ export type Database = {
           message: string
         }
         Returns: string
+      }
+      get_conflicting_workshops: {
+        Args: {
+          user_public_id: string
+          new_workshop_id: string
+        }
+        Returns: {
+          capacity: number
+          created_at: string
+          description: string
+          event_duration: number
+          event_start: string
+          id: string
+          metadata: Json
+          thumbnail_url: string
+          title: string
+        }[]
       }
     }
     Enums: {

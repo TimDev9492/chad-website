@@ -3,19 +3,45 @@
   import { getWorkshopsWithTimeslots } from '$lib/appAdapter';
   import { format } from 'date-fns';
   import { de, enUS } from 'date-fns/locale';
-  import type { WorkshopsByTime } from '../../app.js';
+  import {
+    type Workshop,
+    type WorkshopParticipant,
+    type WorkshopsByTime,
+  } from '../../app';
   import WorkshopCard from '$lib/components/WorkshopCard.svelte';
   import List, { Graphic, Item, Text } from '@smui/list';
   import Tab, { Icon, Label } from '@smui/tab';
   import TabBar from '@smui/tab-bar';
+  import Button from '@smui/button';
+  import { toastStore } from '$lib/toastStore.js';
+  import Dialog, { Actions, Content, Title } from '@smui/dialog';
+  import { useSupabaseTable } from '$lib/tableState.svelte';
 
   let { data } = $props();
-  let { supabase, user } = $derived(data);
+  let { supabase, user, userAppData } = $derived(data);
 
   let groupedWorkshops = $state<WorkshopsByTime | null>(null);
   let activeTimeSlot = $state<string>('');
-
-  $inspect(groupedWorkshops);
+  let loadingWorkshopId = $state<string | null>(null);
+  let conflictingWorkshops = $state<Workshop[] | null>(null);
+  let confirmDialogOpen = $state<boolean>(false);
+  const { rows: workshopParticipants } = useSupabaseTable<WorkshopParticipant>(
+    supabase,
+    'workshop_participants',
+    {
+      compareRecords: (a, b) =>
+        a.public_id === b.public_id && a.workshop_id === b.workshop_id,
+    },
+  );
+  let userWorkshops: string[] = $derived.by(() => {
+    const userWorkshopIds = [];
+    for (const workshopParticipant of workshopParticipants) {
+      if (workshopParticipant.public_id === userAppData.public_id) {
+        userWorkshopIds.push(workshopParticipant.workshop_id);
+      }
+    }
+    return userWorkshopIds;
+  });
 
   onMount(async () => {
     const workshops = await getWorkshopsWithTimeslots(supabase, (date) =>
@@ -24,6 +50,96 @@
     activeTimeSlot = Object.keys(workshops)[0];
     groupedWorkshops = workshops;
   });
+
+  const triggerSignUp = async (workshopId: string) => {
+    loadingWorkshopId = workshopId;
+    const { data, error } = await supabase.rpc('get_conflicting_workshops', {
+      user_public_id: userAppData.public_id,
+      new_workshop_id: workshopId,
+    });
+    if (error) {
+      console.error(error);
+      toastStore.set({
+        level: 'error',
+        message: 'Fehler beim Anmelden',
+      });
+      loadingWorkshopId = null;
+      return;
+    }
+    if (data.length > 0) {
+      conflictingWorkshops = data;
+      confirmDialogOpen = true;
+    } else {
+      await signUpUserForWorkshop(loadingWorkshopId!);
+      loadingWorkshopId = null;
+    }
+  };
+
+  const triggerLeave = async (workshopId: string) => {
+    loadingWorkshopId = workshopId;
+    const { data, error } = await supabase
+      .from('workshop_participants')
+      .delete()
+      .eq('public_id', userAppData.public_id)
+      .eq('workshop_id', workshopId);
+    if (error) {
+      console.error(error);
+      toastStore.set({
+        level: 'error',
+        message: 'Fehler beim Abmelden',
+      });
+      loadingWorkshopId = null;
+      return;
+    }
+    console.log(data);
+    toastStore.set({
+      level: 'success',
+      message: 'Erfolgreich abgemeldet',
+    });
+    loadingWorkshopId = null;
+  };
+
+  const confirmDialogCloseHandler = async (
+    e: CustomEvent<{ action: string }>,
+  ) => {
+    switch (e.detail.action) {
+      case 'confirm':
+        await signUpUserForWorkshop(loadingWorkshopId!);
+        loadingWorkshopId = null;
+        break;
+      case 'cancel':
+      default:
+        // This means the user clicked the scrim or pressed Esc/Cancel to close the dialog.
+        // The actions will be "close".
+        loadingWorkshopId = null;
+        conflictingWorkshops = null;
+        break;
+    }
+    confirmDialogOpen = false;
+  };
+
+  const signUpUserForWorkshop = async (workshopId: string) => {
+    const { data, error } = await supabase
+      .from('workshop_participants')
+      .insert([
+        {
+          public_id: userAppData.public_id,
+          workshop_id: workshopId,
+        },
+      ]);
+    if (error) {
+      console.error(error);
+      toastStore.set({
+        level: 'error',
+        message: 'Fehler beim Anmelden',
+      });
+      return;
+    }
+    toastStore.set({
+      level: 'success',
+      message: 'Erfolgreich angemeldet',
+    });
+  };
 </script>
 
 <div class="size-full flex justify-center">
@@ -38,7 +154,35 @@
         <WorkshopCard workshop={null} />
       {:else}
         {#each groupedWorkshops[activeTimeSlot] as workshop}
-          <WorkshopCard {workshop} />
+          <div class="relative">
+            <WorkshopCard
+              {workshop}
+              loading={loadingWorkshopId === workshop.id}
+            />
+            {#if !userWorkshops.includes(workshop.id)}
+              <Button
+                variant="raised"
+                color="primary"
+                class="absolute top-2 right-2 !bg-yellow-300"
+                disabled={loadingWorkshopId !== null}
+                onclick={() => triggerSignUp(workshop.id)}
+              >
+                <Label>Anmelden</Label>
+                <Icon class="material-icons">person_add_alt</Icon>
+              </Button>
+            {:else}
+              <Button
+                variant="raised"
+                color="primary"
+                class="absolute top-2 right-2 !bg-red-500"
+                disabled={loadingWorkshopId !== null}
+                onclick={() => triggerLeave(workshop.id)}
+              >
+                <Label>Abmelden</Label>
+                <Icon class="material-icons">person_remove</Icon>
+              </Button>
+            {/if}
+          </div>
         {/each}
       {/if}
     </div>
@@ -88,3 +232,33 @@
     </div>
   </div>
 </div>
+<Dialog
+  open={confirmDialogOpen}
+  aria-labelledby="event-title"
+  aria-describedby="event-content"
+  onSMUIDialogClosed={confirmDialogCloseHandler}
+>
+  <Title id="event-title">⚠️ Bist du sicher?</Title>
+  <Content id="event-content">
+    <div>
+      Wenn du dich für diesen Workshop anmeldest, wirst du von folgenden
+      Workshops abgemeldet:
+    </div>
+    <ul class="list-disc list-inside mt-2">
+      {#each conflictingWorkshops! as workshop}
+        <li>{workshop.title}</li>
+      {/each}
+    </ul>
+  </Content>
+  <Actions>
+    <Button action="cancel">
+      <Label>Abbrechen</Label>
+    </Button>
+    <Button
+      action="confirm"
+      defaultAction
+    >
+      <Label>Bestätigen</Label>
+    </Button>
+  </Actions>
+</Dialog>

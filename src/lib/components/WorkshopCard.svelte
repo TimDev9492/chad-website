@@ -3,9 +3,17 @@
   import type { Workshop } from '../../app';
   import Chip, { LeadingIcon, Text } from '@smui/chips';
   import { de } from 'date-fns/locale';
-  import Button, { Icon, Label } from '@smui/button';
+  import LinearProgress from '@smui/linear-progress';
 
-  let { workshop }: { workshop: Workshop | null } = $props();
+  let {
+    workshop,
+    disabled = false,
+    loading = false,
+  }: {
+    workshop: Workshop | null;
+    disabled?: boolean;
+    loading?: boolean;
+  } = $props();
 </script>
 
 {#if workshop == null}
@@ -45,19 +53,19 @@
   <div
     class="relative rounded overflow-hidden bg-[#f7dadf] bg-opacity-75 portrait:w-[90vw] landscape:w-[30rem] min-h-[15rem]"
   >
-    <img
-      src={workshop.thumbnail_url}
-      alt="workshop thumbnail"
-      class="w-full aspect-video object-cover"
-    />
-    <Button
-      variant="raised"
-      color="primary"
-      class="absolute top-2 right-2 !bg-green-500"
-    >
-      <Label>Anmelden</Label>
-      <Icon class="material-icons">person_add_alt</Icon>
-    </Button>
+    <div class="relative">
+      <img
+        src={workshop.thumbnail_url}
+        alt="workshop thumbnail"
+        class="w-full aspect-video object-cover"
+      />
+      <div class="absolute bottom-0 left-0 w-full">
+        <LinearProgress
+          closed={!loading}
+          indeterminate
+        />
+      </div>
+    </div>
     <div class="flex flex-col p-4 gap-4">
       <div class="font-bold text-xl">{workshop.title}</div>
       <div class="font-normal">
@@ -87,4 +95,9 @@
       </div>
     </div>
   </div>
+{/if}
+{#if disabled}
+  <div
+    class="absolute top-0 left-0 size-full bg-gray-500 opacity-50 rounded"
+  ></div>
 {/if}
