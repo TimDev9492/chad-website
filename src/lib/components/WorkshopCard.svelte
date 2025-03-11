@@ -9,10 +9,14 @@
     workshop,
     disabled = false,
     loading = false,
+    participants = 0,
+    onParticipantsIconClick,
   }: {
     workshop: Workshop | null;
     disabled?: boolean;
     loading?: boolean;
+    participants?: number;
+    onParticipantsIconClick?: () => void;
   } = $props();
 </script>
 
@@ -88,9 +92,14 @@
           <LeadingIcon class="material-icons">hourglass_bottom</LeadingIcon>
           <Text>{workshop.event_duration} min</Text>
         </Chip>
-        <Chip chip="participantsChip">
+        <Chip
+          chip="participantsChip"
+          onclick={() => {
+            onParticipantsIconClick && onParticipantsIconClick();
+          }}
+        >
           <LeadingIcon class="material-icons">person</LeadingIcon>
-          <Text>15/20</Text>
+          <Text>{participants}/{workshop.capacity}</Text>
         </Chip>
       </div>
     </div>

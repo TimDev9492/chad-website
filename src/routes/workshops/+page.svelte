@@ -42,6 +42,32 @@
     }
     return userWorkshopIds;
   });
+  let participantModalWorkshop = $state<Workshop | null>(null);
+  let participantModalOpen = $state<boolean>(false);
+  let participantModalNames = $derived.by(async () => {
+    if (participantModalWorkshop === null) return [];
+    const { data, error } = await supabase
+      .from('public_infos')
+      .select('first_name, last_name')
+      .in(
+        'public_id',
+        workshopParticipants
+          .filter(
+            (participation) =>
+              participation.workshop_id === participantModalWorkshop!.id,
+          )
+          .map((participation) => participation.public_id),
+      )
+      .order('first_name', { ascending: true })
+      .order('last_name', { ascending: true });
+    if (error) {
+      console.error(error);
+      return [];
+    }
+    return data.map(
+      (participant) => `${participant.first_name} ${participant.last_name}`,
+    );
+  });
 
   onMount(async () => {
     const workshops = await getWorkshopsWithTimeslots(supabase, (date) =>
@@ -50,6 +76,19 @@
     activeTimeSlot = Object.keys(workshops)[0];
     groupedWorkshops = workshops;
   });
+
+  const showParticipantModal = (workshopId: string) => {
+    participantModalWorkshop = groupedWorkshops![activeTimeSlot].find(
+      (workshop) => workshop.id === workshopId,
+    )!;
+    participantModalOpen = true;
+  };
+
+  const getParticipantCount = (workshopId: string) => {
+    return workshopParticipants.filter(
+      (participant) => participant.workshop_id === workshopId,
+    ).length;
+  };
 
   const triggerSignUp = async (workshopId: string) => {
     loadingWorkshopId = workshopId;
@@ -91,7 +130,6 @@
       loadingWorkshopId = null;
       return;
     }
-    console.log(data);
     toastStore.set({
       level: 'success',
       message: 'Erfolgreich abgemeldet',
@@ -158,18 +196,34 @@
             <WorkshopCard
               {workshop}
               loading={loadingWorkshopId === workshop.id}
+              participants={getParticipantCount(workshop.id)}
+              onParticipantsIconClick={() => {
+                showParticipantModal(workshop.id);
+              }}
             />
             {#if !userWorkshops.includes(workshop.id)}
-              <Button
-                variant="raised"
-                color="primary"
-                class="absolute top-2 right-2 !bg-yellow-300"
-                disabled={loadingWorkshopId !== null}
-                onclick={() => triggerSignUp(workshop.id)}
-              >
-                <Label>Anmelden</Label>
-                <Icon class="material-icons">person_add_alt</Icon>
-              </Button>
+              {#if getParticipantCount(workshop.id) < workshop.capacity}
+                <Button
+                  variant="raised"
+                  color="primary"
+                  class="absolute top-2 right-2 !bg-yellow-300"
+                  disabled={loadingWorkshopId !== null}
+                  onclick={() => triggerSignUp(workshop.id)}
+                >
+                  <Label>Anmelden</Label>
+                  <Icon class="material-icons">person_add_alt</Icon>
+                </Button>
+              {:else}
+                <Button
+                  variant="raised"
+                  color="primary"
+                  class="absolute top-2 right-2 !bg-gray-200"
+                  disabled
+                >
+                  <Label>Voll</Label>
+                  <Icon class="material-icons">groups</Icon>
+                </Button>
+              {/if}
             {:else}
               <Button
                 variant="raised"
@@ -259,6 +313,46 @@
       defaultAction
     >
       <Label>Bestätigen</Label>
+    </Button>
+  </Actions>
+</Dialog>
+<Dialog
+  open={participantModalOpen}
+  aria-labelledby="event-title"
+  aria-describedby="event-content"
+  onSMUIDialogClosed={() => (participantModalOpen = false)}
+>
+  <Title id="event-title">Teilnehmerliste</Title>
+  <Content id="event-content">
+    <div>
+      Diese Leute sind für den Workshop "{participantModalWorkshop?.title}"
+      angemeldet:
+    </div>
+    <ul class="list-disc list-inside mt-2">
+      {#await participantModalNames}
+        <div
+          class="animate-pulse bg-gray-300 h-2 rounded-full w-1/3 mt-4"
+        ></div>
+        <div
+          class="animate-pulse bg-gray-300 h-2 rounded-full w-1/2 mt-2"
+        ></div>
+        <div
+          class="animate-pulse bg-gray-300 h-2 rounded-full w-2/5 mt-2"
+        ></div>
+      {:then names}
+        {#if names!.length === 0}
+          <li>Keine Teilnehmer</li>
+        {:else}
+          {#each names! as name}
+            <li>{name}</li>
+          {/each}
+        {/if}
+      {/await}
+    </ul>
+  </Content>
+  <Actions>
+    <Button action="close">
+      <Label>Schließen</Label>
     </Button>
   </Actions>
 </Dialog>
