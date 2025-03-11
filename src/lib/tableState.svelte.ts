@@ -47,7 +47,7 @@ export interface SupabaseTableResult<T> {
  * @param options Configuration options
  * @returns A reactive $state object containing table rows and utility functions
  */
-export function useSupabaseTable<T extends { id: string | number }>(
+export function useSupabaseTable<T extends Record<string, any>>(
   supabase: SupabaseClient,
   tableName: string,
   options: SupabaseTableOptions<T> = {},
@@ -108,13 +108,14 @@ export function useSupabaseTable<T extends { id: string | number }>(
     subscription = supabase
       .channel(`table-changes-${tableName}`)
       .on(
+        // @ts-ignore
         'postgres_changes',
         {
           event: eventTypes,
           schema,
           table: tableName,
         },
-        (payload) => {
+        (payload: any) => {
           // Handle different event types
           if (payload.eventType === 'INSERT') {
             rows.push(payload.new as T);

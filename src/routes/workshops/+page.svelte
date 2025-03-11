@@ -26,6 +26,7 @@
   let conflictingWorkshops = $state<Workshop[] | null>(null);
   let confirmDialogOpen = $state<boolean>(false);
   const { rows: workshopParticipants } = useSupabaseTable<WorkshopParticipant>(
+    // svelte-ignore state_referenced_locally
     supabase,
     'workshop_participants',
     {
@@ -71,6 +72,7 @@
 
   onMount(async () => {
     const workshops = await getWorkshopsWithTimeslots(supabase, (date) =>
+      // @ts-expect-error
       format(date, 'eeee HH:mm', { locale: de }),
     );
     activeTimeSlot = Object.keys(workshops)[0];
