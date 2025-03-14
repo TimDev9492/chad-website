@@ -1,5 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
-import { type Handle, redirect } from '@sveltejs/kit';
+import { error, type Handle, redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 import {
@@ -88,6 +88,15 @@ const authGuard: Handle = async ({ event, resolve }) => {
   const adminRoutes = ['/admin'];
   const privateRoutes = ['/user', '/participants'];
   const anonymousRoutes = ['/login', '/register'];
+  const apiPrivateRoutes = ['/api/spotify-search'];
+
+  // protect private api routes
+  if (
+    !event.locals.session &&
+    apiPrivateRoutes.find((route) => event.url.pathname.startsWith(route))
+  ) {
+    error(401, JSON.stringify({ error: 'Unauthorized' }));
+  }
 
   // protect admin routes
   if (
