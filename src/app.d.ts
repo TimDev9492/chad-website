@@ -60,9 +60,22 @@ type WorkshopsByTime = { [timeslot: string]: Workshop[] };
 type WorkshopParticipant =
   Database['public']['Tables']['workshop_participants']['Row'];
 
+interface SongSearchResult {
+  id: string;
+  name: string;
+  artists: string[];
+  album: string;
+  releaseDate: string;
+  duration: number;
+  popularity: number;
+  coverImageUrl: string;
+  spotifyUrl: string;
+}
+
 export {
   FoodPreference,
   ResidentialAddressData,
+  SongSearchResult,
   UserAppData,
   UserInfoData,
   Workshop,

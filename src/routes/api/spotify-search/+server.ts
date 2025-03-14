@@ -1,6 +1,7 @@
 // src/routes/api/spotify/search/+server.ts
 import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '$env/static/private';
 import { json } from '@sveltejs/kit';
+import type { SongSearchResult } from '../../../app';
 import type { RequestHandler } from './$types';
 
 // Define interfaces for type safety
@@ -23,18 +24,6 @@ interface SpotifyTrack {
   duration_ms: number;
   popularity: number;
   external_urls: { spotify: string };
-}
-
-interface SongSearchResult {
-  id: string;
-  name: string;
-  artists: string[];
-  album: string;
-  releaseDate: string;
-  duration: number;
-  popularity: number;
-  coverImageUrl: string;
-  spotifyUrl: string;
 }
 
 // Token cache
@@ -85,8 +74,6 @@ export const GET: RequestHandler = async ({ url }) => {
     const query = url.searchParams.get('q');
     const limitParam = url.searchParams.get('limit');
     const limit = limitParam ? parseInt(limitParam, 10) : 10;
-
-    console.log({ query, limitParam });
 
     // Validate query
     if (!query) {
