@@ -20,6 +20,9 @@
   let { data } = $props();
   let { supabase, user, userAppData } = $derived(data);
 
+  let signedIn = $derived(
+    userAppData.public_id !== undefined && userAppData.public_id !== null,
+  );
   let groupedWorkshops = $state<WorkshopsByTime | null>(null);
   let activeTimeSlot = $state<string>('');
   let loadingWorkshopId = $state<string | null>(null);
@@ -200,11 +203,11 @@
               loading={loadingWorkshopId === workshop.id}
               participants={getParticipantCount(workshop.id)}
               onParticipantsIconClick={() => {
-                showParticipantModal(workshop.id);
+                if (signedIn) showParticipantModal(workshop.id);
               }}
             />
             {#if !userWorkshops.includes(workshop.id)}
-              {#if getParticipantCount(workshop.id) < workshop.capacity}
+              {#if getParticipantCount(workshop.id) < workshop.capacity && signedIn}
                 <Button
                   variant="raised"
                   color="primary"
@@ -215,7 +218,7 @@
                   <Label>Anmelden</Label>
                   <Icon class="material-icons">person_add_alt</Icon>
                 </Button>
-              {:else}
+              {:else if signedIn}
                 <Button
                   variant="raised"
                   color="primary"
