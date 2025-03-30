@@ -10,6 +10,7 @@
   let selectedCountry = $state<
     Database['public']['Tables']['countries']['Row'] | null
   >(
+    // svelte-ignore state_referenced_locally
     countries.find(
       (country) =>
         country.iso_code === userAppData.residential_address.country_iso,
