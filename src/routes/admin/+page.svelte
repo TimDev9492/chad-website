@@ -4,6 +4,7 @@
   import { toastStore } from '$lib/toastStore';
   import { PUBLIC_SUPABASE_URL } from '$env/static/public';
   import LinearProgress from '@smui/linear-progress';
+  import Divider from '$lib/components/Divider.svelte';
 
   let { data } = $props();
   let { session } = $derived(data);
@@ -48,7 +49,7 @@
     closed={!excelLoading}
   />
 </div>
-<div class="size-full flex justify-center items-center">
+<div class="size-full flex portrait:flex-col justify-center items-center gap-8">
   <div class="chad-card chad-shadow">
     <div class="flex flex-col items-center gap-4">
       <div class="font-medium text-xl">Teilnehmerliste herunterladen</div>
@@ -63,6 +64,18 @@
         color="secondary"
       >
         <Icon class="material-icons">download</Icon>Herunterladen</Button
+      >
+    </div>
+  </div>
+  <div class="chad-card chad-shadow">
+    <div class="flex flex-col items-center gap-4">
+      <div class="font-medium text-xl">Zahlungen</div>
+      <Button
+        variant="raised"
+        color="secondary"
+        href="/admin/confirm-payment"
+      >
+        <Icon class="material-icons">euro</Icon>Bestätigen</Button
       >
     </div>
   </div>

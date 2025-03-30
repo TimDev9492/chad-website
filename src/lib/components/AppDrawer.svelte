@@ -3,6 +3,7 @@
   import List, { Item, Text, Graphic, Separator, Subheader } from '@smui/list';
   import { drawerStore } from '$lib/drawerStore';
   import { onMount } from 'svelte';
+  import { page } from '$app/state';
   import type { UserAppData } from '../../app';
   import { logout } from '$lib/utils';
   import type { SupabaseClient } from '@supabase/supabase-js';
@@ -43,6 +44,7 @@
       });
 
       opts['Anmeldung'].push(
+        { icon: 'checklist', label: 'Schritte', href: '/user' },
         { icon: 'manage_accounts', label: 'Nutzerdaten', href: '/user/info' },
         { icon: 'credit_card', label: 'Bezahlen', href: '/user/payments' },
       );
@@ -78,6 +80,17 @@
     drawerStore.subscribe((value) => {
       open = value;
     });
+  });
+
+  $effect(() => {
+    for (const category of Object.keys(options)) {
+      for (const option of options[category]) {
+        if (option.href === page.route.id) {
+          active = option;
+          return;
+        }
+      }
+    }
   });
 </script>
 

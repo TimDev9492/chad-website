@@ -13,6 +13,7 @@ input[type='tel'] {
 }
 
 .chad-typography-gradient {
+  text-align: center;
   background: linear-gradient(
     45deg,
     rgba(var(--color1), 1),
@@ -36,7 +37,7 @@ input[type='tel'] {
 }
 
 .chad-shadow {
-  box-shadow: 0 0 2em rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 2em rgba(0, 0, 0, 0.3);
 }
 
 .chad-card {
