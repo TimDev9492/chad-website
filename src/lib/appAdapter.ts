@@ -32,6 +32,8 @@ export const getUserAppData = async (
     avatar_url: userInfo?.public_infos?.avatar_url,
     needs_place_to_sleep: userInfo?.needs_place_to_sleep,
     wants_breakfast: userInfo?.wants_breakfast,
+    has_paid: userInfo.has_paid,
+    payment_reference: userInfo.payment_reference,
     residential_address: {
       street_name_and_number:
         userInfo?.residency_addresses?.street_name_and_number,

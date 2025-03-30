@@ -48,6 +48,8 @@ type UserInfoData = {
   wants_breakfast: boolean | null | undefined;
   gender: string | null | undefined;
   role: string | undefined;
+  has_paid: boolean | undefined;
+  payment_reference: string | undefined;
 };
 
 type UserAppData = UserInfoData & {

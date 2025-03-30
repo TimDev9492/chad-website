@@ -16,6 +16,7 @@ export type Database = {
           flag_emoji: string
           iso_code: string
           name: string
+          price_tag: string
         }
         Insert: {
           country_code: string
@@ -23,6 +24,7 @@ export type Database = {
           flag_emoji: string
           iso_code: string
           name: string
+          price_tag?: string
         }
         Update: {
           country_code?: string
@@ -30,6 +32,7 @@ export type Database = {
           flag_emoji?: string
           iso_code?: string
           name?: string
+          price_tag?: string
         }
         Relationships: []
       }
@@ -207,7 +210,9 @@ export type Database = {
           date_of_birth: string | null
           email: string
           gender: string | null
+          has_paid: boolean
           needs_place_to_sleep: boolean
+          payment_reference: number
           phone_number: string | null
           public_id: string
           user_id: string
@@ -218,7 +223,9 @@ export type Database = {
           date_of_birth?: string | null
           email?: string
           gender?: string | null
+          has_paid?: boolean
           needs_place_to_sleep?: boolean
+          payment_reference: number
           phone_number?: string | null
           public_id?: string
           user_id?: string
@@ -229,7 +236,9 @@ export type Database = {
           date_of_birth?: string | null
           email?: string
           gender?: string | null
+          has_paid?: boolean
           needs_place_to_sleep?: boolean
+          payment_reference?: number
           phone_number?: string | null
           public_id?: string
           user_id?: string
@@ -360,6 +369,10 @@ export type Database = {
           message: string
         }
         Returns: string
+      }
+      generate_payment_reference: {
+        Args: Record<PropertyKey, never>
+        Returns: number
       }
       get_conflicting_workshops: {
         Args: {
