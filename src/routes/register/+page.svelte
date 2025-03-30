@@ -40,7 +40,9 @@
       };
     }}
   >
-    <div class="mdc-typography--headline6">Account erstellen</div>
+    <div class="chad-typography-gradient font-extrabold text-2xl">
+      Account erstellen
+    </div>
     <Divider />
     <IconInput
       iconName="email"

@@ -49,9 +49,9 @@
   />
 </div>
 <div class="size-full flex justify-center items-center">
-  <Card variant="outlined">
-    <Content class="flex flex-col items-center gap-4">
-      <div class="mdc-typography--headline6">Teilnehmerliste herunterladen</div>
+  <div class="chad-card chad-shadow">
+    <div class="flex flex-col items-center gap-4">
+      <div class="font-medium text-xl">Teilnehmerliste herunterladen</div>
       <Button
         disabled={excelLoading}
         onclick={async () => {
@@ -64,6 +64,6 @@
       >
         <Icon class="material-icons">download</Icon>Herunterladen</Button
       >
-    </Content>
-  </Card>
+    </div>
+  </div>
 </div>

@@ -59,13 +59,15 @@
 </Dialog>
 
 <div class="size-full flex flex-col justify-center items-center gap-8 p-8">
-  <div class="mdc-typography--headline3 text-wrap w-full text-center">
+  <div
+    class="chad-typography-gradient font-extrabold text-5xl text-wrap text-center pb-1"
+  >
     Angemeldete Teilnehmer
   </div>
   <div
-    class={`grid landscape:min-w-[800px] landscape:w-[50vw]
+    class="grid landscape:min-w-[800px] landscape:w-[50vw]
     landscape:grid-cols-5 portrait:w-full portrait:grid-cols-3
-    items-center justify-items-center gap-4`}
+    items-center justify-items-center gap-4"
   >
     {#if participants}
       {#each participants as participant}

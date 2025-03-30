@@ -1,0 +1,49 @@
+:root {
+  --color1: 254, 92, 59; /* #fe5c3b */
+  --color2: 97, 152, 231; /* #6198e7 */
+  --color3: 247, 218, 223; /* #f7dadf */
+  --color4: 192, 225, 230; /* #c0e1e6 */
+}
+
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='tel'] {
+  background-color: transparent !important;
+}
+
+.chad-typography-gradient {
+  background: linear-gradient(
+    45deg,
+    rgba(var(--color1), 1),
+    rgba(var(--color2), 1)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.chad-typography-gradient-alt {
+  background: linear-gradient(
+    45deg,
+    rgba(var(--color1), 1),
+    rgba(var(--color1), 1)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.chad-shadow {
+  box-shadow: 0 0 2em rgba(0, 0, 0, 0.4);
+}
+
+.chad-card {
+  background: linear-gradient(
+    45deg,
+    rgba(var(--color3), 0.5),
+    rgba(var(--color4), 0.5)
+  );
+  border-radius: 1em;
+  padding: 2em;
+}

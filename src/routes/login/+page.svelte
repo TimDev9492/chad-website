@@ -42,7 +42,7 @@
       };
     }}
   >
-    <div class="mdc-typography--headline6">Anmelden</div>
+    <div class="chad-typography-gradient font-extrabold text-2xl">Anmelden</div>
     <Divider />
     <IconInput
       iconName="email"

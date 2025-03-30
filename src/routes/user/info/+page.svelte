@@ -229,7 +229,9 @@
       };
     }}
   >
-    <div class="mdc-typography--headline4">Deine Infos</div>
+    <div class="font-extrabold text-5xl chad-typography-gradient">
+      Deine Infos
+    </div>
     <Divider />
     <div
       class="grid grid-cols-[1fr_auto] items-center gap-12 portrait:flex portrait:flex-col portrait:gap-4 portrait:items-center"

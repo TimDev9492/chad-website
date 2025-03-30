@@ -53,7 +53,7 @@
 <div class="w-full grid grid-cols-1">
   <Autocomplete
     style="width: 100%"
-    textfield$style="width: 100%"
+    textfield$style="width: 100%; background: transparent !important;"
     {options}
     {disabled}
     getOptionLabel={(option: Ward) => (option ? option.name : '')}

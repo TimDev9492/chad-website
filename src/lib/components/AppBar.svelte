@@ -30,7 +30,9 @@
       >
     </Section>
     <Section class="flex justify-center items-center">
-      <Title class="p-0">CHAD Tagung</Title>
+      <Title class="p-0 font-extrabold text-2xl chad-typography-gradient-alt"
+        >CHAD Tagung</Title
+      >
     </Section>
     <Section align="end">
       {#if user}
