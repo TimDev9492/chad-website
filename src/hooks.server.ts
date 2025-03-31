@@ -7,6 +7,7 @@ import {
   PUBLIC_SUPABASE_URL,
 } from '$env/static/public';
 import { getUserAppData } from '$lib/appAdapter';
+import { hasInfosProvided } from '$lib/utils';
 import type { UserAppData } from './app';
 
 const supabase: Handle = async ({ event, resolve }) => {
@@ -41,11 +42,19 @@ const supabase: Handle = async ({ event, resolve }) => {
    * JWT before returning the session.
    */
   event.locals.safeGetSession = async () => {
+    const fallback = {
+      session: null,
+      user: null,
+      userAppData: null,
+      infosProvided: false,
+      hasPaid: false,
+    };
+
     const {
       data: { session },
     } = await event.locals.supabase.auth.getSession();
     if (!session) {
-      return { session: null, user: null, userAppData: null };
+      return fallback;
     }
 
     const {
@@ -54,7 +63,7 @@ const supabase: Handle = async ({ event, resolve }) => {
     } = await event.locals.supabase.auth.getUser();
     if (error) {
       // JWT validation has failed
-      return { session: null, user: null, userAppData: null };
+      return fallback;
     }
 
     // parse user data for the app
@@ -65,7 +74,13 @@ const supabase: Handle = async ({ event, resolve }) => {
       console.error('Error getting user app data:', error);
     }
 
-    return { session, user, userAppData: userAppData ?? null };
+    return {
+      session,
+      user,
+      userAppData: userAppData ?? null,
+      infosProvided: hasInfosProvided(userAppData),
+      hasPaid: userAppData?.has_paid ?? false,
+    };
   };
 
   return resolve(event, {

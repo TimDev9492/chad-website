@@ -1,9 +1,8 @@
 <script lang="ts">
-  import IconButton, { Icon } from '@smui/icon-button';
-  import { phone } from 'phone';
+  import IconButton from '@smui/icon-button';
 
   let { data } = $props();
-  let { user, userAppData } = $derived(data);
+  let { infosProvided, hasPaid } = $derived(data);
 </script>
 
 <div class="size-full flex justify-center items-center">
@@ -13,16 +12,8 @@
     <div class="chad-typography-gradient font-extrabold text-2xl mb-2">
       Nächste Schritte zur Anmeldung
     </div>
-    {@render todo(
-      phone(userAppData.phone_number ?? '').isValid,
-      'Formular ausfüllen',
-      '/user/info',
-    )}
-    {@render todo(
-      userAppData.has_paid ?? false,
-      'Tagungsbeitrag bezahlen',
-      '/user/payments',
-    )}
+    {@render todo(infosProvided, 'Formular ausfüllen', '/user/info')}
+    {@render todo(hasPaid, 'Tagungsbeitrag bezahlen', '/user/payments')}
   </div>
 </div>
 

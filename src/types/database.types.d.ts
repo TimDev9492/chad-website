@@ -101,6 +101,35 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_infos: {
+        Row: {
+          created_at: string
+          has_paid: boolean
+          payment_reference: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          has_paid?: boolean
+          payment_reference?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          has_paid?: boolean
+          payment_reference?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_infos_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "user_infos"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       public_infos: {
         Row: {
           avatar_url: string
@@ -210,9 +239,7 @@ export type Database = {
           date_of_birth: string | null
           email: string
           gender: string | null
-          has_paid: boolean
           needs_place_to_sleep: boolean
-          payment_reference: number
           phone_number: string | null
           public_id: string
           user_id: string
@@ -223,9 +250,7 @@ export type Database = {
           date_of_birth?: string | null
           email?: string
           gender?: string | null
-          has_paid?: boolean
           needs_place_to_sleep?: boolean
-          payment_reference: number
           phone_number?: string | null
           public_id?: string
           user_id?: string
@@ -236,9 +261,7 @@ export type Database = {
           date_of_birth?: string | null
           email?: string
           gender?: string | null
-          has_paid?: boolean
           needs_place_to_sleep?: boolean
-          payment_reference?: number
           phone_number?: string | null
           public_id?: string
           user_id?: string
@@ -273,6 +296,13 @@ export type Database = {
             columns: ["public_id"]
             isOneToOne: false
             referencedRelation: "public_infos"
+            referencedColumns: ["public_id"]
+          },
+          {
+            foreignKeyName: "workshop_participants_public_id_fkey"
+            columns: ["public_id"]
+            isOneToOne: false
+            referencedRelation: "public_participants"
             referencedColumns: ["public_id"]
           },
           {
@@ -359,7 +389,15 @@ export type Database = {
           stake_name: string | null
           ward_name: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "public_infos_public_id_fkey"
+            columns: ["public_id"]
+            isOneToOne: true
+            referencedRelation: "user_infos"
+            referencedColumns: ["public_id"]
+          },
+        ]
       }
     }
     Functions: {

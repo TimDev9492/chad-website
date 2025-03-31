@@ -1,5 +1,6 @@
 import { goto } from '$app/navigation';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import type { UserAppData } from '../app';
 
 export const isHttpSuccess: (status: number) => boolean = (status: number) =>
   status >= 200 && status < 300;
@@ -33,6 +34,11 @@ export const isValidPostalAddress = (
   if (postCode >= 100_000) return false;
   if (!streetAndNumber || !city || !countryISOCode) return false;
   return true;
+};
+
+export const isValidPhoneNumber = (phoneNumber: string) => {
+  const regex = /^\+?[1-9]\d{1,14}$/; // E.164 format
+  return regex.test(phoneNumber);
 };
 
 export const isValidDate = (dateString: string) => {
@@ -81,4 +87,68 @@ export const logout = async (supabase: SupabaseClient) => {
   } else {
     goto('/');
   }
+};
+
+export const isValidUser = (userAppData: UserAppData): boolean => {
+  const { user_id, public_id, role } = userAppData;
+  return !(!user_id || !public_id || !role);
+};
+
+export const hasInfosProvided = (
+  userAppData: UserAppData | null | undefined,
+): boolean => {
+  if (!userAppData) return false;
+  const {
+    first_name,
+    last_name,
+    ward_id,
+    email,
+    phone_number,
+    date_of_birth,
+    avatar_url,
+    needs_place_to_sleep,
+    wants_breakfast,
+    gender,
+    has_paid,
+    payment_reference,
+    residential_address,
+    food_preferences,
+  } = userAppData;
+  // unexpected database entries
+  if (!isValidUser(userAppData)) return false;
+
+  // default fields
+  if (!avatar_url) return false;
+  if (needs_place_to_sleep == null) return false;
+  if (wants_breakfast == null) return false;
+  if (has_paid == null) return false;
+  if (payment_reference == null) return false;
+
+  // required fields
+  if (!first_name || !last_name) return false;
+  if (
+    !isValidEmailAddress(email ?? '') ||
+    !isValidPhoneNumber(phone_number ?? '')
+  )
+    return false;
+  if (!isValidDate(date_of_birth ?? '')) return false;
+  if (gender == null) return false;
+  if (!residential_address) return false;
+  if (!food_preferences) return false;
+
+  // address and food preferences
+  const { street_name_and_number, postal_code, city_name, country_iso } =
+    residential_address;
+  if (
+    !isValidPostalAddress(
+      street_name_and_number,
+      city_name,
+      postal_code,
+      country_iso,
+    )
+  )
+    return false;
+  if (food_preferences == null) return false;
+
+  return true;
 };

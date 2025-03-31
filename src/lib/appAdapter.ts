@@ -13,7 +13,8 @@ export const getUserAppData = async (
           roles(role),
           food_preferences(*),
           residency_addresses(*),
-          public_infos(*)
+          public_infos(*),
+          payment_infos(*)
           `,
     )
     .single();
@@ -32,8 +33,8 @@ export const getUserAppData = async (
     avatar_url: userInfo?.public_infos?.avatar_url,
     needs_place_to_sleep: userInfo?.needs_place_to_sleep,
     wants_breakfast: userInfo?.wants_breakfast,
-    has_paid: userInfo?.has_paid,
-    payment_reference: userInfo?.payment_reference,
+    has_paid: userInfo?.payment_infos?.has_paid,
+    payment_reference: userInfo?.payment_infos?.payment_reference,
     residential_address: {
       street_name_and_number:
         userInfo?.residency_addresses?.street_name_and_number,

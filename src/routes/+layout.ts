@@ -3,6 +3,7 @@ import {
   PUBLIC_SUPABASE_URL,
 } from '$env/static/public';
 import { getUserAppData } from '$lib/appAdapter';
+import { hasInfosProvided } from '$lib/utils';
 import {
   createBrowserClient,
   createServerClient,
@@ -49,5 +50,12 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
 
   const userAppData = await getUserAppData(supabase, { throwOnError: false });
 
-  return { session, supabase, user, userAppData };
+  return {
+    session,
+    supabase,
+    user,
+    userAppData,
+    infosProvided: hasInfosProvided(userAppData),
+    hasPaid: userAppData?.has_paid ?? false,
+  };
 };

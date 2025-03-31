@@ -10,10 +10,14 @@ declare global {
         session: Session | null;
         user: User | null;
         userAppData: UserAppData | null;
+        infosProvided: boolean;
+        hasPaid: boolean;
       }>;
       session: Session | null;
       user: User | null;
       userAppData: UserAppData | null;
+      infosProvided: boolean;
+      hasPaid: boolean;
     }
     interface PageData {
       session: Session | null;

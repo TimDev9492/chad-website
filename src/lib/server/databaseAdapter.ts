@@ -5,6 +5,23 @@ import type {
   UserInfoData,
 } from '../../app';
 
+export const updateHasPaid = async (
+  supabase: SupabaseClient,
+  payment_reference: string,
+  has_paid: boolean,
+  options: { throwOnError: boolean } = { throwOnError: true },
+) => {
+  const { data, error } = await supabase
+    .from('payment_infos')
+    .update({
+      has_paid,
+    })
+    .eq('payment_reference', payment_reference)
+    .select('user_id');
+  if (error && options.throwOnError) throw error;
+  return data;
+};
+
 export const upsertUserAddress = async (
   supabase: SupabaseClient,
   user_id: string,

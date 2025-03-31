@@ -121,6 +121,9 @@ export const actions: Actions = {
           public_id: undefined,
           email: undefined,
           avatar_url: undefined,
+          role: undefined,
+          payment_reference: undefined,
+          has_paid: undefined,
         },
         {
           throwOnError: true,
