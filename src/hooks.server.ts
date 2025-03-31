@@ -101,7 +101,9 @@ const authGuard: Handle = async ({ event, resolve }) => {
   event.locals.userAppData = userAppData;
 
   const adminRoutes = ['/admin'];
-  const privateRoutes = ['/user', '/participants'];
+  const paidRoutes: string[] = [];
+  const withInfosRoutes = ['/user/payments'];
+  const loggedInRoutes = ['/user', '/participants'];
   const anonymousRoutes = ['/login', '/register'];
   const apiPrivateRoutes = ['/api/spotify-search'];
 
@@ -124,10 +126,26 @@ const authGuard: Handle = async ({ event, resolve }) => {
     redirect(303, '/');
   }
 
+  // protect paid routes
+  if (
+    paidRoutes.find((route) => event.url.pathname.startsWith(route)) &&
+    !event.locals.hasPaid
+  ) {
+    redirect(303, '/user/payments');
+  }
+
+  // protect routes that require user data
+  if (
+    withInfosRoutes.find((route) => event.url.pathname.startsWith(route)) &&
+    !event.locals.infosProvided
+  ) {
+    redirect(303, '/user/info');
+  }
+
   // protect private routes
   if (
     !event.locals.session &&
-    privateRoutes.find((route) => event.url.pathname.startsWith(route))
+    loggedInRoutes.find((route) => event.url.pathname.startsWith(route))
   ) {
     redirect(303, '/login');
   }
