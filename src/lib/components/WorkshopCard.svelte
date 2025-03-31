@@ -75,7 +75,7 @@
         <div class="font-bold text-xl">{workshop.title}</div>
         <div class="font-normal">
           <LeadingIcon class="material-icons mr-2">school</LeadingIcon>
-          Leitung: Elon Musk
+          Leitung: Bischof
         </div>
         <div class="text-gray-500 font-light line-clamp-3">
           {workshop.description}

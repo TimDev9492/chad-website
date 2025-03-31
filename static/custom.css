@@ -49,3 +49,11 @@ input[type='tel'] {
   border-radius: 1em;
   padding: 2em;
 }
+
+.chad-bg-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color4), 1),
+    rgba(var(--color1), 0.3)
+  );
+}

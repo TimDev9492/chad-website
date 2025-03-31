@@ -9,6 +9,7 @@
   import { drawerStore } from '$lib/drawerStore';
   import LinearProgress from '@smui/linear-progress';
   import { navigating } from '$app/state';
+  import { PUBLIC_SUPPORT_EMAIL } from '$env/static/public';
 
   let { data, children } = $props();
   let { session, supabase, userAppData } = $derived(data);
@@ -60,7 +61,15 @@
     </main>
   </AutoAdjust>
   <!-- footer -->
-  <footer>(footer)</footer>
+  <footer class="flex justify-between items-center p-2 px-4 text-gray-700">
+    <div>Chad Tagung 2025</div>
+    <div>
+      Kontakt: <a
+        href={`mailto:${PUBLIC_SUPPORT_EMAIL}`}
+        class="text-blue-500">{PUBLIC_SUPPORT_EMAIL}</a
+      >
+    </div>
+  </footer>
 </div>
 
 <NotificationToast />
