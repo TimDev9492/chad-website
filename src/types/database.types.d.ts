@@ -210,6 +210,54 @@ export type Database = {
           },
         ]
       }
+      ride_sharing: {
+        Row: {
+          contact_details: string
+          created_at: string
+          from: string | null
+          from_seat_amount: number | null
+          is_providing: boolean
+          public_id: string
+          to: string | null
+          to_seat_amount: number | null
+        }
+        Insert: {
+          contact_details: string
+          created_at?: string
+          from?: string | null
+          from_seat_amount?: number | null
+          is_providing?: boolean
+          public_id: string
+          to?: string | null
+          to_seat_amount?: number | null
+        }
+        Update: {
+          contact_details?: string
+          created_at?: string
+          from?: string | null
+          from_seat_amount?: number | null
+          is_providing?: boolean
+          public_id?: string
+          to?: string | null
+          to_seat_amount?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ride_sharing_public_id_fkey"
+            columns: ["public_id"]
+            isOneToOne: true
+            referencedRelation: "public_infos"
+            referencedColumns: ["public_id"]
+          },
+          {
+            foreignKeyName: "ride_sharing_public_id_fkey"
+            columns: ["public_id"]
+            isOneToOne: true
+            referencedRelation: "public_participants"
+            referencedColumns: ["public_id"]
+          },
+        ]
+      }
       roles: {
         Row: {
           role: Database["public"]["Enums"]["role"]

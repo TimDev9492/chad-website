@@ -95,14 +95,18 @@ const supabase: Handle = async ({ event, resolve }) => {
 };
 
 const authGuard: Handle = async ({ event, resolve }) => {
-  const { session, user, userAppData } = await event.locals.safeGetSession();
+  const { session, user, userAppData, hasPaid, infosProvided } =
+    await event.locals.safeGetSession();
   event.locals.session = session;
   event.locals.user = user;
   event.locals.userAppData = userAppData;
+  event.locals.hasPaid = hasPaid;
+  event.locals.infosProvided = infosProvided;
 
   const adminRoutes = ['/admin'];
+  // const paidRoutes = ['/ride-sharing'];
   const paidRoutes: string[] = [];
-  const withInfosRoutes = ['/user/payments'];
+  const withInfosRoutes = ['/user/payments', '/ride-sharing'];
   const loggedInRoutes = ['/user', '/participants'];
   const anonymousRoutes = ['/login', '/register'];
   const apiPrivateRoutes = ['/api/spotify-search'];

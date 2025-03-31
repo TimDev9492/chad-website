@@ -47,6 +47,11 @@
         { icon: 'checklist', label: 'Schritte', href: '/user' },
         { icon: 'manage_accounts', label: 'Nutzerdaten', href: '/user/info' },
         { icon: 'credit_card', label: 'Bezahlen', href: '/user/payments' },
+        {
+          icon: 'airport_shuttle',
+          label: 'Mitfahrgelegenheiten',
+          href: '/ride-sharing',
+        },
       );
 
       opts.footer.push({
