@@ -3,11 +3,9 @@
   import Button, { Label } from '@smui/button';
   import { onMount } from 'svelte';
   import { page } from '$app/state';
-  import { toastStore, raiseToast } from '$lib/toastStore';
+  import { toastStore } from '$lib/toastStore';
 
   let { form } = $props();
-
-  console.log(form, page.status);
 
   onMount(() => {
     if (form && form.message) {

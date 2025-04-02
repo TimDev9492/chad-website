@@ -8,16 +8,39 @@
   } from '@smui/data-table';
   import Select, { Option } from '@smui/select';
   import IconButton from '@smui/icon-button';
-  import { Label } from '@smui/common';
+  import { Icon, Label } from '@smui/common';
   import { onMount } from 'svelte';
   import { raiseToast } from '$lib/toastStore';
   import LinearProgress from '@smui/linear-progress';
   import type { Database } from '../../types/database.types.js';
   import RoundImage from '$lib/components/RoundImage.svelte';
   import Switch from '@smui/switch';
+  import Button from '@smui/button';
+  import RideSharingDialog from '$lib/components/RideSharingDialog.svelte';
+  import Menu from '@smui/menu';
+  import List, { Item, Separator, Text } from '@smui/list';
+  import Ripple from '@smui/ripple';
 
   let { data } = $props();
-  let { supabase } = $derived(data);
+  let { supabase, userAppData } = $derived(data);
+
+  let userInSystem = $state(true);
+  let entryDialogOpen = $state(false);
+  let entryDialogData = $state<{
+    from: string;
+    to: string;
+    from_seat_amount: number | null;
+    to_seat_amount: number | null;
+    contact_details: string;
+    is_providing: boolean;
+  }>({
+    from: '',
+    to: '',
+    from_seat_amount: null,
+    to_seat_amount: null,
+    contact_details: '',
+    is_providing: true,
+  });
 
   let fetchingData = $state(true);
   let lookingForRides = $state(true);
@@ -41,13 +64,54 @@
   const slice = $derived(items.slice(start, end));
   const lastPage = $derived(Math.max(Math.ceil(items.length / perPage) - 1, 0));
 
+  let menu: Menu;
+  let menuPos = $state({ x: 0, y: 0 });
+
   $effect(() => {
     if (currentPage > lastPage) {
       currentPage = lastPage;
     }
   });
 
-  onMount(async () => {
+  const deleteOwnEntry = async () => {
+    fetchingData = true;
+    const { error } = await supabase
+      .from('ride_sharing')
+      .delete()
+      .eq('public_id', userAppData.public_id);
+    if (error) {
+      console.error(error);
+      raiseToast({
+        level: 'error',
+        message: 'Fehler beim Löschen der Mitfahrgelegenheit',
+      });
+      return;
+    }
+    raiseToast({
+      level: 'success',
+      message: 'Mitfahrgelegenheit erfolgreich gelöscht',
+    });
+    await pullData();
+    fetchingData = false;
+  };
+
+  const editOwnEntry = async () => {
+    const ownEntry = rideSharingInfos.find(
+      (item) => item.public_id === userAppData.public_id,
+    );
+    if (!ownEntry) return;
+    entryDialogData = {
+      from: ownEntry.from ?? '',
+      to: ownEntry.to ?? '',
+      from_seat_amount: ownEntry.from_seat_amount,
+      to_seat_amount: ownEntry.to_seat_amount,
+      contact_details: ownEntry.contact_details,
+      is_providing: !ownEntry.is_providing,
+    };
+    entryDialogOpen = true;
+  };
+
+  const pullData = async () => {
     const { data, error } = await supabase
       .from('ride_sharing')
       .select('*, public_infos(first_name, last_name, avatar_url)');
@@ -61,18 +125,44 @@
       return;
     }
     rideSharingInfos = data as RideSharingInfo[];
+
+    let userIndex = rideSharingInfos.findIndex(
+      (item) => item.public_id === userAppData.public_id,
+    );
+
+    userInSystem = userIndex !== -1;
+
+    // if user is in the system, put him at the top of the list
+    if (userIndex === -1) return;
+    let userItem = rideSharingInfos.splice(userIndex, 1)[0];
+    rideSharingInfos.unshift(userItem);
+  };
+
+  onMount(async () => {
+    await pullData();
     fetchingData = false;
   });
 </script>
 
 <div class="size-full flex justify-center items-center">
-  <div class="chad-card chad-shadow portrait:w-[90vw]">
+  <div
+    class="chad-card chad-shadow portrait:w-[90vw] flex flex-col items-center gap-4"
+  >
     <div
-      class="chad-typography-gradient font-extrabold landscape:text-6xl portrait:text-4xl pb-4 mb-4"
+      class="chad-typography-gradient font-extrabold landscape:text-6xl portrait:text-4xl pb-4"
     >
       Mitfahrgelegenheiten
     </div>
-    <div class="flex items-center justify-center mb-4 text-center">
+    {#if !userInSystem || true}
+      <Button
+        onclick={() => (entryDialogOpen = true)}
+        color="secondary"
+        variant="raised"
+      >
+        <Label>Eintragen</Label>
+      </Button>
+    {/if}
+    <div class="flex items-center justify-center text-center">
       <span class={lookingForRides ? 'text-gray-500' : 'text-black'}
         >Ich will mitnehmen</span
       >
@@ -119,7 +209,12 @@
         </Head>
         <Body>
           {#each slice as item (item.public_id)}
-            <Row>
+            <Row
+              class={'relative ' +
+                (item.public_id === userAppData.public_id
+                  ? 'bg-green-100'
+                  : '')}
+            >
               <Cell>
                 <div class="flex items-center gap-2">
                   <div class="w-8">
@@ -162,7 +257,34 @@
                   -
                 {/if}
               </Cell>
-              <Cell>{item.contact_details}</Cell>
+              <Cell>
+                <div class="inline-block">
+                  {item.contact_details}
+                </div>
+              </Cell>
+              {#if item.public_id === userAppData.public_id}
+                <div class="absolute top-0 right-0 h-full flex">
+                  <div
+                    class="h-full w-8 bg-white chad-text-mask-left border-y"
+                  ></div>
+                  <div class="h-full aspect-square bg-white border-y p-2">
+                    <button
+                      use:Ripple={{ surface: true }}
+                      onclick={(e) => {
+                        menuPos = {
+                          x: e.clientX,
+                          y: e.clientY,
+                        };
+                        menu.setOpen(true);
+                      }}
+                      aria-label="More options"
+                      class="cursor-pointer select-none material-icons size-full flex justify-center items-center text-center rounded-full text-xl"
+                    >
+                      more_vert
+                    </button>
+                  </div>
+                </div>
+              {/if}
             </Row>
           {/each}
         </Body>
@@ -226,4 +348,36 @@
       </DataTable>
     </div>
   </div>
+</div>
+<RideSharingDialog
+  {supabase}
+  refreshData={pullData}
+  publicId={userAppData.public_id!}
+  bind:open={entryDialogOpen}
+  bind:toLocation={entryDialogData.to}
+  bind:toSeats={entryDialogData.to_seat_amount}
+  bind:fromLocation={entryDialogData.from}
+  bind:fromSeats={entryDialogData.from_seat_amount}
+  bind:contactDetails={entryDialogData.contact_details}
+  bind:lookingForRides={entryDialogData.is_providing}
+/>
+<div
+  class="fixed z-50"
+  style="top: {menuPos.y}px; left: {menuPos.x}px;"
+>
+  <Menu bind:this={menu}>
+    <List>
+      <Item onSMUIAction={editOwnEntry}>
+        <Icon class="material-icons pr-2">edit</Icon>
+        <Text>Bearbeiten</Text>
+      </Item>
+      <Item
+        onSMUIAction={deleteOwnEntry}
+        class="text-red-500"
+      >
+        <Icon class="material-icons pr-2">delete</Icon>
+        <Text>Löschen</Text>
+      </Item>
+    </List>
+  </Menu>
 </div>
