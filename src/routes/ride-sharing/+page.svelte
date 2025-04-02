@@ -174,7 +174,7 @@
         >Ich will mitfahren</span
       >
     </div>
-    <div class="landscape:min-w-[60vw]">
+    <div class="landscape:min-w-[60vw] w-full">
       <DataTable
         table$aria-label="Mitfahrgelegenheiten"
         style="width: 100%;"
@@ -258,9 +258,7 @@
                 {/if}
               </Cell>
               <Cell>
-                <div class="inline-block">
-                  {item.contact_details}
-                </div>
+                {item.contact_details}
               </Cell>
               {#if item.public_id === userAppData.public_id}
                 <div class="absolute top-0 right-0 h-full flex">
