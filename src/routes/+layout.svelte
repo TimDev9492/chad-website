@@ -28,6 +28,14 @@
   });
 </script>
 
+<svelte:head>
+  <title>CHAD Tagung</title>
+  <meta
+    name="description"
+    content="Website für die CHAD (Schweiz - Österreich - Deutschland) Tagung 2025"
+  />
+</svelte:head>
+
 <AppDrawer
   {userAppData}
   {supabase}
