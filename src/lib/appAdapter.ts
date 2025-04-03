@@ -73,3 +73,17 @@ export const getWorkshopsWithTimeslots = async (
 
   return groupedWorkshops;
 };
+
+export const getWorkshopDetails = async (
+  supabase: SupabaseClient,
+  workshopId: string,
+): Promise<Workshop | null> => {
+  const { data, error } = await supabase
+    .from('workshops')
+    .select('*')
+    .eq('id', workshopId);
+
+  if (error) throw error;
+
+  return data.length ? data[0] : null;
+};

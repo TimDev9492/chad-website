@@ -22,7 +22,7 @@
 <PageFormWrapper>
   <form
     method="POST"
-    class="flex flex-col justify-evenly items-center gap-4 portrait:gap-8"
+    class="flex flex-col justify-evenly items-center gap-4"
     use:enhance={() => {
       waitingForResponse = true;
 
@@ -42,7 +42,9 @@
       };
     }}
   >
-    <div class="chad-typography-gradient font-extrabold text-2xl">Anmelden</div>
+    <div class="chad-typography-gradient font-extrabold chad-text-subheading">
+      Anmelden
+    </div>
     <Divider />
     <IconInput
       iconName="email"
@@ -66,11 +68,15 @@
     >
       {#snippet helper()}
         <HelperText persistent>
-          <a href="/login/reset-password">Passwort vergessen?</a>
+          <a
+            class="text-blue-400 chad-text-base"
+            href="/login/reset-password">Passwort vergessen?</a
+          >
         </HelperText>
       {/snippet}
     </IconInput>
-    <span class="flex flex-col gap-1">
+    <Divider />
+    <span class="flex flex-col items-center gap-2">
       <Button
         variant="raised"
         color="primary"
@@ -80,7 +86,7 @@
         <Label>Anmelden</Label>
       </Button>
       <a
-        class="mdc-typography--caption text-center"
+        class="chad-text-sm text-center"
         href="/register">Du hast noch keinen Account?</a
       >
     </span>

@@ -21,7 +21,7 @@
 <PageFormWrapper>
   <form
     method="POST"
-    class="flex flex-col justify-evenly items-center gap-4 portrait:gap-8"
+    class="flex flex-col justify-evenly items-center gap-4"
     use:enhance={() => {
       waitingForResponse = true;
 
@@ -41,7 +41,11 @@
       };
     }}
   >
-    <div class="mdc-typography--headline6">Password zurücksetzen</div>
+    <div
+      class="chad-text-subheading chad-typography-gradient font-extrabold text-balance"
+    >
+      Password zurücksetzen
+    </div>
     <Divider />
     <IconInput
       iconName="email"

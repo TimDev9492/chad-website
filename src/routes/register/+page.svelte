@@ -21,7 +21,7 @@
 <PageFormWrapper>
   <form
     method="POST"
-    class="flex flex-col justify-evenly items-center gap-4 portrait:gap-8"
+    class="flex flex-col justify-evenly items-center gap-4"
     use:enhance={() => {
       waitingForResponse = true;
 
@@ -40,7 +40,7 @@
       };
     }}
   >
-    <div class="chad-typography-gradient font-extrabold text-2xl">
+    <div class="chad-typography-gradient font-extrabold chad-text-subheading">
       Account erstellen
     </div>
     <Divider />
@@ -64,7 +64,8 @@
       disabled={waitingForResponse}
       required
     ></IconInput>
-    <span class="flex flex-col gap-1">
+    <Divider />
+    <span class="flex flex-col items-center gap-2">
       <Button
         variant="raised"
         color="primary"
@@ -74,7 +75,7 @@
         <Label>Registrieren</Label>
       </Button>
       <a
-        class="mdc-typography--caption text-center"
+        class="chad-text-sm text-center"
         href="/login">Du hast bereits einen Account?</a
       >
     </span>

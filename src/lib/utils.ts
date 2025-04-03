@@ -1,5 +1,7 @@
 import { goto } from '$app/navigation';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { format } from 'date-fns';
+import { de } from 'date-fns/locale';
 import type { UserAppData } from '../app';
 
 export const isHttpSuccess: (status: number) => boolean = (status: number) =>
@@ -151,4 +153,10 @@ export const hasInfosProvided = (
   if (food_preferences == null) return false;
 
   return true;
+};
+
+export const formatWorkshopStart = (startTime: string) => {
+  return format(startTime, "eee dd.MM. HH:mm 'Uhr'", {
+    locale: de,
+  });
 };

@@ -2,8 +2,8 @@
   import { format } from 'date-fns';
   import type { Workshop } from '../../app';
   import Chip, { LeadingIcon, Text } from '@smui/chips';
-  import { de } from 'date-fns/locale';
   import LinearProgress from '@smui/linear-progress';
+  import { formatWorkshopStart } from '$lib/utils';
 
   let {
     workshop,
@@ -20,11 +20,9 @@
   } = $props();
 </script>
 
-<div class="chad-shadow rounded-[1em]">
+<div class="chad-shadow rounded-[1em] min-w-64 w-full">
   {#if workshop == null}
-    <div
-      class="rounded-[1em] animate-pulse portrait:w-[90vw] landscape:w-[30rem] min-h-[15rem] bg-gray-300 overflow-hidden"
-    >
+    <div class="rounded-[1em] animate-pulse bg-gray-300 overflow-hidden w-full">
       <div
         class="w-full aspect-video flex justify-center items-center bg-gray-200"
       >
@@ -42,21 +40,21 @@
       </div>
 
       <div class="flex flex-col p-4">
-        <div class="h-3 bg-gray-400 rounded-[1em]-full w-3/4 mb-6"></div>
-        <div class="h-2 bg-gray-400 rounded-[1em]-full w-1/3 mb-6"></div>
-        <div class="h-2.5 bg-gray-400 rounded-[1em]-full w-full mb-3"></div>
-        <div class="h-2.5 bg-gray-400 rounded-[1em]-full w-full mb-3"></div>
-        <div class="h-2.5 bg-gray-400 rounded-[1em]-full w-3/5 mb-6"></div>
+        <div class="h-3 bg-gray-400 rounded-full w-3/4 mb-6"></div>
+        <div class="h-2 bg-gray-400 rounded-full w-1/3 mb-6"></div>
+        <div class="h-2.5 bg-gray-400 rounded-full w-full mb-3"></div>
+        <div class="h-2.5 bg-gray-400 rounded-full w-full mb-3"></div>
+        <div class="h-2.5 bg-gray-400 rounded-full w-3/5 mb-6"></div>
         <div class="flex gap-2">
-          <div class="h-8 bg-gray-400 rounded-[1em]-full w-48"></div>
-          <div class="h-8 bg-gray-400 rounded-[1em]-full w-24"></div>
-          <div class="h-8 bg-gray-400 rounded-[1em]-full w-24"></div>
+          <div class="h-8 bg-gray-400 rounded-full w-48"></div>
+          <div class="h-8 bg-gray-400 rounded-full w-24"></div>
+          <div class="h-8 bg-gray-400 rounded-full w-24"></div>
         </div>
       </div>
     </div>
   {:else}
     <div
-      class="relative rounded-[1em] overflow-hidden bg-[#f7dadf] bg-opacity-75 portrait:w-[90vw] landscape:w-[30rem] min-h-[15rem]"
+      class="relative rounded-[1em] overflow-hidden bg-[#f7dadf] bg-opacity-75 w-full"
     >
       <div class="relative">
         <img
@@ -72,22 +70,18 @@
         </div>
       </div>
       <div class="flex flex-col p-4 gap-4">
-        <div class="font-bold text-xl">{workshop.title}</div>
-        <div class="font-normal">
+        <div class="font-bold chad-text-lg">{workshop.title}</div>
+        <div class="font-normal chad-text-base">
           <LeadingIcon class="material-icons mr-2">school</LeadingIcon>
-          Leitung: Bischof
+          <span>Leitung: Bischof</span>
         </div>
-        <div class="text-gray-500 font-light line-clamp-3">
+        <div class="text-gray-500 font-light line-clamp-3 chad-text-base">
           {workshop.description}
         </div>
-        <div class="[&>*]:bg-[#6198e7] [&>*]:bg-opacity-50">
+        <div class="[&>*]:bg-[#6198e7] [&>*]:bg-opacity-50 [&>*]:mt-1">
           <Chip chip="eventStartChip">
             <LeadingIcon class="material-icons">event</LeadingIcon>
-            <Text
-              >{format(workshop.event_start, "eee dd.MM. HH:mm 'Uhr'", {
-                locale: de,
-              })}</Text
-            >
+            <Text>{formatWorkshopStart(workshop.event_start)}</Text>
           </Chip>
           <Chip chip="eventDurationChip">
             <LeadingIcon class="material-icons">hourglass_bottom</LeadingIcon>

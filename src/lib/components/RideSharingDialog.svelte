@@ -134,7 +134,8 @@
       <div class="flex flex-col items-center gap-4 p-2">
         <div class="flex justify-center items-center">
           <span
-            class={lookingForRides || loading ? 'text-gray-500' : 'text-black'}
+            class={'text-center chad-text-base' +
+              (lookingForRides || loading ? 'text-gray-500' : 'text-black')}
             >Ich kann mitnehmen</span
           >
           <Switch

@@ -9,7 +9,9 @@
   <div
     class="chad-card chad-shadow portrait:max-w-[90vw] landscape:max-w-[60vw] flex flex-col items-center gap-4"
   >
-    <div class="chad-typography-gradient font-extrabold text-2xl mb-2">
+    <div
+      class="chad-typography-gradient font-extrabold chad-text-subheading mb-2"
+    >
       Nächste Schritte zur Anmeldung
     </div>
     {@render todo(infosProvided, 'Formular ausfüllen', '/user/info')}
@@ -24,7 +26,10 @@
     {:else}
       <div class="material-icons text-red-400">cancel</div>
     {/if}
-    <span class="font-thin text-base">{text}</span>
+    <span
+      class="font-thin chad-text-base text-nowrap overflow-hidden text-ellipsis"
+      >{text}</span
+    >
     <IconButton
       class="material-icons text-gray-400"
       size="button"

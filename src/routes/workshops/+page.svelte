@@ -16,9 +16,10 @@
   import { toastStore } from '$lib/toastStore.js';
   import Dialog, { Actions, Content, Title } from '@smui/dialog';
   import { useSupabaseTable } from '$lib/tableState.svelte';
+  import Ripple from '@smui/ripple';
 
   let { data } = $props();
-  let { supabase, user, userAppData } = $derived(data);
+  let { supabase, userAppData } = $derived(data);
 
   let signedIn = $derived(
     userAppData.public_id !== undefined && userAppData.public_id !== null,
@@ -185,67 +186,75 @@
   };
 </script>
 
-<div class="size-full flex justify-center">
+<div
+  class="size-full flex justify-center items-center landscape:p-8 portrait:p-4"
+>
   <div
-    class="grid landscape:grid-cols-[3fr_1fr] landscape:max-w-[100rem] landscape:py-16 gap-16 portrait:grid-cols-1 portrait:py-8"
+    class="grid landscape:grid-cols-4 portrait:grid-cols-1 gap-16 landscape:max-w-[80vw]"
   >
-    <div
-      class="w-full grid landscape:grid-cols-2 portrait:grid-cols-1 items-start gap-8"
-    >
-      {#if groupedWorkshops == null}
-        <WorkshopCard workshop={null} />
-        <WorkshopCard workshop={null} />
-      {:else}
-        {#each groupedWorkshops[activeTimeSlot] as workshop}
-          <div class="relative">
-            <WorkshopCard
-              {workshop}
-              loading={loadingWorkshopId === workshop.id}
-              participants={getParticipantCount(workshop.id)}
-              onParticipantsIconClick={() => {
-                if (signedIn) showParticipantModal(workshop.id);
-              }}
-            />
-            {#if !userWorkshops.includes(workshop.id)}
-              {#if getParticipantCount(workshop.id) < workshop.capacity && signedIn}
+    <div class="landscape:col-span-3">
+      <div class="grid landscape:grid-cols-2 gap-4">
+        {#if groupedWorkshops == null}
+          <WorkshopCard workshop={null} />
+          <WorkshopCard workshop={null} />
+        {:else}
+          {#each groupedWorkshops[activeTimeSlot] as workshop}
+            <div class="relative">
+              <WorkshopCard
+                {workshop}
+                loading={loadingWorkshopId === workshop.id}
+                participants={getParticipantCount(workshop.id)}
+                onParticipantsIconClick={() => {
+                  if (signedIn) showParticipantModal(workshop.id);
+                }}
+              />
+              <a
+                use:Ripple={{ surface: true }}
+                class="absolute top-0 left-0 size-full rounded-[1em]"
+                href={`/workshops/${workshop.id}`}
+                aria-label="Workshop Details"
+              ></a>
+              {#if !userWorkshops.includes(workshop.id)}
+                {#if getParticipantCount(workshop.id) < workshop.capacity && signedIn}
+                  <Button
+                    variant="raised"
+                    color="primary"
+                    class="absolute top-2 right-2 !bg-yellow-300"
+                    disabled={loadingWorkshopId !== null}
+                    onclick={() => triggerSignUp(workshop.id)}
+                  >
+                    <Label>Anmelden</Label>
+                    <Icon class="material-icons">person_add_alt</Icon>
+                  </Button>
+                {:else if signedIn}
+                  <Button
+                    variant="raised"
+                    color="primary"
+                    class="absolute top-2 right-2 !bg-gray-200"
+                    disabled
+                  >
+                    <Label>Voll</Label>
+                    <Icon class="material-icons">groups</Icon>
+                  </Button>
+                {/if}
+              {:else}
                 <Button
                   variant="raised"
                   color="primary"
-                  class="absolute top-2 right-2 !bg-yellow-300"
+                  class="absolute top-2 right-2 !bg-red-500"
                   disabled={loadingWorkshopId !== null}
-                  onclick={() => triggerSignUp(workshop.id)}
+                  onclick={() => triggerLeave(workshop.id)}
                 >
-                  <Label>Anmelden</Label>
-                  <Icon class="material-icons">person_add_alt</Icon>
-                </Button>
-              {:else if signedIn}
-                <Button
-                  variant="raised"
-                  color="primary"
-                  class="absolute top-2 right-2 !bg-gray-200"
-                  disabled
-                >
-                  <Label>Voll</Label>
-                  <Icon class="material-icons">groups</Icon>
+                  <Label>Abmelden</Label>
+                  <Icon class="material-icons">person_remove</Icon>
                 </Button>
               {/if}
-            {:else}
-              <Button
-                variant="raised"
-                color="primary"
-                class="absolute top-2 right-2 !bg-red-500"
-                disabled={loadingWorkshopId !== null}
-                onclick={() => triggerLeave(workshop.id)}
-              >
-                <Label>Abmelden</Label>
-                <Icon class="material-icons">person_remove</Icon>
-              </Button>
-            {/if}
-          </div>
-        {/each}
-      {/if}
+            </div>
+          {/each}
+        {/if}
+      </div>
     </div>
-    <div class="fixed right-64 portrait:hidden">
+    <div class="portrait:hidden">
       <div class="font-thin text-gray-500">Zeit Slots</div>
       <div class="relative">
         <List>

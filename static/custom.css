@@ -47,7 +47,12 @@ input[type='tel'] {
     rgba(var(--color4), 0.5)
   );
   border-radius: 1em;
-  padding: 2em;
+  @media (orientation: landscape) {
+    padding: 2em;
+  }
+  @media (orientation: portrait) {
+    padding: 1.5em;
+  }
 }
 
 .chad-bg-gradient {
@@ -69,4 +74,71 @@ input[type='tel'] {
     rgba(255, 255, 255, 1),
     rgba(255, 255, 255, 0)
   );
+}
+
+.chad-text-giga {
+  line-height: 1;
+  @media (orientation: landscape) {
+    font-size: 8em;
+  }
+  @media (orientation: portrait) {
+    font-size: 4em;
+  }
+}
+
+.chad-text-xl {
+  line-height: 1;
+  @media (orientation: landscape) {
+    font-size: 6em;
+  }
+  @media (orientation: portrait) {
+    font-size: 3em;
+  }
+}
+
+.chad-text-heading {
+  line-height: 1;
+  @media (orientation: landscape) {
+    font-size: 4em;
+  }
+  @media (orientation: portrait) {
+    font-size: 2em;
+  }
+}
+
+.chad-text-subheading {
+  line-height: 1;
+  @media (orientation: landscape) {
+    font-size: 2em;
+  }
+  @media (orientation: portrait) {
+    font-size: 1.5em;
+  }
+}
+
+.chad-text-lg {
+  @media (orientation: landscape) {
+    font-size: 1.1em;
+  }
+  @media (orientation: portrait) {
+    font-size: 1.1em;
+  }
+}
+
+.chad-text-base {
+  @media (orientation: landscape) {
+    font-size: 1em;
+  }
+  @media (orientation: portrait) {
+    font-size: 1em;
+  }
+}
+
+.chad-text-sm {
+  @media (orientation: landscape) {
+    font-size: 0.8em;
+  }
+  @media (orientation: portrait) {
+    font-size: 0.8em;
+  }
 }

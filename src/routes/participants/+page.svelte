@@ -18,7 +18,14 @@
 
   let participants = $state<ParticipantData[] | null>(null);
   let open = $state(false);
-  let closeUpSrc = $state('');
+  let dialogParticipant = $state<ParticipantData>({
+    public_id: '',
+    first_name: '',
+    last_name: '',
+    stake_name: '',
+    ward_name: '',
+    avatar_url: '',
+  });
 
   onMount(async () => {
     const { data, error } = await supabase
@@ -48,19 +55,37 @@
   bind:open
   aria-labelledby="avatar closeup"
   aria-describedby="avatar closeup"
-  surface$class="landscape:!max-w-[100vw] landscape:!size-[80vh] portait:!size-[90vw]"
+  surface$class="landscape:!max-h-[90vh] landscape:!w-[80vh] portait:!w-[90vw]"
 >
   <Content>
     <RoundImage
       alt="avatar closeup"
-      src={closeUpSrc}
+      src={dialogParticipant.avatar_url}
     />
+    <div
+      class="flex portrait:flex-col items-center gap-4 pt-4 landscape:flex-row landscape:justify-between"
+    >
+      <div class="flex flex-col portrait:text-center">
+        <span class="font-bold chad-text-lg">Name</span>
+        <span class="chad-text-base"
+          >{dialogParticipant.first_name} {dialogParticipant.last_name}</span
+        >
+      </div>
+      <div class="flex flex-col portrait:text-center">
+        <span class="font-bold chad-text-lg">Gemeinde</span>
+        <span class="chad-text-base">{dialogParticipant.ward_name}</span>
+      </div>
+      <div class="flex flex-col portrait:text-center">
+        <span class="font-bold chad-text-lg">Pfahl</span>
+        <span class="chad-text-base">{dialogParticipant.stake_name}</span>
+      </div>
+    </div>
   </Content>
 </Dialog>
 
 <div class="size-full flex flex-col justify-center items-center gap-8 p-8">
   <div
-    class="chad-typography-gradient font-extrabold text-5xl text-wrap text-center pb-1"
+    class="chad-typography-gradient font-extrabold chad-text-heading text-wrap text-center pb-1"
   >
     Angemeldete Teilnehmer
   </div>
@@ -75,7 +100,7 @@
           <ParticipantIcon
             {participant}
             onclick={(participant) => {
-              closeUpSrc = participant.avatar_url;
+              dialogParticipant = participant;
               open = true;
             }}
           />

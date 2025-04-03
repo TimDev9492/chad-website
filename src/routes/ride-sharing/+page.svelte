@@ -144,14 +144,12 @@
   });
 </script>
 
-<div class="size-full flex justify-center items-center">
+<div class="size-full flex justify-center items-center py-4">
   <div
     class="chad-card chad-shadow portrait:w-[90vw] flex flex-col items-center gap-4"
   >
-    <div
-      class="chad-typography-gradient font-extrabold landscape:text-6xl portrait:text-4xl pb-4"
-    >
-      Mitfahrgelegenheiten
+    <div class="chad-typography-gradient font-extrabold chad-text-heading pb-4">
+      Mitfahrgelegenheit
     </div>
     {#if !userInSystem || true}
       <Button
@@ -162,7 +160,7 @@
         <Label>Eintragen</Label>
       </Button>
     {/if}
-    <div class="flex items-center justify-center text-center">
+    <div class="flex items-center justify-center text-center chad-text-base">
       <span class={lookingForRides ? 'text-gray-500' : 'text-black'}
         >Ich will mitnehmen</span
       >
@@ -207,7 +205,7 @@
             </Cell>
           </Row>
         </Head>
-        <Body>
+        <Body class="">
           {#each slice as item (item.public_id)}
             <Row
               class={'relative ' +
@@ -223,7 +221,7 @@
                       alt="Avatar"
                     />
                   </div>
-                  <span class="text-sm">
+                  <span>
                     {item.public_infos.first_name}
                     {item.public_infos.last_name}
                   </span>
@@ -234,7 +232,7 @@
                   <div class="flex items-center gap-2">
                     <div class="material-icons">location_on</div>
                     <span>{item.from}</span>
-                    <div class="text-gray-600 text-sm flex items-center">
+                    <div class="text-gray-600 flex items-center">
                       <div class="material-icons">person</div>
                       <span>{item.from_seat_amount}</span>
                     </div>
@@ -248,7 +246,7 @@
                   <div class="flex items-center gap-2">
                     <div class="material-icons">location_on</div>
                     <span>{item.to}</span>
-                    <div class="text-gray-600 text-sm flex items-center">
+                    <div class="text-gray-600 flex items-center">
                       <div class="material-icons">person</div>
                       <span>{item.to_seat_amount}</span>
                     </div>
@@ -310,16 +308,11 @@
               </Select>
             {/snippet}
             {#snippet total()}
-              {start + 1}-{end} von {items.length}
+              <div>
+                {start + 1}-{end} von {items.length}
+              </div>
             {/snippet}
 
-            <IconButton
-              class="material-icons"
-              action="first-page"
-              title="First page"
-              onclick={() => (currentPage = 0)}
-              disabled={currentPage === 0}>first_page</IconButton
-            >
             <IconButton
               class="material-icons"
               action="prev-page"
@@ -333,13 +326,6 @@
               title="Next page"
               onclick={() => currentPage++}
               disabled={currentPage === lastPage}>chevron_right</IconButton
-            >
-            <IconButton
-              class="material-icons"
-              action="last-page"
-              title="Last page"
-              onclick={() => (currentPage = lastPage)}
-              disabled={currentPage === lastPage}>last_page</IconButton
             >
           </Pagination>
         {/snippet}

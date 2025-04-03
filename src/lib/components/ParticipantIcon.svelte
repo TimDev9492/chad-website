@@ -45,11 +45,11 @@
     <div class="flex flex-col items-center">
       {@render avatarWithName(
         participant.avatar_url,
-        `${participant.first_name} ${participant.last_name}`,
+        `${participant.first_name} ${participant.last_name.charAt(0)}.`,
         participant.public_id,
         loading,
       )}
-      <span class="-translate-y-1/4 text-nowrap">
+      <span class="-translate-y-1/4 text-nowrap w-full">
         {@render info(
           'church',
           `${participant.ward_name.replace('Gemeinde ', '')}`,
@@ -76,11 +76,11 @@
   </div>
 {/snippet}
 {#snippet info(icon: string, text: string, mdc_class: string)}
-  <span class="flex justify-stretch items-center gap-2">
+  <span class="flex justify-center items-center gap-2 w-full">
     {#if icon}
       <LeadingIcon class="material-icons">{icon}</LeadingIcon>
     {/if}
-    <div class={`mdc-typography--${mdc_class} w-full text-center`}>
+    <div class="chad-text-sm overflow-hidden text-ellipsis">
       {text}
     </div>
   </span>
@@ -115,7 +115,7 @@
       class="py-1 px-3 rounded-full bg-gray-300 flex items-center -translate-y-2/3 select-none max-w-full"
     >
       <div
-        class="mdc-typography--caption whitespace-nowrap overflow-ellipsis overflow-hidden"
+        class="chad-text-sm whitespace-nowrap overflow-ellipsis overflow-hidden"
       >
         {name}
       </div>
