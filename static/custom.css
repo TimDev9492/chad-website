@@ -5,6 +5,17 @@
   --color4: 192, 225, 230; /* #c0e1e6 */
 }
 
+@font-face {
+  font-family: 'MADEWaffleSoft';
+  src: url('/fonts/MADEWaffleSoft.ttf.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.rich-font {
+  font-family: 'MADEWaffleSoft';
+}
+
 input[type='text'],
 input[type='password'],
 input[type='email'],

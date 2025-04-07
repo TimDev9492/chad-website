@@ -8,10 +8,9 @@
   import { onDestroy, onMount } from 'svelte';
   import { avatarStore } from '$lib/avatarStore';
   import { logout } from '$lib/utils';
+  import RoundImage from './RoundImage.svelte';
 
   let menu: Menu;
-  let anchor: HTMLDivElement | undefined = $state();
-  let anchorClasses: { [k: string]: boolean } = $state({});
 
   let { supabase, userAppData } = $props();
 
@@ -31,47 +30,31 @@
   onDestroy(() => unsubscribe && unsubscribe());
 </script>
 
-<div
-  class={Object.keys(anchorClasses).join(' ') +
-    ' flex justify-center items-center'}
-  use:Anchor={{
-    addClass: (className) => {
-      if (!anchorClasses[className]) {
-        anchorClasses[className] = true;
-      }
-    },
-    removeClass: (className) => {
-      if (anchorClasses[className]) {
-        delete anchorClasses[className];
-      }
-    },
-  }}
-  bind:this={anchor}
->
+<div class="max-w-full max-h-full aspect-square">
   {#if displayedAvatarUrl}
     <button
-      class="rounded-full cursor-pointer ml-2"
+      class="rounded-full cursor-pointer size-full"
       onclick={() => menu.setOpen(true)}
       use:Ripple={{ surface: true }}
     >
       <img
         src={displayedAvatarUrl}
         alt="Avatar"
-        class="size-10 rounded-full"
+        class="max-h-full max-w-full bg-red-400"
       />
+      <!-- <div class="size-full bg-red-400"></div> -->
     </button>
   {:else}
-    <IconButton
+    <button
+      use:Ripple={{ surface: true }}
       onclick={() => menu.setOpen(true)}
-      class="material-icons"
+      class="material-icons rounded-full h-full aspect-square chad-text-heading"
       aria-label="Account"
       >account_circle
-    </IconButton>
+    </button>
   {/if}
   <Menu
     bind:this={menu}
-    anchor={false}
-    anchorElement={anchor}
     anchorCorner="BOTTOM_LEFT"
   >
     <List>

@@ -34,6 +34,12 @@
     name="description"
     content="Website für die CHAD (Schweiz - Österreich - Deutschland) Tagung 2025"
   />
+  <link
+    rel="preload"
+    href="/fonts/MADEWaffleSoft.ttf.woff"
+    type="tonf/woff"
+    crossorigin="anonymous"
+  />
 </svelte:head>
 
 <AppDrawer

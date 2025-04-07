@@ -3,7 +3,7 @@
 </script>
 
 <img
-  class="w-full h-auto aspect-square object-cover rounded-full relative"
+  class="max-w-full max-h-full aspect-square object-cover rounded-full relative"
   {src}
   {alt}
 />
