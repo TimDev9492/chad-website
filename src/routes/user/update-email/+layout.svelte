@@ -3,10 +3,10 @@
 </script>
 
 <svelte:head>
-  <title>CHAD • Admin Panel</title>
+  <title>CHAD • Email ändern</title>
   <meta
     name="description"
-    content="Admin Control Panel"
+    content="Ändere deine Email Adresse"
   />
 </svelte:head>
 
