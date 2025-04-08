@@ -31,10 +31,19 @@ export const getUserAppData = async (
     phone_number: userInfo?.phone_number,
     date_of_birth: userInfo?.date_of_birth,
     avatar_url: userInfo?.public_infos?.avatar_url,
-    needs_place_to_sleep: userInfo?.needs_place_to_sleep,
-    wants_breakfast: userInfo?.wants_breakfast,
     has_paid: userInfo?.payment_infos?.has_paid,
     payment_reference: userInfo?.payment_infos?.payment_reference,
+    room_mate_preferences: userInfo?.room_mate_preferences,
+    accomodation: userInfo?.accomodation,
+    mode_of_transport: userInfo?.mode_of_transport,
+    has_deutschland_ticket: userInfo?.has_deutschland_ticket,
+    wants_to_visit_temple: userInfo?.wants_to_visit_temple,
+    has_endowment: userInfo?.has_endowment,
+    is_temple_staff: userInfo?.is_temple_staff,
+    wants_to_provide_temple_staff: userInfo?.wants_to_provide_temple_staff,
+    wants_to_attend_baptism: userInfo?.wants_to_attend_baptism,
+    agrees_to_recordings: userInfo?.agrees_to_recordings,
+    other_remarks: userInfo?.other_remarks,
     residential_address: {
       street_name_and_number:
         userInfo?.residency_addresses?.street_name_and_number,
@@ -51,6 +60,12 @@ export const getUserAppData = async (
     ),
     gender: userInfo?.gender,
     role: userInfo?.roles?.role,
+    breakfast_preferences: {
+      tuesday: userInfo?.breakfast_tuesday,
+      wednesday: userInfo?.breakfast_wednesday,
+      thursday: userInfo?.breakfast_thursday,
+      friday: userInfo?.breakfast_friday,
+    },
   } as UserAppData;
 };
 

@@ -9,6 +9,21 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      accomodations: {
+        Row: {
+          created_at: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          name?: string
+        }
+        Relationships: []
+      }
       countries: {
         Row: {
           country_code: string
@@ -63,6 +78,21 @@ export type Database = {
         ]
       }
       genders: {
+        Row: {
+          created_at: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      means_of_transport: {
         Row: {
           created_at: string
           name: string
@@ -283,44 +313,97 @@ export type Database = {
       }
       user_infos: {
         Row: {
+          accomodation: string | null
+          agrees_to_recordings: boolean
+          breakfast_friday: boolean
+          breakfast_thursday: boolean
+          breakfast_tuesday: boolean
+          breakfast_wednesday: boolean
           created_at: string
           date_of_birth: string | null
           email: string
           gender: string | null
-          needs_place_to_sleep: boolean
+          has_deutschland_ticket: boolean
+          has_endowment: boolean
+          is_temple_staff: boolean
+          mode_of_transport: string | null
+          other_remarks: string | null
           phone_number: string | null
           public_id: string
+          room_mate_preferences: string | null
           user_id: string
-          wants_breakfast: boolean
+          wants_to_attend_baptism: boolean
+          wants_to_provide_temple_staff: boolean
+          wants_to_visit_temple: boolean
         }
         Insert: {
+          accomodation?: string | null
+          agrees_to_recordings?: boolean
+          breakfast_friday?: boolean
+          breakfast_thursday?: boolean
+          breakfast_tuesday?: boolean
+          breakfast_wednesday?: boolean
           created_at?: string
           date_of_birth?: string | null
           email?: string
           gender?: string | null
-          needs_place_to_sleep?: boolean
+          has_deutschland_ticket?: boolean
+          has_endowment?: boolean
+          is_temple_staff?: boolean
+          mode_of_transport?: string | null
+          other_remarks?: string | null
           phone_number?: string | null
           public_id?: string
+          room_mate_preferences?: string | null
           user_id?: string
-          wants_breakfast?: boolean
+          wants_to_attend_baptism?: boolean
+          wants_to_provide_temple_staff?: boolean
+          wants_to_visit_temple?: boolean
         }
         Update: {
+          accomodation?: string | null
+          agrees_to_recordings?: boolean
+          breakfast_friday?: boolean
+          breakfast_thursday?: boolean
+          breakfast_tuesday?: boolean
+          breakfast_wednesday?: boolean
           created_at?: string
           date_of_birth?: string | null
           email?: string
           gender?: string | null
-          needs_place_to_sleep?: boolean
+          has_deutschland_ticket?: boolean
+          has_endowment?: boolean
+          is_temple_staff?: boolean
+          mode_of_transport?: string | null
+          other_remarks?: string | null
           phone_number?: string | null
           public_id?: string
+          room_mate_preferences?: string | null
           user_id?: string
-          wants_breakfast?: boolean
+          wants_to_attend_baptism?: boolean
+          wants_to_provide_temple_staff?: boolean
+          wants_to_visit_temple?: boolean
         }
         Relationships: [
+          {
+            foreignKeyName: "user_infos_accomodation_fkey"
+            columns: ["accomodation"]
+            isOneToOne: false
+            referencedRelation: "accomodations"
+            referencedColumns: ["name"]
+          },
           {
             foreignKeyName: "user_infos_gender_fkey"
             columns: ["gender"]
             isOneToOne: false
             referencedRelation: "genders"
+            referencedColumns: ["name"]
+          },
+          {
+            foreignKeyName: "user_infos_mode_of_transport_fkey"
+            columns: ["mode_of_transport"]
+            isOneToOne: false
+            referencedRelation: "means_of_transport"
             referencedColumns: ["name"]
           },
         ]
@@ -400,34 +483,6 @@ export type Database = {
       }
     }
     Views: {
-      participants: {
-        Row: {
-          city: string | null
-          country_of_residency: string | null
-          date_of_birth: string | null
-          email: string | null
-          first_name: string | null
-          food_preferences: string | null
-          gender: string | null
-          last_name: string | null
-          needs_place_to_sleep: boolean | null
-          phone_number: string | null
-          postal_code: number | null
-          stake_name: string | null
-          street_name_and_number: string | null
-          wants_breakfast: boolean | null
-          ward_name: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_infos_gender_fkey"
-            columns: ["gender"]
-            isOneToOne: false
-            referencedRelation: "genders"
-            referencedColumns: ["name"]
-          },
-        ]
-      }
       public_participants: {
         Row: {
           avatar_url: string | null
@@ -450,10 +505,7 @@ export type Database = {
     }
     Functions: {
       generate_hmac: {
-        Args: {
-          secret_key: string
-          message: string
-        }
+        Args: { secret_key: string; message: string }
         Returns: string
       }
       generate_payment_reference: {
@@ -461,10 +513,7 @@ export type Database = {
         Returns: number
       }
       get_conflicting_workshops: {
-        Args: {
-          user_public_id: string
-          new_workshop_id: string
-        }
+        Args: { user_public_id: string; new_workshop_id: string }
         Returns: {
           capacity: number
           created_at: string
@@ -487,27 +536,29 @@ export type Database = {
   }
 }
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type DefaultSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
-  PublicTableNameOrOptions extends
-    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-        PublicSchema["Views"])
-    ? (PublicSchema["Tables"] &
-        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -515,20 +566,22 @@ export type Tables<
     : never
 
 export type TablesInsert<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -536,20 +589,22 @@ export type TablesInsert<
     : never
 
 export type TablesUpdate<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -557,21 +612,23 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  PublicEnumNameOrOptions extends
-    | keyof PublicSchema["Enums"]
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof Database },
-  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof PublicSchema["CompositeTypes"]
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof Database
@@ -580,6 +637,14 @@ export type CompositeTypes<
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
-    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      role: ["user", "admin"],
+    },
+  },
+} as const

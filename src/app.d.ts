@@ -38,6 +38,13 @@ type ResidentialAddressData = {
   country_iso: string | null;
 };
 
+type BreakfastPreferences = {
+  tuesday: boolean | null;
+  wednesday: boolean | null;
+  thursday: boolean | null;
+  friday: boolean | null;
+};
+
 type UserInfoData = {
   user_id: string | null | undefined;
   public_id: string | null | undefined;
@@ -48,12 +55,22 @@ type UserInfoData = {
   phone_number: string | null | undefined;
   date_of_birth: string | null | undefined;
   avatar_url: string | null | undefined;
-  needs_place_to_sleep: boolean | null | undefined;
-  wants_breakfast: boolean | null | undefined;
   gender: string | null | undefined;
   role: string | undefined;
   has_paid: boolean | undefined;
   payment_reference: string | undefined;
+  room_mate_preferences: string | null | undefined;
+  accomodation: string | null | undefined;
+  mode_of_transport: string | null | undefined;
+  has_deutschland_ticket: boolean | null | undefinded;
+  wants_to_visit_temple: boolean | null | undefined;
+  has_endowment: boolean | null | undefined;
+  is_temple_staff: boolean | null | undefined;
+  wants_to_provide_temple_staff: boolean | null | undefined;
+  wants_to_attend_baptism: boolean | null | undefined;
+  agrees_to_recordings: boolean | null | undefined;
+  other_remarks: string | null | undefinded;
+  breakfast_preferences: BreakfastPreferences | null | undefined;
 };
 
 type UserAppData = UserInfoData & {

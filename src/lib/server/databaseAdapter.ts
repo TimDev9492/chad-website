@@ -59,9 +59,22 @@ export const updateUserInfo = async (
     .update({
       phone_number: userInfo.phone_number,
       date_of_birth: userInfo.date_of_birth,
-      needs_place_to_sleep: userInfo.needs_place_to_sleep,
-      wants_breakfast: userInfo.wants_breakfast,
       gender: userInfo.gender,
+      breakfast_tuesday: userInfo.breakfast_preferences?.tuesday,
+      breakfast_wednesday: userInfo.breakfast_preferences?.wednesday,
+      breakfast_thursday: userInfo.breakfast_preferences?.thursday,
+      breakfast_friday: userInfo.breakfast_preferences?.friday,
+      room_mate_preferences: userInfo.room_mate_preferences,
+      accomodation: userInfo.accomodation,
+      mode_of_transport: userInfo.mode_of_transport,
+      has_deutschland_ticket: userInfo.has_deutschland_ticket,
+      wants_to_visit_temple: userInfo.wants_to_visit_temple,
+      has_endowment: userInfo.has_endowment,
+      is_temple_staff: userInfo.is_temple_staff,
+      wants_to_provide_temple_staff: userInfo.wants_to_provide_temple_staff,
+      wants_to_attend_baptism: userInfo.wants_to_attend_baptism,
+      agrees_to_recordings: userInfo.agrees_to_recordings,
+      other_remarks: userInfo.other_remarks,
     })
     .eq('user_id', userInfo.user_id)
     .select('public_id')

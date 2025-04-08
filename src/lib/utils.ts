@@ -108,21 +108,29 @@ export const hasInfosProvided = (
     phone_number,
     date_of_birth,
     avatar_url,
-    needs_place_to_sleep,
-    wants_breakfast,
     gender,
     has_paid,
+    room_mate_preferences,
+    accomodation,
+    mode_of_transport,
+    has_deutschland_ticket,
+    wants_to_visit_temple,
+    has_endowment,
+    is_temple_staff,
+    wants_to_provide_temple_staff,
+    wants_to_attend_baptism,
+    agrees_to_recordings,
+    other_remarks,
     payment_reference,
     residential_address,
     food_preferences,
+    breakfast_preferences,
   } = userAppData;
   // unexpected database entries
   if (!isValidUser(userAppData)) return false;
 
   // default fields
   if (!avatar_url) return false;
-  if (needs_place_to_sleep == null) return false;
-  if (wants_breakfast == null) return false;
   if (has_paid == null) return false;
   if (payment_reference == null) return false;
 
@@ -137,6 +145,10 @@ export const hasInfosProvided = (
   if (gender == null) return false;
   if (!residential_address) return false;
   if (!food_preferences) return false;
+  if (!breakfast_preferences) return false;
+  if (room_mate_preferences === undefined) return false;
+  if (!accomodation) return false;
+  if (!mode_of_transport) return false;
 
   // address and food preferences
   const { street_name_and_number, postal_code, city_name, country_iso } =
