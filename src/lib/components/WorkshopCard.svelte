@@ -78,7 +78,7 @@
         <div class="text-gray-500 font-light line-clamp-3 chad-text-base">
           {workshop.description}
         </div>
-        <div class="[&>*]:bg-[#6198e7] [&>*]:bg-opacity-50 [&>*]:mt-1">
+        <div class="[&>*]:bg-[#6198e7] [&>*]:bg-opacity-50 [&>*]:mt-1 z-10">
           <Chip chip="eventStartChip">
             <LeadingIcon class="material-icons">event</LeadingIcon>
             <Text>{formatWorkshopStart(workshop.event_start)}</Text>
