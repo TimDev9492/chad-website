@@ -105,6 +105,7 @@
   <Drawer
     variant="modal"
     fixed={true}
+    class="z-50"
     bind:open
   >
     <Header>

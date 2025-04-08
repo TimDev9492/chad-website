@@ -40,9 +40,8 @@
       <img
         src={displayedAvatarUrl}
         alt="Avatar"
-        class="max-h-full max-w-full bg-red-400"
+        class="max-h-full max-w-full"
       />
-      <!-- <div class="size-full bg-red-400"></div> -->
     </button>
   {:else}
     <button

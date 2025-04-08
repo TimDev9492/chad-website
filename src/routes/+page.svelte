@@ -1,7 +1,61 @@
-<div class="size-full flex justify-center items-center">
+<script lang="ts">
+  import Carousel from '$lib/components/Carousel.svelte';
+  import { carouselData, type CarouselSlide } from '$lib/content/mainPage';
+  import { hasInfosProvided } from '$lib/utils';
+  import Ripple from '@smui/ripple';
+
+  let { data } = $props();
+  let { userAppData } = $derived(data);
+
+  const nextSignupRoute = $derived.by(() => {
+    return '/login';
+  });
+</script>
+
+<div class="size-full flex flex-col items-center landscape:p-8 portrait:p-4">
   <div
-    class="chad-typography-gradient font-extrabold chad-text-xl p-4 text-balance"
+    class="flex flex-col items-center max-w-screen-xl w-full gap-8 portrait:gap-4"
   >
-    Willkommen zur CHAD Tagung!
+    <a
+      use:Ripple={{ surface: true }}
+      href={nextSignupRoute}
+      class="bg-[#ff914d] rich-font rounded-full w-full text-center p-4 uppercase !text-white chad-text-subheading font-extrabold tracking-[0.2em] chad-shadow"
+      >Anmeldung</a
+    >
+    <div class="chad-card p-4 landscape:p-8 w-full">
+      <Carousel data={carouselData}>
+        {#snippet slide(item: CarouselSlide)}
+          <div
+            class="grid grid-cols-2 gap-8 portrait:flex portrait:flex-col portrait:items-center portrait:p-2"
+          >
+            <img
+              src={item.imgSrc}
+              alt="Slide"
+              class="size-full object-contain"
+            />
+            <div
+              class="flex flex-col justify-center gap-4 portrait:text-center landscape:py-8"
+            >
+              <span class="chad-text-subheading font-bold text-balance"
+                >{item.title}</span
+              >
+              <span class="chad-text-lg text-balance">{item.description}</span>
+            </div>
+          </div>
+        {/snippet}
+      </Carousel>
+    </div>
+    <div class="w-full">
+      <img
+        src="https://placehold.co/1280x720?text=Moodboard+Wide"
+        alt="Moodboard Wide"
+        class="size-full object-contain portrait:hidden"
+      />
+      <img
+        src="https://placehold.co/480x720?text=Moodboard+Narrow"
+        alt="Moodboard Wide"
+        class="size-full object-contain landscape:hidden"
+      />
+    </div>
   </div>
 </div>

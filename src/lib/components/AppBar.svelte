@@ -1,13 +1,11 @@
 <script lang="ts">
-  import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
-  import IconButton from '@smui/icon-button';
   import { goto } from '$app/navigation';
   import UserIcon from './UserIcon.svelte';
   import { drawerStore } from '$lib/drawerStore';
   import Ripple from '@smui/ripple';
   import { hasInfosProvided } from '$lib/utils';
 
-  let { smuiBar = $bindable(), data } = $props();
+  let { data } = $props();
 
   let { user, supabase, userAppData } = $derived(data);
 
@@ -19,12 +17,7 @@
   });
 </script>
 
-<TopAppBar
-  bind:this={smuiBar}
-  variant="fixed"
-  color="secondary"
-  class="relative"
->
+<div class="w-full chad-top-app-bar relative">
   <div class="[&>*]:p-4 text-white relative z-20">
     <div class="absolute top-0 left-0 h-full aspect-square">
       <button
@@ -46,9 +39,7 @@
       {#if user}
         <div class="flex gap-4 items-center h-full landscape:p-4">
           {#if hasInfosProvided(userAppData)}
-            <span class="chad-text-lg portrait:hidden"
-              >{`${userAppData!.first_name} ${userAppData!.last_name}`}</span
-            >
+            <span class="chad-text-lg portrait:hidden">{profileName}</span>
           {/if}
           <UserIcon
             {userAppData}
@@ -81,4 +72,4 @@
       <path d="M 0 0 C 5 1 5 4 9 4 C 13 4 14 2 15 0"></path>
     </svg>
   </div>
-</TopAppBar>
+</div>

@@ -23,6 +23,10 @@ input[type='tel'] {
   background-color: transparent !important;
 }
 
+.chad-top-app-bar {
+  background: rgba(var(--color2), 1);
+}
+
 .chad-typography-gradient {
   text-align: center;
   background: linear-gradient(
