@@ -123,6 +123,7 @@
     bind:open
     aria-labelledby="Mitfahrgelegenheit eintragen"
     aria-describedby="Mitfahrgelegenheit eintragen"
+    class="z-[500]"
   >
     <LinearProgress
       indeterminate

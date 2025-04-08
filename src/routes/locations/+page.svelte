@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { type Snippet } from 'svelte';
+  import RideSharingTable from '$lib/components/RideSharingTable.svelte';
+  import { hasInfosProvided } from '$lib/utils';
+
+  let { data } = $props();
+  let { userAppData } = $derived(data);
 </script>
 
 <div class="size-full flex flex-col items-center p-8">
@@ -23,6 +27,13 @@
         'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2552.8718061896834!2d8.618106076911557!3d50.21961597154907!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bd0795fd35492b%3A0x704912c57b9f2392!2sB%26B%20HOTEL%20Bad%20Homburg!5e0!3m2!1sde!2sde!4v1744119104918!5m2!1sde!2sde',
       )}
     </div>
+    {#if hasInfosProvided(userAppData)}
+      <div class="w-full my-16">
+        <div>
+          <RideSharingTable {data} />
+        </div>
+      </div>
+    {/if}
   </div>
 </div>
 
