@@ -12,14 +12,17 @@ export type Database = {
       accomodations: {
         Row: {
           created_at: string
+          discount: number
           name: string
         }
         Insert: {
           created_at?: string
+          discount?: number
           name: string
         }
         Update: {
           created_at?: string
+          discount?: number
           name?: string
         }
         Relationships: []

@@ -51,5 +51,7 @@
     bind:value={phoneNumber}
     label="Nummer"
     type="tel"
+    variant="outlined"
+    style="width: 100%;"
   />
 </div>

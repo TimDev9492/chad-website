@@ -96,6 +96,7 @@ interface SongSearchResult {
 }
 
 export {
+  BreakfastPreferences,
   FoodPreference,
   ResidentialAddressData,
   SongSearchResult,

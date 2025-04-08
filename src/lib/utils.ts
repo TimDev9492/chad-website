@@ -62,6 +62,46 @@ export const isValidDate = (dateString: string) => {
   );
 };
 
+export const isValidBreakfastPreferences = (preferences: any) => {
+  if (!preferences) return false;
+  if (typeof preferences !== 'object') return false;
+  if (Array.isArray(preferences)) return false;
+  return (
+    Object.keys(preferences).length > 0 &&
+    Object.keys(preferences).every((key) => {
+      if (!['tuesday', 'wednesday', 'thursday', 'friday'].includes(key))
+        return false;
+      const value = preferences[key];
+      if (typeof value !== 'boolean') return false;
+      return true;
+    })
+  );
+};
+
+export const isValidAccomodation = async (
+  supabase: SupabaseClient,
+  accomodation: string,
+) => {
+  const { data, error } = await supabase
+    .from('accomodations')
+    .select('*')
+    .eq('name', accomodation);
+  if (error) throw error;
+  return data !== null && data.length > 0;
+};
+
+export const isValidModeOfTransport = async (
+  supabase: SupabaseClient,
+  modeOfTransport: string,
+) => {
+  const { data, error } = await supabase
+    .from('means_of_transport')
+    .select('*')
+    .eq('name', modeOfTransport);
+  if (error) throw error;
+  return data !== null && data.length > 0;
+};
+
 export const strToBool = (str: string) => {
   if (str.toLowerCase() === 'true') return true;
   if (str.toLowerCase() === 'false') return false;
@@ -147,6 +187,7 @@ export const hasInfosProvided = (
   if (!food_preferences) return false;
   if (!breakfast_preferences) return false;
   if (room_mate_preferences === undefined) return false;
+  if (other_remarks === undefined) return false;
   if (!accomodation) return false;
   if (!mode_of_transport) return false;
 

@@ -99,46 +99,48 @@
   };
 </script>
 
-<Autocomplete
-  {disabled}
-  style="width: 100%;"
-  textfield$style="width: 100%;"
-  options={available}
-  getOptionLabel={(option) => (option ? `${option.label}` : '')}
-  bind:value
-  bind:text
-  noMatchesActionDisabled={false}
-  onSMUIAutocompleteNoMatchesAction={() => {
-    newLabel = text;
-    dialogOpen = true;
-  }}
-  onSMUIAutocompleteSelected={handleSelection}
-  label="Darauf achte ich"
->
-  {#snippet noMatches()}
-    <Text>Hinzufügen</Text>
-  {/snippet}
-</Autocomplete>
-
-<Set
-  class={'absolute translate-y-14' + (disabled ? ' opacity-50' : '')}
-  style="display: inline-block;"
-  key={(item) => (item && item?.id ? item.id.toString() : '')}
-  bind:chips={selected}
->
-  {#snippet chip(item)}
-    <Chip
-      chip={item.id}
-      onclick={() => (selected = selected.filter((el) => el.id !== item.id))}
-    >
-      <LeadingIcon class="material-icons">{item.icon}</LeadingIcon>
-      <Text tabindex={item.id}>{item.label}</Text>
-      <TrailingAction icon$class="material-icons">cancel</TrailingAction>
-    </Chip>
-  {/snippet}
-</Set>
+<div class="w-full flex flex-col">
+  <Autocomplete
+    {disabled}
+    style="width: 100%;"
+    textfield$style="width: 100%;"
+    options={available}
+    getOptionLabel={(option) => (option ? `${option.label}` : '')}
+    bind:value
+    bind:text
+    noMatchesActionDisabled={false}
+    onSMUIAutocompleteNoMatchesAction={() => {
+      newLabel = text;
+      dialogOpen = true;
+    }}
+    onSMUIAutocompleteSelected={handleSelection}
+    label="Darauf achte ich"
+  >
+    {#snippet noMatches()}
+      <Text>Hinzufügen</Text>
+    {/snippet}
+  </Autocomplete>
+  <Set
+    class={disabled ? ' opacity-50' : ''}
+    style="display: inline-block;"
+    key={(item) => (item && item?.id ? item.id.toString() : '')}
+    bind:chips={selected}
+  >
+    {#snippet chip(item)}
+      <Chip
+        chip={item.id}
+        onclick={() => (selected = selected.filter((el) => el.id !== item.id))}
+      >
+        <LeadingIcon class="material-icons">{item.icon}</LeadingIcon>
+        <Text tabindex={item.id}>{item.label}</Text>
+        <TrailingAction icon$class="material-icons">cancel</TrailingAction>
+      </Chip>
+    {/snippet}
+  </Set>
+</div>
 
 <Dialog
+  class="z-[500]"
   bind:open={dialogOpen}
   aria-labelledby="autocomplete-dialog-title"
   aria-describedby="autocomplete-dialog-content"

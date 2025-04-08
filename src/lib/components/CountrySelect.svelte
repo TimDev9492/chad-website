@@ -29,6 +29,7 @@
   bind:value={selectedCountry}
   {label}
   class={classes}
+  variant="outlined"
 >
   {#each countries as country (country.iso_code)}
     <Option value={country}>{displayTransform(country)}</Option>

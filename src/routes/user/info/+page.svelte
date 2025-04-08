@@ -5,9 +5,7 @@
     disabledText,
   } from '$lib/utils.js';
   import { applyAction, enhance } from '$app/forms';
-  import Divider from '$lib/components/Divider.svelte';
   import { toastStore } from '$lib/toastStore';
-  import PageFormWrapper from '$lib/components/PageFormWrapper.svelte';
   import type { Database } from '../../../types/database.types.js';
   import Textfield from '@smui/textfield';
   import GenderSelect from '$lib/components/GenderSelect.svelte';
@@ -28,10 +26,19 @@
   import { onDestroy, onMount } from 'svelte';
   import { avatarStore } from '$lib/avatarStore.js';
   import Ripple from '@smui/ripple';
+  import type { BreakfastPreferences } from '../../../app.js';
+  import Select, { Option } from '@smui/select';
 
   let { data } = $props();
-  const { userAppData, countries, stakes } = data;
-  let { genders, supabase } = $derived(data);
+  const {
+    userAppData,
+    countries,
+    stakes,
+    genders,
+    accomodations,
+    meansOfTransport,
+  } = data;
+  let { supabase } = $derived(data);
 
   /**
    * Constant Variables
@@ -40,6 +47,7 @@
 
   type Country = Database['public']['Tables']['countries']['Row'];
   type Ward = { id: number; name: string };
+  type Accomodation = Database['public']['Tables']['accomodations']['Row'];
 
   /**
    * UI States - initialize with `null` and set in onMount to update the UI.
@@ -67,8 +75,23 @@
   let _foodPreferences = $state<string[]>(
     userAppData.food_preferences?.map((pref) => pref.description) ?? [],
   );
-  let _wantsBreakfast = $state<boolean | null>(null);
-  let _needsPlaceToSleep = $state<boolean | null>(null);
+  let _breakfastPreferences = $state<BreakfastPreferences>({
+    tuesday: true,
+    wednesday: true,
+    thursday: true,
+    friday: true,
+  });
+  let _accomodation = $state<Accomodation | null>(null);
+  let _roomMatePreferences = $state<string | null>(null);
+  let _modeOfTransport = $state<string | null>(null);
+  let _hasDeutschlandTicket = $state<boolean>(false);
+  let _wantsToVisitTemple = $state<boolean>(false);
+  let _hasEndowment = $state<boolean>(false);
+  let _isTempleStaff = $state<boolean>(false);
+  let _wantsToProvideTempleStaff = $state<boolean>(false);
+  let _wantsToAttendBaptism = $state<boolean>(false);
+  let _agreesToRecordings = $state<boolean>(false);
+  let _otherRemarks = $state<string | null>(null);
 
   // parse initial states from database values
   // phone
@@ -92,6 +115,10 @@
       .map((stake) => stake.wards)
       .flat()
       .find((ward) => ward.id === userAppData.ward_id) ?? null;
+  const initialAccomodation: Accomodation | null =
+    accomodations.find(
+      (accomodation) => accomodation.name === userAppData.accomodation,
+    ) ?? null;
 
   /**
    * Page States
@@ -133,13 +160,29 @@
     _ward = initialWard;
     _foodPreferences =
       userAppData.food_preferences?.map((pref) => pref.description) ?? [];
-    _wantsBreakfast = userAppData.wants_breakfast!;
-    _needsPlaceToSleep = userAppData.needs_place_to_sleep!;
+    if (userAppData.breakfast_preferences)
+      _breakfastPreferences = userAppData.breakfast_preferences;
+    _accomodation = initialAccomodation;
+    _roomMatePreferences = userAppData.room_mate_preferences ?? '';
+    _modeOfTransport = userAppData.mode_of_transport ?? null;
+    _hasDeutschlandTicket = userAppData.has_deutschland_ticket ?? false;
+    _wantsToVisitTemple = userAppData.wants_to_visit_temple ?? false;
+    _hasEndowment = userAppData.has_endowment ?? false;
+    _isTempleStaff = userAppData.is_temple_staff ?? false;
+    _wantsToProvideTempleStaff =
+      userAppData.wants_to_provide_temple_staff ?? false;
+    _wantsToAttendBaptism = userAppData.wants_to_attend_baptism ?? false;
+    _agreesToRecordings = userAppData.agrees_to_recordings ?? false;
+    _otherRemarks = userAppData.other_remarks ?? null;
 
     // update avatar image
     unsubscribe = avatarStore.subscribe((newAvatar) => {
       imageSrc = newAvatar;
     });
+  });
+
+  $effect(() => {
+    if (!_isTempleStaff) _wantsToProvideTempleStaff = false;
   });
 
   onDestroy(() => unsubscribe && unsubscribe());
@@ -188,10 +231,10 @@
     closed={!waitingForResponse}
   />
 </div>
-<PageFormWrapper>
+<div class="size-full flex justify-center p-4 landscape:p-8">
   <form
     method="POST"
-    class="flex flex-col justify-evenly items-center gap-4 portrait:gap-8 min-w-[50vw]"
+    class="max-w-screen-md flex flex-col gap-4 w-full"
     use:enhance={(form_element) => {
       // populate form data
       const formData = form_element.formData;
@@ -209,8 +252,24 @@
       formData.set('date_of_birth', _dateOfBirth ?? '');
       formData.set('ward_id', `${notAMember ? null : _ward?.id}`);
       formData.set('food_preferences', JSON.stringify(_foodPreferences));
-      formData.set('wants_breakfast', `${_wantsBreakfast}`);
-      formData.set('needs_place_to_sleep', `${_needsPlaceToSleep}`);
+      formData.set(
+        'breakfast_preferences',
+        JSON.stringify(_breakfastPreferences),
+      );
+      formData.set('accomodation', _accomodation?.name ?? '');
+      formData.set('room_mate_preferences', _roomMatePreferences ?? '');
+      formData.set('mode_of_transport', _modeOfTransport ?? '');
+      formData.set('has_deutschland_ticket', `${_hasDeutschlandTicket}`);
+      formData.set('wants_to_visit_temple', `${_wantsToVisitTemple}`);
+      formData.set('has_endowment', `${_hasEndowment}`);
+      formData.set('is_temple_staff', `${_isTempleStaff}`);
+      formData.set(
+        'wants_to_provide_temple_staff',
+        `${_isTempleStaff && _wantsToProvideTempleStaff}`,
+      );
+      formData.set('wants_to_attend_baptism', `${_wantsToAttendBaptism}`);
+      formData.set('agrees_to_recordings', `${_agreesToRecordings}`);
+      formData.set('other_remarks', _otherRemarks ?? '');
 
       waitingForResponse = true;
 
@@ -218,6 +277,7 @@
         // `result` is an `ActionResult` object
         // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
         waitingForResponse = false;
+        console.log(result);
         await applyAction(result);
         if (!result.status) return;
         const success: boolean = isHttpSuccess(result.status);
@@ -229,53 +289,62 @@
       };
     }}
   >
-    <div class="font-extrabold text-5xl chad-typography-gradient">
-      Deine Infos
+    <div class="flex justify-center items-center my-8">
+      <span class="chad-text-heading chad-typography-gradient rich-font">
+        Anmeldeformular
+      </span>
     </div>
-    <Divider />
     <div
-      class="grid grid-cols-[1fr_auto] items-center gap-12 portrait:flex portrait:flex-col portrait:gap-4 portrait:items-center"
+      class="chad-card chad-shadow w-full flex flex-col gap-4 chad-text-base"
     >
-      <div class="mdc-typography--overline">Wie siehst du aus?</div>
-      <div class="flex justify-center">
-        <div class="h-48 relative">
-          <img
-            class="h-full aspect-[1/1] object-cover object-center rounded-full"
-            alt="avatar"
-            src={imageSrc}
-          />
-          <!-- svelte-ignore a11y_no_static_element_interactions -->
-          <!-- svelte-ignore a11y_click_events_have_key_events -->
-          <div
-            use:Ripple={{ surface: true }}
-            onclick={() => imageUpload?.click()}
-            class="size-full absolute top-0 left-0 rounded-full cursor-pointer"
-          ></div>
-          <div class="absolute -bottom-4 left-1/2 -translate-x-1/2">
-            <Chip
-              chip="uploadChip"
+      <span
+        >Schön, dass du bei der Chad 2025 in Friedrichsdorf dabei sein wirst.
+        Alle weiteren Informationen über diese wundervolle Tagung erhältst du
+        per E-Mail oder auf dieser Website.</span
+      >
+      <span>Erzähle uns doch zuerst etwas über dich.</span>
+    </div>
+    <div class="chad-card chad-shadow w-full flex flex-col gap-8">
+      <span class="chad-text-lg font-bold">Persönliche Daten</span>
+      <div class="flex flex-col gap-2">
+        <span class="chad-text-base text-gray-600"
+          >Lade ein Bild von dir hoch!</span
+        >
+        <div class="w-full flex justify-center">
+          <div class="h-48 relative">
+            <img
+              class="h-full aspect-[1/1] object-cover object-center rounded-full"
+              alt="avatar"
+              src={imageSrc}
+            />
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <div
+              use:Ripple={{ surface: true }}
               onclick={() => imageUpload?.click()}
-            >
-              <LeadingIcon class="material-icons">upload</LeadingIcon>
-              <Text tabindex={0}>Hochladen</Text>
-            </Chip>
+              class="size-full absolute top-0 left-0 rounded-full cursor-pointer"
+            ></div>
+            <div class="absolute -bottom-4 left-1/2 -translate-x-1/2">
+              <Chip
+                chip="uploadChip"
+                onclick={() => imageUpload?.click()}
+              >
+                <LeadingIcon class="material-icons">upload</LeadingIcon>
+                <Text tabindex={0}>Hochladen</Text>
+              </Chip>
+            </div>
+            <input
+              class="hidden"
+              type="file"
+              accept="image/*"
+              onchange={onImageSelected}
+              bind:this={imageUpload}
+            />
           </div>
-          <input
-            class="hidden"
-            type="file"
-            accept="image/*"
-            onchange={onImageSelected}
-            bind:this={imageUpload}
-          />
         </div>
       </div>
-
-      <div class="col-span-2 portrait:w-full portrait:mt-8">
-        <Divider />
-      </div>
-
-      <div class="mdc-typography--overline">Wie heißt du?</div>
-      <div class="portrait:flex portrait:flex-col portrait:gap-4">
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600">Dein Vorname</span>
         <Textfield
           variant="outlined"
           bind:value={_firstName}
@@ -283,6 +352,9 @@
           disabled={waitingForResponse}
           required
         />
+      </div>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600">Dein Nachname</span>
         <Textfield
           variant="outlined"
           bind:value={_lastName}
@@ -291,50 +363,63 @@
           required
         />
       </div>
-
-      <div class="col-span-2 portrait:w-full">
-        <Divider />
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600">Geschlecht</span>
+        <GenderSelect
+          genders={genders.map((gender) => gender.name)}
+          disabled={waitingForResponse}
+          bind:selected={_gender}
+        />
       </div>
-
-      <div class="mdc-typography--overline">Was bist du?</div>
-      <GenderSelect
-        genders={genders.map((gender) => gender.name)}
-        disabled={waitingForResponse}
-        bind:selected={_gender}
-      />
-
-      <div class="col-span-2 portrait:w-full">
-        <Divider />
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600">Telefonnummer</span>
+        <PhoneNumberInput
+          {countries}
+          disabled={waitingForResponse}
+          bind:selectedCountry={_phoneNumber.country}
+          bind:phoneNumber={_phoneNumber.suffix}
+        />
       </div>
-
-      <div class="mdc-typography--overline">Was ist deine Handynummer?</div>
-      <PhoneNumberInput
-        {countries}
-        disabled={waitingForResponse}
-        bind:selectedCountry={_phoneNumber.country}
-        bind:phoneNumber={_phoneNumber.suffix}
-      />
-
-      <div class="col-span-2 portrait:w-full">
-        <Divider />
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600">Geburtsdatum</span>
+        <div>
+          <Textfield
+            style="width: 100%"
+            input$style="width: 100%"
+            type="date"
+            variant="outlined"
+            bind:value={_dateOfBirth}
+            label="Geburtsdatum"
+            disabled={waitingForResponse}
+            required
+            invalid={!birthDateValid}
+          >
+            {#snippet helper()}
+              <HelperText
+                >Du musst midestens {MIN_AGE} Jahre alt sein!</HelperText
+              >
+            {/snippet}
+          </Textfield>
+        </div>
       </div>
-
-      <div class="mdc-typography--overline">Wo wohnst du?</div>
-      <div class="grid grid-cols-[1fr_auto] gap-2">
+    </div>
+    <div class="chad-card chad-shadow w-full flex flex-col gap-8">
+      <span class="chad-text-lg font-bold">Wohnort und Gemeinde</span>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600">Adresse</span>
+        <CountrySelect
+          disabled={waitingForResponse}
+          {countries}
+          label="Land"
+          bind:selectedCountry={_countryOfResidency}
+          displayTransform={(country) =>
+            `${country.flag_emoji} ${country.name}`}
+        />
         <Textfield
           class="col-span-2"
           variant="outlined"
           bind:value={_streetNameAndNumber}
           label="Straße und Hausnummer"
-          disabled={waitingForResponse}
-          required
-        />
-
-        <Textfield
-          class="col-span-2"
-          variant="outlined"
-          bind:value={_cityName}
-          label="Stadt"
           disabled={waitingForResponse}
           required
         />
@@ -346,118 +431,288 @@
           disabled={waitingForResponse}
           required
         />
-        <CountrySelect
-          disabled={waitingForResponse}
-          {countries}
-          label="Land"
-          bind:selectedCountry={_countryOfResidency}
-          displayTransform={(country) =>
-            `${country.flag_emoji} ${country.name}`}
-        />
-      </div>
-
-      <div class="col-span-2 portrait:w-full">
-        <Divider />
-      </div>
-
-      <div class="mdc-typography--overline">Wie alt bist du?</div>
-      <div>
         <Textfield
-          style="width: 100%"
-          input$style="width: 100%"
-          type="date"
+          class="col-span-2"
           variant="outlined"
-          bind:value={_dateOfBirth}
-          label="Geburtsdatum"
+          bind:value={_cityName}
+          label="Stadt"
           disabled={waitingForResponse}
           required
-          invalid={!birthDateValid}
-        >
-          {#snippet helper()}
-            <HelperText>Du musst midestens {MIN_AGE} Jahre alt sein!</HelperText
-            >
-          {/snippet}
-        </Textfield>
-      </div>
-
-      <div class="col-span-2 portrait:w-full">
-        <Divider />
-      </div>
-
-      <div class="mdc-typography--overline">In welche Gemeinde gehst du?</div>
-      <div class="w-full flex portrait:flex-col portrait:items-center">
-        <WardSelect
-          {stakes}
-          bind:value={_ward as any}
-          disabled={notAMember || waitingForResponse}
         />
-        <FormField>
-          <Checkbox
-            disabled={waitingForResponse}
-            bind:checked={notAMember}
+      </div>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600">Gemeinde</span>
+        <div class="w-full flex portrait:flex-col portrait:items-center">
+          <WardSelect
+            {stakes}
+            bind:value={_ward as any}
+            disabled={notAMember || waitingForResponse}
           />
-          {#snippet label()}
-            <div class={disabledText('', waitingForResponse)}>
-              Ich bin kein Mitglied
-            </div>
-          {/snippet}
-        </FormField>
+          <FormField>
+            <Checkbox
+              disabled={waitingForResponse}
+              bind:checked={notAMember}
+            />
+            {#snippet label()}
+              <div class={disabledText('', waitingForResponse)}>
+                Ich bin kein Mitglied
+              </div>
+            {/snippet}
+          </FormField>
+        </div>
       </div>
-
-      <div class="col-span-2 portrait:w-full">
-        <Divider />
-      </div>
-
-      <div class="mdc-typography--overline">Wie sieht es mit Essen aus?</div>
-      <div class="w-full flex portrait:flex-col">
+    </div>
+    <div class="chad-card chad-shadow w-full flex flex-col gap-8">
+      <span class="chad-text-lg font-bold">Besondere Bedürfnisse</span>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600"
+          >Diäten / Unverträglichkeiten</span
+        >
         <FoodPreferencesSelect
           disabled={waitingForResponse}
           bind:selectedPreferences={_foodPreferences}
         />
-        <FormField class="portrait:mt-24">
-          <Checkbox
-            disabled={waitingForResponse}
-            bind:checked={_wantsBreakfast}
-          />
-          {#snippet label()}
-            <div class={disabledText('', waitingForResponse)}>
-              Ich esse Frühstück
-            </div>
-          {/snippet}
-        </FormField>
       </div>
-
-      <div class="col-span-2 spacer w-16"></div>
-
-      <div class="col-span-2 portrait:w-full">
-        <Divider />
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600"
+          >An welchen Tagen brauchst du Frühstück?</span
+        >
+        <div class="grid grid-cols-2">
+          <FormField>
+            <Checkbox
+              disabled={waitingForResponse}
+              bind:checked={_breakfastPreferences.tuesday}
+            />
+            {#snippet label()}
+              <div class={disabledText('', waitingForResponse)}>Dienstag</div>
+            {/snippet}
+          </FormField>
+          <FormField>
+            <Checkbox
+              disabled={waitingForResponse}
+              bind:checked={_breakfastPreferences.wednesday}
+            />
+            {#snippet label()}
+              <div class={disabledText('', waitingForResponse)}>Mittwoch</div>
+            {/snippet}
+          </FormField>
+          <FormField>
+            <Checkbox
+              disabled={waitingForResponse}
+              bind:checked={_breakfastPreferences.thursday}
+            />
+            {#snippet label()}
+              <div class={disabledText('', waitingForResponse)}>Donnerstag</div>
+            {/snippet}
+          </FormField>
+          <FormField>
+            <Checkbox
+              disabled={waitingForResponse}
+              bind:checked={_breakfastPreferences.friday}
+            />
+            {#snippet label()}
+              <div class={disabledText('', waitingForResponse)}>Freitag</div>
+            {/snippet}
+          </FormField>
+        </div>
       </div>
-
-      <div class="mdc-typography--overline">Wo schläfst du?</div>
-      <div class="w-full flex portrait:justify-center">
+    </div>
+    <div class="chad-card chad-shadow w-full flex flex-col gap-8">
+      <span class="chad-text-lg font-bold">Anreise und Unterkunft</span>
+      <span class="chad-text-base"
+        >Wir werden dieses Jahr in einem Hotel in Bad Homburg (in der Nähe des
+        Bahnhofs) und in der Tempelherberge direkt in Friedrichsdorf
+        untergebracht werden. Die Einteilung erfolgt nach Bedarf und dem
+        Vorhandensein eines Fahrzeuges.<br />Der Rabatt, wenn du nicht in der
+        Herberge oder dem Hotel untergebracht wirst beträgt 25€.
+      </span>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600"
+          >Wie möchtest du untergebracht werden? (Wir versuchen Wünsche zu
+          beachten, können aber nicht garantieren, dass wir jeden Wunsch
+          erfüllen können)</span
+        >
+        <Select
+          variant="outlined"
+          label="Unterkunft"
+          bind:value={_accomodation}
+          key={(accomodation) => accomodation?.name ?? ''}
+          disabled={waitingForResponse}
+          required
+        >
+          {#each accomodations as accomodation (accomodation.name)}
+            <Option value={accomodation}
+              >{accomodation.name +
+                (accomodation.discount == 0
+                  ? ''
+                  : ` (-${accomodation.discount}€)`)}</Option
+            >
+          {/each}
+        </Select>
+      </div>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600"
+          >Mit wem möchtest du in einem Zimmer sein? (optional)</span
+        >
+        <Textfield
+          variant="outlined"
+          bind:value={_roomMatePreferences}
+          label="Wünsche"
+          disabled={waitingForResponse}
+        />
+      </div>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600">Wie wirst du anreisen?</span>
+        <Select
+          variant="outlined"
+          label="Anreise"
+          bind:value={_modeOfTransport}
+          disabled={waitingForResponse}
+          required
+        >
+          {#each meansOfTransport as transport}
+            <Option value={transport.name}>{transport.name}</Option>
+          {/each}
+        </Select>
+      </div>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600"
+          >Hast du das <a
+            class="text-blue-500"
+            href="https://www.bahn.de/angebot/regio/deutschland-ticket"
+            target="_blank">Deutschland-Ticket?</a
+          ></span
+        >
         <FormField>
           <Checkbox
             disabled={waitingForResponse}
-            bind:checked={_needsPlaceToSleep}
+            bind:checked={_hasDeutschlandTicket}
           />
           {#snippet label()}
             <div class={disabledText('', waitingForResponse)}>
-              Ich brauche eine Übernachtungsmöglichkeit
+              Ich besitze das Deutschland-Ticket
             </div>
           {/snippet}
         </FormField>
       </div>
     </div>
-    <Divider />
-    <div class="save col-span-2 flex justify-center items-center my-4">
+    <div class="chad-card chad-shadow w-full flex flex-col gap-8">
+      <span class="chad-text-lg font-bold">Tempel</span>
+      <span class="chad-text-base"
+        >Du wirst während der Tagung jeden Tag die Gelegenheit haben in den
+        Tempel zu gehen oder parallel etwas anders zu machen. Für die Endowment
+        Sessionen musst du dich selbst anmelden. Informationen über mögliche
+        Taufsessionen werden vor der Tagung bekannt gegeben.
+      </span>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600">Tempelbesuch</span>
+        <FormField>
+          <Checkbox
+            disabled={waitingForResponse}
+            bind:checked={_wantsToVisitTemple}
+          />
+          {#snippet label()}
+            <div class={disabledText('', waitingForResponse)}>
+              Ich möchte während der Tagung in den Tempel gehen
+            </div>
+          {/snippet}
+        </FormField>
+      </div>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600">Endowment</span>
+        <FormField>
+          <Checkbox
+            disabled={waitingForResponse}
+            bind:checked={_hasEndowment}
+          />
+          {#snippet label()}
+            <div class={disabledText('', waitingForResponse)}>
+              Ich habe mein eigenes <a
+                class="text-blue-500"
+                href="https://www.churchofjesuschrist.org/study/manual/gospel-topics/endowment?lang=deu"
+                target="_blank">Endowment</a
+              >
+            </div>
+          {/snippet}
+        </FormField>
+      </div>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600">Tempelarbeiter</span>
+        <div class="grid grid-cols-2 portrait:grid-cols-1">
+          <FormField>
+            <Checkbox
+              disabled={waitingForResponse}
+              bind:checked={_isTempleStaff}
+            />
+            {#snippet label()}
+              <div class={disabledText('', waitingForResponse)}>
+                Ich bin Tempelarbeiter
+              </div>
+            {/snippet}
+          </FormField>
+          <FormField>
+            <Checkbox
+              disabled={waitingForResponse || !_isTempleStaff}
+              bind:checked={_wantsToProvideTempleStaff}
+            />
+            {#snippet label()}
+              <div
+                class={disabledText('', waitingForResponse || !_isTempleStaff)}
+              >
+                Ich bin bereit als Tempelarbeiter auszuhelfen
+              </div>
+            {/snippet}
+          </FormField>
+        </div>
+      </div>
+    </div>
+    <div class="chad-card chad-shadow w-full flex flex-col gap-8">
+      <span class="chad-text-lg font-bold">Datenschutz und Anmerkungen</span>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600"
+          >Zustimmung zur Aufnahme von Bild- und Tonmaterial*</span
+        >
+        <FormField>
+          <Checkbox
+            disabled={waitingForResponse}
+            bind:checked={_agreesToRecordings}
+          />
+          {#snippet label()}
+            <div class={disabledText('', waitingForResponse)}>
+              Ich willige ein, dass von mir während der Tagung Bild- und
+              Tonaufnahmen angefertigt werden dürfen, welche auf Sozialen Medien
+              und Cloud Servern vorübergehen veröffentlicht und gespeichert
+              werden.
+            </div>
+          {/snippet}
+        </FormField>
+      </div>
+      <div class="w-full flex flex-col gap-4">
+        <span class="chad-text-base text-gray-600"
+          >Sonstige Anmerkungen (optional)</span
+        >
+        <Textfield
+          variant="outlined"
+          bind:value={_otherRemarks}
+          label="Anmerkungen"
+          disabled={waitingForResponse}
+        />
+      </div>
+    </div>
+    <div class="chad-card chad-shadow w-full flex flex-col gap-8">
       <Button
         variant="raised"
         color="primary"
         disabled={waitingForResponse}
       >
-        <Icon class="material-icons">save</Icon>
+        <Icon class="material-icons">send</Icon>
         <Label>Speichern</Label>
       </Button>
     </div>
   </form>
-</PageFormWrapper>
+</div>
+
+<style>
+  .topic-section {
+  }
+</style>
