@@ -10,7 +10,7 @@
       >Anreise</span
     >
     <div
-      class="grid grid-cols-2 portrait:grid-cols-1 w-full items-center gap-8"
+      class="flex w-full justify-center gap-8 portrait:flex-col portrait:items-center"
     >
       {@render locationWidget(
         'Gemeindehaus Friedrichsdorf',
@@ -28,7 +28,7 @@
 
 {#snippet locationWidget(title: string, address: string, iframeSrc: string)}
   <div
-    class="w-full grid grid-cols-1 justify-items-center portrait:items-center"
+    class="portrait:w-full grid grid-cols-1 justify-items-center portrait:items-center"
   >
     <span class="font-bold chad-text-lg">{title}</span>
     <span class="italic chad-text-base">{address}</span>
@@ -48,7 +48,12 @@
 <style>
   .maps-iframe {
     aspect-ratio: 1 / 1;
-    max-height: 60vh;
-    max-width: min(100%, 60vh);
+    @media (orientation: landscape) {
+      height: 60vh;
+      max-width: min(100%, 60vh);
+    }
+    @media (orientation: portrait) {
+      width: 100%;
+    }
   }
 </style>
