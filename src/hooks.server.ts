@@ -113,7 +113,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
   const paidRoutes: string[] = [];
   const withInfosRoutes = ['/user/payments', '/ride-sharing'];
   const loggedInRoutes = ['/user', '/participants'];
-  const anonymousRoutes = ['/login', '/register'];
+  const anonymousRoutes = ['/login', '/register', '/locations'];
   const apiPrivateRoutes = ['/api/spotify-search'];
 
   // protect private api routes

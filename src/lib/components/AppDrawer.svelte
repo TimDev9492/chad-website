@@ -30,6 +30,7 @@
         { icon: 'calendar_month', label: 'Programmplan', href: '/program' },
         { icon: 'nightlife', label: 'Tanzabend', href: '/dance-event' },
         { icon: 'event', label: 'Workshops', href: '/workshops' },
+        { icon: 'pin_drop', label: 'Anreise', href: '/locations' },
       ],
       footer: [],
     };
