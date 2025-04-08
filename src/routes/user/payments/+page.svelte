@@ -6,7 +6,7 @@
   import { enIE } from 'date-fns/locale';
 
   let { data } = $props();
-  let { userAppData, countries } = $derived(data);
+  let { userAppData, countries, price } = $derived(data);
 
   let selectedCountry = $state<
     Database['public']['Tables']['countries']['Row'] | null
@@ -17,6 +17,14 @@
         country.iso_code === userAppData.residential_address.country_iso,
     ) || null,
   );
+  let priceStr = $derived(
+    price.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }),
+  );
+
+  const currencySymbolFallback = '€';
 </script>
 
 <div class="size-full flex justify-center items-center py-4">
@@ -32,7 +40,9 @@
         angegebene Konto überweisen!
       </div>
       <div class="chad-typography-gradient font-extrabold chad-text-giga py-4">
-        {selectedCountry ? selectedCountry.price_tag : '60,00€'}
+        {priceStr}{selectedCountry
+          ? `${selectedCountry.currency_symbol}`
+          : currencySymbolFallback}
       </div>
       <div class="chad-text-lg font-bold">Kontoverbindung:</div>
       <div

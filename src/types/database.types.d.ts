@@ -31,26 +31,32 @@ export type Database = {
         Row: {
           country_code: string
           created_at: string
+          currency_iso_code: string
+          currency_symbol: string
           flag_emoji: string
           iso_code: string
           name: string
-          price_tag: string
+          price_base: number
         }
         Insert: {
           country_code: string
           created_at?: string
+          currency_iso_code?: string
+          currency_symbol?: string
           flag_emoji: string
           iso_code: string
           name: string
-          price_tag?: string
+          price_base?: number
         }
         Update: {
           country_code?: string
           created_at?: string
+          currency_iso_code?: string
+          currency_symbol?: string
           flag_emoji?: string
           iso_code?: string
           name?: string
-          price_tag?: string
+          price_base?: number
         }
         Relationships: []
       }
@@ -528,6 +534,10 @@ export type Database = {
           thumbnail_url: string
           title: string
         }[]
+      }
+      get_user_price: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
     }
     Enums: {
