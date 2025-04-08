@@ -74,6 +74,7 @@
     class="hidden"
   ></canvas>
   <Dialog
+    class="z-[500]"
     bind:open
     aria-labelledby="simple-title"
     aria-describedby="simple-content"

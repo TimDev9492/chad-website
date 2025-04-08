@@ -52,16 +52,19 @@
 </script>
 
 <Dialog
+  class="z-[500]"
   bind:open
   aria-labelledby="avatar closeup"
   aria-describedby="avatar closeup"
   surface$class="landscape:!max-h-[90vh] landscape:!w-[80vh] portait:!w-[90vw]"
 >
   <Content>
-    <RoundImage
-      alt="avatar closeup"
-      src={dialogParticipant.avatar_url}
-    />
+    <div class="w-full aspect-square flex flex-grow">
+      <RoundImage
+        alt="avatar closeup"
+        src={dialogParticipant.avatar_url}
+      />
+    </div>
     <div
       class="flex portrait:flex-col items-center gap-4 pt-4 landscape:flex-row landscape:justify-between"
     >
