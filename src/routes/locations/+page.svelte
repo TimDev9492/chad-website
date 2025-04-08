@@ -28,12 +28,28 @@
       )}
     </div>
     {#if hasInfosProvided(userAppData)}
-      <div class="w-full my-16">
+      <div class="w-full mt-16">
         <div>
           <RideSharingTable {data} />
         </div>
       </div>
     {/if}
+    <div class="w-full mt-16">
+      <div class="chad-card chad-shadow flex flex-col items-center">
+        <span
+          class="chad-text-subheading landscape:text-6xl chad-typography-gradient font-extrabold pb-4"
+          >Parkmöglichkeiten</span
+        >
+        <iframe
+          class="w-full h-[60vh]"
+          title="Parkmöglichkeiten"
+          src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d4136.342777656776!2d8.642564120279545!3d50.25571371771839!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sparken!5e0!3m2!1sde!2sde!4v1744121257353!5m2!1sde!2sde"
+          style="border:0;"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
   </div>
 </div>
 
