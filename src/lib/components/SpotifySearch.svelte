@@ -55,7 +55,7 @@
   };
 </script>
 
-<div class="landscape:w-1/2 portrait:w-[90vw]">
+<div class="w-full">
   <Autocomplete
     class="w-full"
     search={searchItems}

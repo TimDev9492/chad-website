@@ -7,13 +7,34 @@
 
 @font-face {
   font-family: 'MADEWaffleSoft';
-  src: url('/fonts/MADEWaffleSoft.ttf.woff') format('woff');
+  src: url('/fonts/MADEWaffleSoft.ttf.eot'); /* IE9 Compat Modes */
+  src:
+    url('/fonts/MADEWaffleSoft.ttf.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */ url('/fonts/MADEWaffleSoft.ttf.woff') format('woff'),
+    /* Super Modern Browsers */
+      url('/fonts/MadeWaffleSoft.ttf.svg#MADEWaffleSoft') format('svg'); /* Legacy iOS */
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Frankfurt';
+  src: url('/fonts/Frankfurt.ttf.eot'); /* IE9 Compat Modes */
+  src:
+    url('/fonts/Frankfurt.ttf.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */ url('/fonts/Frankfurt.ttf.woff') format('woff'),
+    /* Super Modern Browsers */ url('/fonts/Frankfurt.ttf.svg#Frankfurt')
+      format('svg'); /* Legacy iOS */
   font-weight: normal;
   font-style: normal;
 }
 
 .rich-font {
   font-family: 'MADEWaffleSoft';
+}
+
+.bubble-font {
+  font-family: 'Frankfurt';
 }
 
 input[type='text'],
@@ -61,11 +82,11 @@ input[type='tel'] {
 }
 
 .chad-card {
-  background: linear-gradient(
+  /* background: linear-gradient(
     45deg,
     rgba(var(--color3), 0.5),
     rgba(var(--color4), 0.5)
-  );
+  ); */
   border-radius: 1em;
   @media (orientation: landscape) {
     padding: 2em;
@@ -99,66 +120,66 @@ input[type='tel'] {
 .chad-text-giga {
   line-height: 1;
   @media (orientation: landscape) {
-    font-size: 8em;
+    font-size: 8rem;
   }
   @media (orientation: portrait) {
-    font-size: 4em;
+    font-size: 4rem;
   }
 }
 
 .chad-text-xl {
   line-height: 1;
   @media (orientation: landscape) {
-    font-size: 6em;
+    font-size: 6rem;
   }
   @media (orientation: portrait) {
-    font-size: 3em;
+    font-size: 3rem;
   }
 }
 
 .chad-text-heading {
   line-height: 1;
   @media (orientation: landscape) {
-    font-size: 4em;
+    font-size: 4rem;
   }
   @media (orientation: portrait) {
-    font-size: 2em;
+    font-size: 2rem;
   }
 }
 
 .chad-text-subheading {
   line-height: 1;
   @media (orientation: landscape) {
-    font-size: 2em;
+    font-size: 2rem;
   }
   @media (orientation: portrait) {
-    font-size: 1.5em;
+    font-size: 1.5rem;
   }
 }
 
 .chad-text-lg {
   @media (orientation: landscape) {
-    font-size: 1.1em;
+    font-size: 1.1rem;
   }
   @media (orientation: portrait) {
-    font-size: 1.1em;
+    font-size: 1.1rem;
   }
 }
 
 .chad-text-base {
   @media (orientation: landscape) {
-    font-size: 1em;
+    font-size: 1rem;
   }
   @media (orientation: portrait) {
-    font-size: 1em;
+    font-size: 1rem;
   }
 }
 
 .chad-text-sm {
   @media (orientation: landscape) {
-    font-size: 0.8em;
+    font-size: 0.8rem;
   }
   @media (orientation: portrait) {
-    font-size: 0.8em;
+    font-size: 0.8rem;
   }
 }
