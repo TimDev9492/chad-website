@@ -25,8 +25,6 @@
   let excelLoading = $state(false);
   let excelPaymentStatuses = $state<PaymentStatus[]>(['CONFIRMED']);
 
-  $inspect(excelPaymentStatuses);
-
   const fetchExcelTriggerDownload = async () => {
     const response = await fetch(
       `${PUBLIC_SUPABASE_URL}/functions/v1/create-participant-excel`,
