@@ -4,6 +4,7 @@
   import type { Database } from '../../../types/database.types.js';
   import { PUBLIC_SUPPORT_EMAIL } from '$env/static/public';
   import { enIE } from 'date-fns/locale';
+  import { BANK_ACCOUNT_DETAILS } from '$lib/content/constants.js';
 
   let { data } = $props();
   let { userAppData, countries, price } = $derived(data);
@@ -52,15 +53,16 @@
           class="landscape:grid landscape:grid-cols-[auto_1fr] landscape:gap-x-8 landscape:items-center portrait:flex portrait:flex-col"
         >
           <div class="font-bold chad-text-lg">Kontoinhaber:</div>
-          <code class="font-medium chad-text-base portrait:mb-2">Chad e.V.</code
+          <code class="font-medium chad-text-base portrait:mb-2"
+            >{BANK_ACCOUNT_DETAILS.ACCOUNT_HOLDER}</code
           >
           <div class="font-bold chad-text-lg">IBAN:</div>
           <code class="font-medium chad-text-base portrait:mb-2"
-            >DE12345678901234567890</code
+            >{BANK_ACCOUNT_DETAILS.IBAN}</code
           >
           <div class="font-bold chad-text-lg">BIC:</div>
           <code class="font-medium chad-text-base portrait:mb-2"
-            >DEUTDEDBXXX</code
+            >{BANK_ACCOUNT_DETAILS.BIC}</code
           >
           <div class="font-bold chad-text-lg">Verwendungszweck:</div>
           <code class="font-medium chad-text-base"
