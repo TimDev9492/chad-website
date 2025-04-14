@@ -132,7 +132,7 @@ Deno.serve(async (req) => {
         );
       }
     } catch (error) {
-      console.error('Error parsing request body:', error);
+      // body is not json, ignore and use fallback
     } finally {
       if (allowedPaymentStatuses.length === 0) {
         allowedPaymentStatuses = paymentStatusOptions;
