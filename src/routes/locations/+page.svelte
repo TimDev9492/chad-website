@@ -8,7 +8,7 @@
 
 <div class="size-full flex flex-col items-center p-8">
   <div
-    class="w-full flex flex-col items-center gap-4 landscape:gap-8 max-w-screen-2xl"
+    class="w-full flex flex-col items-center gap-4 landscape:gap-8 max-w-screen-lg"
   >
     <span class="uppercase rich-font chad-text-heading chad-typography-gradient"
       >Anreise</span

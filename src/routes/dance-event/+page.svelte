@@ -3,7 +3,7 @@
 </script>
 
 <div class="size-full flex flex-col items-center p-4 landscape:p-8">
-  <div class="w-full max-w-screen-xl flex flex-col items-center gap-8">
+  <div class="w-full max-w-screen-lg flex flex-col items-center gap-8">
     <span class="chad-text-heading font-extrabold chad-typography-gradient"
       >Tanzabend</span
     >

@@ -27,7 +27,7 @@
       main: [{ icon: 'home', label: 'Startseite', href: '/' }],
       Anmeldung: [],
       Programm: [
-        { icon: 'calendar_month', label: 'Programmplan', href: '/program' },
+        // { icon: 'calendar_month', label: 'Programmplan', href: '/program' },
         { icon: 'nightlife', label: 'Tanzabend', href: '/dance-event' },
         { icon: 'event', label: 'Workshops', href: '/workshops' },
         { icon: 'pin_drop', label: 'Anreise', href: '/locations' },
@@ -110,8 +110,8 @@
     bind:open
   >
     <Header>
-      <Title>Navigation</Title>
-      <Subtitle>Was suchst du?</Subtitle>
+      <Title class="chad-text-lg">Navigation</Title>
+      <Subtitle class="chad-text-base">Was suchst du?</Subtitle>
     </Header>
     <Content>
       <div class="flex flex-col justify-between h-full">
@@ -148,7 +148,7 @@
       class="material-icons"
       aria-hidden="true">{option.icon}</Graphic
     >
-    <Text>{option.label}</Text>
+    <Text class="chad-text-base">{option.label}</Text>
   </Item>
 {/snippet}
 {#snippet section(label: string, options: DrawerOption[])}

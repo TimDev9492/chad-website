@@ -14,7 +14,7 @@
 
 <div class="size-full flex flex-col items-center landscape:p-8 portrait:p-4">
   <div
-    class="flex flex-col items-center max-w-screen-xl w-full gap-8 portrait:gap-4"
+    class="flex flex-col items-center max-w-screen-lg w-full gap-8 portrait:gap-4"
   >
     <a
       use:Ripple={{ surface: true }}
@@ -22,7 +22,7 @@
       class="bg-[#ff914d] rich-font rounded-full w-full text-center p-4 uppercase !text-white chad-text-subheading font-extrabold tracking-[0.2em] chad-shadow"
       >Anmeldung</a
     >
-    <div class="chad-card p-4 landscape:p-8 w-full">
+    <div class="chad-card chad-shadow p-4 landscape:p-8 w-full">
       <Carousel data={carouselData}>
         {#snippet slide(item: CarouselSlide)}
           <div
