@@ -1,11 +1,14 @@
 <script lang="ts">
   import ParticipantIcon from '$lib/components/ParticipantIcon.svelte';
   import RoundImage from '$lib/components/RoundImage.svelte';
+  import { DEFAULT_AVATAR_URL } from '$lib/content/constants';
+  import { raiseToast } from '$lib/toastStore';
+  import Button, { Icon } from '@smui/button';
   import Dialog, { Content } from '@smui/dialog';
   import { onMount } from 'svelte';
 
   let { data } = $props();
-  let { supabase } = $derived(data);
+  let { supabase, userAppData } = $derived(data);
 
   type ParticipantData = {
     public_id: string;
@@ -27,7 +30,36 @@
     avatar_url: '',
   });
 
-  onMount(async () => {
+  const deleteProfilePicture = async (public_id: string) => {
+    const { data, error } = await supabase
+      .from('public_infos')
+      .update({ avatar_url: DEFAULT_AVATAR_URL })
+      .eq('public_id', public_id)
+      .select();
+    console.log({ data, error });
+    if (error) {
+      console.error(error);
+      raiseToast({
+        level: 'error',
+        message: 'Fehler beim Löschen des Profilbildes',
+      });
+    } else if (data !== null && data.length === 0) {
+      console.error('RLS prevents the row from being updated.');
+      raiseToast({
+        level: 'error',
+        message: 'Fehler beim Löschen des Profilbildes',
+      });
+    } else {
+      await pullData();
+      open = false;
+      raiseToast({
+        level: 'success',
+        message: 'Profilbild erfolgreich gelöscht',
+      });
+    }
+  };
+
+  const pullData = async () => {
     const { data, error } = await supabase
       .from('public_participants')
       .select('*');
@@ -48,6 +80,10 @@
         Array(5 - participants.length).fill(null),
       );
     }
+  };
+
+  onMount(async () => {
+    await pullData();
   });
 </script>
 
@@ -59,6 +95,18 @@
   surface$class="landscape:!max-h-[90vh] landscape:!w-[80vh] portait:!w-[90vw]"
 >
   <Content>
+    {#if userAppData.role === 'admin'}
+      <div class="w-full flex justify-center mb-2">
+        <Button
+          variant="outlined"
+          style="color: red;"
+          href="/participants"
+          onclick={() => deleteProfilePicture(dialogParticipant.public_id)}
+        >
+          <Icon class="material-icons">delete</Icon>Profilbild löschen</Button
+        >
+      </div>
+    {/if}
     <div class="w-full aspect-square flex flex-grow">
       <RoundImage
         alt="avatar closeup"

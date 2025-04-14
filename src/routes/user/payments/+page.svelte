@@ -3,7 +3,6 @@
   import { Label } from '@smui/common';
   import type { Database } from '../../../types/database.types.js';
   import { PUBLIC_SUPPORT_EMAIL } from '$env/static/public';
-  import { enIE } from 'date-fns/locale';
   import { BANK_ACCOUNT_DETAILS } from '$lib/content/constants.js';
 
   let { data } = $props();

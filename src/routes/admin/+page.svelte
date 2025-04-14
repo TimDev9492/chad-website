@@ -1,10 +1,8 @@
 <script>
   import Button, { Icon } from '@smui/button';
-  import Card, { Content } from '@smui/card';
   import { toastStore } from '$lib/toastStore';
   import { PUBLIC_SUPABASE_URL } from '$env/static/public';
   import LinearProgress from '@smui/linear-progress';
-  import Divider from '$lib/components/Divider.svelte';
 
   let { data } = $props();
   let { session } = $derived(data);
@@ -49,34 +47,52 @@
     closed={!excelLoading}
   />
 </div>
-<div class="size-full flex portrait:flex-col justify-center items-center gap-8">
-  <div class="chad-card chad-shadow">
-    <div class="flex flex-col items-center gap-4">
-      <div class="font-medium text-xl">Teilnehmerliste herunterladen</div>
-      <Button
-        disabled={excelLoading}
-        onclick={async () => {
-          excelLoading = true;
-          await fetchExcelTriggerDownload();
-          excelLoading = false;
-        }}
-        variant="raised"
-        color="secondary"
-      >
-        <Icon class="material-icons">download</Icon>Herunterladen</Button
-      >
-    </div>
-  </div>
-  <div class="chad-card chad-shadow">
-    <div class="flex flex-col items-center gap-4">
-      <div class="font-medium text-xl">Zahlungen</div>
+<div class="size-full flex justify-center p-4 landscape:p-8">
+  <div class="w-full max-w-screen-lg flex flex-col items-center gap-4">
+    <div class="w-full">
       <Button
         variant="raised"
         color="secondary"
         href="/admin/confirm-payment"
+        style="width: 100%;"
       >
-        <Icon class="material-icons">euro</Icon>Bestätigen</Button
+        <Icon class="material-icons">euro</Icon>Zahlung Bestätigen</Button
       >
+    </div>
+    <div class="w-full grid grid-cols-2 landscape:grid-cols-4 gap-4">
+      <div class="w-full aspect-square chad-card chad-shadow">
+        user accounts
+      </div>
+      <div class="w-full aspect-square chad-card chad-shadow">
+        forms filled in
+      </div>
+      <div class="w-full aspect-square chad-card chad-shadow">
+        waiting for payment
+      </div>
+      <div class="w-full aspect-square chad-card chad-shadow">
+        paid and registered participants
+      </div>
+    </div>
+    <div class="w-full grid grid-cols-1 landscape:grid-cols-2 gap-4">
+      <div class="chad-card chad-shadow">
+        <div class="flex flex-col gap-4">
+          <div class="font-bold chad-text-lg">
+            Teilnehmerliste herunterladen
+          </div>
+          <Button
+            disabled={excelLoading}
+            onclick={async () => {
+              excelLoading = true;
+              await fetchExcelTriggerDownload();
+              excelLoading = false;
+            }}
+            variant="raised"
+            color="secondary"
+          >
+            <Icon class="material-icons">download</Icon>Herunterladen</Button
+          >
+        </div>
+      </div>
     </div>
   </div>
 </div>

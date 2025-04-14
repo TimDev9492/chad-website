@@ -46,7 +46,11 @@
 
       opts['Anmeldung'].push(
         { icon: 'checklist', label: 'Schritte', href: '/user' },
-        { icon: 'manage_accounts', label: 'Nutzerdaten', href: '/user/info' },
+        {
+          icon: 'manage_accounts',
+          label: 'Anmeldeformular',
+          href: '/user/info',
+        },
         { icon: 'credit_card', label: 'Bezahlen', href: '/user/payments' },
         {
           icon: 'airport_shuttle',
