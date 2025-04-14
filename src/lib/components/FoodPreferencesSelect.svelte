@@ -4,9 +4,9 @@
   import Dialog, { Title, Content, Actions } from '@smui/dialog';
   import Textfield from '@smui/textfield';
   import Chip, { Set, TrailingAction, Text, LeadingIcon } from '@smui/chips';
+  import { DEFAULT_FOOD_PREFERENCES } from '$lib/content/constants';
 
   type Item = {
-    id: number;
     label: string;
     icon: string;
   };
@@ -22,33 +22,7 @@
   let dialogOpen = $state(false);
   // When options are objects, you need to wrap them in a $state rune, so that
   // Svelte can compare the objects properly.
-  let options: Item[] = [
-    {
-      id: 0,
-      label: 'Vegan',
-      icon: 'compost',
-    },
-    {
-      id: 1,
-      label: 'Vegetarisch',
-      icon: 'compost',
-    },
-    {
-      id: 2,
-      label: 'Glutenfrei',
-      icon: 'grain',
-    },
-    {
-      id: 3,
-      label: 'Laktosefrei',
-      icon: 'local_drink',
-    },
-    {
-      id: 4,
-      label: 'Nussallergie',
-      icon: 'no_meals',
-    },
-  ];
+  let options: Item[] = DEFAULT_FOOD_PREFERENCES;
   let newLabel = $state('');
 
   for (const selectedPreference of selectedPreferences) {
@@ -56,7 +30,6 @@
       options = [
         ...options,
         {
-          id: options[options.length - 1].id + 1,
           label: selectedPreference,
           icon: 'local_hospital',
         },
@@ -69,7 +42,7 @@
   );
   let available = $derived(
     options.filter(
-      (option) => selected.findIndex((el) => el.id === option.id) === -1,
+      (option) => selected.findIndex((el) => el.label === option.label) === -1,
     ),
   );
 
@@ -81,8 +54,12 @@
   let text = $state('');
 
   const addObject = () => {
+    if (options.findIndex((option) => option.label === newLabel) !== -1) {
+      // don't add options that already exist
+      dialogOpen = false;
+      return;
+    }
     const newObject = {
-      id: options[options.length - 1].id + 1,
       label: newLabel,
       icon: 'local_hospital',
     };
@@ -90,6 +67,10 @@
     selected.push(newObject);
     // value = newObject;
     dialogOpen = false;
+  };
+
+  const removeSelected = (item: Item) => {
+    selected = selected.filter((el) => el.label !== item.label);
   };
 
   const handleSelection = (event: CustomEvent<Item>) => {
@@ -123,17 +104,22 @@
   <Set
     class={disabled ? ' opacity-50' : ''}
     style="display: inline-block;"
-    key={(item) => (item && item?.id ? item.id.toString() : '')}
+    key={(item) => item?.label ?? ''}
     bind:chips={selected}
   >
     {#snippet chip(item)}
       <Chip
-        chip={item.id}
-        onclick={() => (selected = selected.filter((el) => el.id !== item.id))}
+        chip={item.label}
+        onclick={() => removeSelected(item)}
       >
         <LeadingIcon class="material-icons">{item.icon}</LeadingIcon>
-        <Text tabindex={item.id}>{item.label}</Text>
-        <TrailingAction icon$class="material-icons">cancel</TrailingAction>
+        <Text tabindex={selected.findIndex((opt) => opt.label === item.label)}
+          >{item.label}</Text
+        >
+        <TrailingAction
+          onclick={() => removeSelected(item)}
+          icon$class="material-icons">cancel</TrailingAction
+        >
       </Chip>
     {/snippet}
   </Set>

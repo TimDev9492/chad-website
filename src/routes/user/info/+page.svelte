@@ -5,7 +5,7 @@
     disabledText,
   } from '$lib/utils.js';
   import { applyAction, enhance } from '$app/forms';
-  import { toastStore } from '$lib/toastStore';
+  import { raiseToast, toastStore } from '$lib/toastStore';
   import type { Database } from '../../../types/database.types.js';
   import Textfield from '@smui/textfield';
   import GenderSelect from '$lib/components/GenderSelect.svelte';
@@ -278,12 +278,11 @@
         // `result` is an `ActionResult` object
         // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
         waitingForResponse = false;
-        console.log(result);
         await applyAction(result);
         if (!result.status) return;
         const success: boolean = isHttpSuccess(result.status);
         // if (success) update({ invalidateAll: false });
-        toastStore.set({
+        raiseToast({
           level: success ? 'success' : 'error',
           message: (result as any).data?.message,
         });

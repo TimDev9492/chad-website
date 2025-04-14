@@ -11,3 +11,25 @@ export const CONTACT = {
   INSTAGRAM: 'https://www.instagram.com/chadtagung',
   WHATSAPP: 'https://chat.whatsapp.com/HgaYsaSNQO8JhHXASsk4Tk',
 };
+export const DEFAULT_FOOD_PREFERENCES = [
+  {
+    label: 'Vegan',
+    icon: 'compost',
+  },
+  {
+    label: 'Vegetarisch',
+    icon: 'compost',
+  },
+  {
+    label: 'Glutenfrei',
+    icon: 'grain',
+  },
+  {
+    label: 'Laktosefrei',
+    icon: 'local_drink',
+  },
+  {
+    label: 'Nussallergie',
+    icon: 'no_meals',
+  },
+];
