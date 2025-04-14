@@ -89,6 +89,7 @@
         und bestätigt werden. Dies kann einige Studen bis wenige Tage dauern.
         Falls du Fragen hast, oder glaubst, es ist etwas schief gelaufen,
         <a
+          class="text-blue-400"
           href={`mailto:${CONTACT.EMAIL}\n` +
             `?subject=${encodeURIComponent(`Problem mit Bezahlung ${userAppData.payment_reference}`)}\n` +
             `&body=${encodeURIComponent(`Hallo Chad-Team,

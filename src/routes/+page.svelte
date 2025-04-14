@@ -1,11 +1,11 @@
 <script lang="ts">
   import Carousel from '$lib/components/Carousel.svelte';
+  import ParticipantBar from '$lib/components/ParticipantBar.svelte';
   import { carouselData, type CarouselSlide } from '$lib/content/mainPage';
-  import { hasInfosProvided } from '$lib/utils';
   import Ripple from '@smui/ripple';
 
   let { data } = $props();
-  let { userAppData } = $derived(data);
+  let { supabase } = $derived(data);
 
   const nextSignupRoute = $derived.by(() => {
     return '/login';
@@ -22,6 +22,9 @@
       class="bg-[#ff914d] rich-font rounded-full w-full text-center p-4 uppercase !text-white chad-text-subheading font-extrabold tracking-[0.2em] chad-shadow"
       >Anmeldung</a
     >
+    <div class="chad-card chad-shadow w-full">
+      <ParticipantBar {supabase} />
+    </div>
     <div class="chad-card chad-shadow p-4 landscape:p-8 w-full">
       <Carousel data={carouselData}>
         {#snippet slide(item: CarouselSlide)}

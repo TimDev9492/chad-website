@@ -28,6 +28,7 @@
   import Ripple from '@smui/ripple';
   import type { BreakfastPreferences } from '../../../app.js';
   import Select, { Option } from '@smui/select';
+  import ParticipantBar from '$lib/components/ParticipantBar.svelte';
 
   let { data } = $props();
   const {
@@ -293,6 +294,9 @@
       <span class="chad-text-heading chad-typography-gradient rich-font">
         Anmeldeformular
       </span>
+    </div>
+    <div class="chad-card chad-shadow w-full">
+      <ParticipantBar {supabase} />
     </div>
     <div
       class="chad-card chad-shadow w-full flex flex-col gap-4 chad-text-base"
