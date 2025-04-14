@@ -61,19 +61,34 @@ Deno.serve(async (req) => {
       'Geburtsdatum',
       'Pfahl',
       'Gemeinde',
-      'Braucht Schlafplatz?',
-      'Braucht Frühstück?',
       'Ernährung',
       'Straße und Hausnummer',
       'PLZ',
       'Stadt',
       'Wohnsitz',
+      'Frühstück Dienstag',
+      'Frühstück Mittwoch',
+      'Frühstück Donnerstag',
+      'Frühstück Freitag',
+      'Mitbewohner Wünsche',
+      'Unterkunft',
+      'Hinweg mit',
+      'Deutschlandticket',
+      'Tempelbesuch',
+      'Endowment',
+      'Tempelmitarbeiter',
+      'Bereit auszuhelfen',
+      'Teilnahme Taufe',
+      'Aufnahmen erlaubt',
+      'Sonstiges',
+      'Verwendungszweck Überweisung',
+      'Zahlungsstatus',
     ];
 
     const { data, error } = await supabase.from('participants').select('*');
     if (error)
       return JsonError(500, 'Failed to fetch participant info!', error.message);
-    const participantData = data.map((participant) => [
+    const participantData = data.map((participant: any) => [
       participant.first_name ?? '-',
       participant.last_name ?? '-',
       participant.email ?? '-',
@@ -82,17 +97,59 @@ Deno.serve(async (req) => {
       participant.date_of_birth ?? '-',
       participant.stake_name ?? '-',
       participant.ward_name ?? '-',
-      participant.needs_place_to_sleep ? 'Ja' : 'Nein',
-      participant.wants_breakfast ? 'Ja' : 'Nein',
       participant.food_preferences ?? '-',
       participant.street_name_and_number ?? '-',
       participant.postal_code ?? '-',
       participant.city ?? '-',
       participant.country_of_residency ?? '-',
+      participant.breakfast_tuesday ? 'Ja' : 'Nein',
+      participant.breakfast_wednesday ? 'Ja' : 'Nein',
+      participant.breakfast_thursday ? 'Ja' : 'Nein',
+      participant.breakfast_friday ? 'Ja' : 'Nein',
+      participant.room_mate_preferences ?? '-',
+      participant.accomodation ?? '-',
+      participant.mode_of_transport ?? '-',
+      participant.has_deutschland_ticket ? 'Ja' : 'Nein',
+      participant.wants_to_visit_temple ? 'Ja' : 'Nein',
+      participant.has_endowment ? 'Ja' : 'Nein',
+      participant.is_temple_staff ? 'Ja' : 'Nein',
+      participant.wants_to_provide_temple_staff ? 'Ja' : 'Nein',
+      participant.wants_to_attend_baptism ? 'Ja' : 'Nein',
+      participant.agrees_to_recordings ? 'Ja' : 'Nein',
+      participant.other_remarks ?? '-',
+      participant.payment_reference ?? '-',
+      participant.payment_status ?? '-',
     ]);
 
+    // Filter participants by payment status
+    const paymentStatusOptions = ['CONFIRMED', 'PENDING_APPROVAL', 'UNPAID'];
+    let allowedPaymentStatuses = [];
+    try {
+      const body = await req.json();
+      if (Array.isArray(body)) {
+        allowedPaymentStatuses = body.filter((status: string) =>
+          paymentStatusOptions.includes(status),
+        );
+      }
+    } catch (error) {
+      console.error('Error parsing request body:', error);
+    } finally {
+      if (allowedPaymentStatuses.length === 0) {
+        allowedPaymentStatuses = paymentStatusOptions;
+      }
+    }
+
+    const PAYMENT_STATUS_INDEX = 29;
+    const requestedParticipants = participantData.filter(
+      (participant: string[]) =>
+        allowedPaymentStatuses.includes(participant[PAYMENT_STATUS_INDEX]),
+    );
+
     // create worksheet
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...participantData]);
+    const worksheet = XLSX.utils.aoa_to_sheet([
+      headers,
+      ...requestedParticipants,
+    ]);
 
     // make header bold (does not work on free version)
     headers.forEach((_, col) => {

@@ -1,13 +1,31 @@
-<script>
+<script lang="ts">
   import Button, { Icon } from '@smui/button';
-  import { toastStore } from '$lib/toastStore';
+  import { raiseToast, toastStore } from '$lib/toastStore';
   import { PUBLIC_SUPABASE_URL } from '$env/static/public';
   import LinearProgress from '@smui/linear-progress';
+  import { type PaymentStatus } from '../../app.js';
+  import FormField from '@smui/form-field';
+  import Checkbox from '@smui/checkbox';
+  import ParticipantBar from '$lib/components/ParticipantBar.svelte';
 
   let { data } = $props();
-  let { session } = $derived(data);
+  let { session, supabase } = $derived(data);
+
+  const paymentStatuses: PaymentStatus[] = [
+    'CONFIRMED',
+    'PENDING_APPROVAL',
+    'UNPAID',
+  ] as const;
+  const paymentStatusDescription: Record<PaymentStatus, string> = {
+    CONFIRMED: 'Angemeldet / Zahlung Bestätigt',
+    PENDING_APPROVAL: 'Benutzer, die auf Zahlungsbestätigung warten',
+    UNPAID: 'Benutzer, die noch nicht überwiesen haben',
+  } as const;
 
   let excelLoading = $state(false);
+  let excelPaymentStatuses = $state<PaymentStatus[]>(['CONFIRMED']);
+
+  $inspect(excelPaymentStatuses);
 
   const fetchExcelTriggerDownload = async () => {
     const response = await fetch(
@@ -17,6 +35,7 @@
         headers: {
           Authorization: `Bearer ${session?.access_token}`,
         },
+        body: JSON.stringify($state.snapshot(excelPaymentStatuses)),
       },
     );
     if (!response.ok) {
@@ -69,21 +88,53 @@
       <div class="w-full aspect-square chad-card chad-shadow">
         waiting for payment
       </div>
-      <div class="w-full aspect-square chad-card chad-shadow">
-        paid and registered participants
+      <div class="w-full aspect-square chad-card chad-shadow flex items-end">
+        <ParticipantBar {supabase} />
       </div>
     </div>
     <div class="w-full grid grid-cols-1 landscape:grid-cols-2 gap-4">
       <div class="chad-card chad-shadow">
         <div class="flex flex-col gap-4">
-          <div class="font-bold chad-text-lg">
-            Teilnehmerliste herunterladen
+          <div class="flex flex-col">
+            <span class="font-bold chad-text-lg"
+              >Teilnehmerliste herunterladen</span
+            >
+            <span class="chad-text-base text-gray-500"
+              >Welche Benutzer sollen enthalten sein?</span
+            >
+          </div>
+          <div class="flex flex-col gap-4">
+            {#each paymentStatuses as option}
+              <FormField>
+                <Checkbox
+                  disabled={excelLoading}
+                  bind:group={excelPaymentStatuses}
+                  value={option}
+                />
+                {#snippet label()}
+                  <div class="flex flex-col">
+                    <span>{option}</span>
+                    <span class="text-gray-500 chad-text-sm"
+                      >{paymentStatusDescription[option]}</span
+                    >
+                  </div>
+                {/snippet}
+              </FormField>
+            {/each}
           </div>
           <Button
-            disabled={excelLoading}
+            disabled={excelLoading || excelPaymentStatuses.length === 0}
             onclick={async () => {
               excelLoading = true;
-              await fetchExcelTriggerDownload();
+              try {
+                await fetchExcelTriggerDownload();
+              } catch (error) {
+                console.error(error);
+                raiseToast({
+                  level: 'error',
+                  message: `Fehler beim Herunterladen der Excel-Datei!`,
+                });
+              }
               excelLoading = false;
             }}
             variant="raised"
