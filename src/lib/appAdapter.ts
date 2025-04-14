@@ -31,7 +31,7 @@ export const getUserAppData = async (
     phone_number: userInfo?.phone_number,
     date_of_birth: userInfo?.date_of_birth,
     avatar_url: userInfo?.public_infos?.avatar_url,
-    has_paid: userInfo?.payment_infos?.has_paid,
+    payment_status: userInfo?.payment_infos?.status,
     payment_reference: userInfo?.payment_infos?.payment_reference,
     room_mate_preferences: userInfo?.room_mate_preferences,
     accomodation: userInfo?.accomodation,

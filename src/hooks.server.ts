@@ -84,7 +84,7 @@ const supabase: Handle = async ({ event, resolve }) => {
       user,
       userAppData: userAppData ?? null,
       infosProvided: hasInfosProvided(userAppData),
-      hasPaid: userAppData?.has_paid ?? false,
+      hasPaid: userAppData?.payment_status === 'CONFIRMED',
     };
   };
 

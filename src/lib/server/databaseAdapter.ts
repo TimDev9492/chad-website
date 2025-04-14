@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type {
   FoodPreference,
+  PaymentStatus,
   ResidentialAddressData,
   UserInfoData,
 } from '../../app';
@@ -8,13 +9,13 @@ import type {
 export const updateHasPaid = async (
   supabase: SupabaseClient,
   payment_reference: string,
-  has_paid: boolean,
+  payment_status: PaymentStatus,
   options: { throwOnError: boolean } = { throwOnError: true },
 ) => {
   const { data, error } = await supabase
     .from('payment_infos')
     .update({
-      has_paid,
+      payment_status,
     })
     .eq('payment_reference', payment_reference)
     .select('user_id');

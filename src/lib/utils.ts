@@ -149,7 +149,7 @@ export const hasInfosProvided = (
     date_of_birth,
     avatar_url,
     gender,
-    has_paid,
+    payment_status,
     room_mate_preferences,
     accomodation,
     mode_of_transport,
@@ -171,7 +171,12 @@ export const hasInfosProvided = (
 
   // default fields
   if (!avatar_url) return false;
-  if (has_paid == null) return false;
+  if (
+    payment_status !== 'UNPAID' &&
+    payment_status !== 'PENDING_APPROVAL' &&
+    payment_status !== 'CONFIRMED'
+  )
+    return false;
   if (payment_reference == null) return false;
 
   // required fields

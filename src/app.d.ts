@@ -27,6 +27,8 @@ declare global {
   }
 }
 
+export type PaymentStatus = Database['public']['Enums']['payment_status'];
+
 type FoodPreference = {
   description: string;
 };
@@ -57,7 +59,7 @@ type UserInfoData = {
   avatar_url: string | null | undefined;
   gender: string | null | undefined;
   role: string | undefined;
-  has_paid: boolean | undefined;
+  payment_status: PaymentStatus | undefined;
   payment_reference: string | undefined;
   room_mate_preferences: string | null | undefined;
   accomodation: string | null | undefined;

@@ -145,18 +145,21 @@ export type Database = {
           created_at: string
           has_paid: boolean
           payment_reference: number
+          status: Database["public"]["Enums"]["payment_status"]
           user_id: string
         }
         Insert: {
           created_at?: string
           has_paid?: boolean
           payment_reference?: number
+          status?: Database["public"]["Enums"]["payment_status"]
           user_id: string
         }
         Update: {
           created_at?: string
           has_paid?: boolean
           payment_reference?: number
+          status?: Database["public"]["Enums"]["payment_status"]
           user_id?: string
         }
         Relationships: [
@@ -541,6 +544,7 @@ export type Database = {
       }
     }
     Enums: {
+      payment_status: "UNPAID" | "PENDING_APPROVAL" | "CONFIRMED"
       role: "user" | "admin"
     }
     CompositeTypes: {
@@ -657,6 +661,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      payment_status: ["UNPAID", "PENDING_APPROVAL", "CONFIRMED"],
       role: ["user", "admin"],
     },
   },

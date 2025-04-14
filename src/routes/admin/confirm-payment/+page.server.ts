@@ -26,7 +26,7 @@ export const actions = {
     );
     let data;
     try {
-      data = await updateHasPaid(supabase, paymentRef, true, {
+      data = await updateHasPaid(supabase, paymentRef, 'CONFIRMED', {
         throwOnError: true,
       });
     } catch (error) {
