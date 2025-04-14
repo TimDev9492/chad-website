@@ -56,6 +56,6 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
     user,
     userAppData,
     infosProvided: hasInfosProvided(userAppData),
-    hasPaid: userAppData?.has_paid ?? false,
+    hasPaid: userAppData?.payment_status === 'CONFIRMED',
   };
 };

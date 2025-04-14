@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import type { RegisteredParticipant, UserAppData } from '../app';
+import type { Database } from '../types/database.types';
 
 export const isHttpSuccess: (status: number) => boolean = (status: number) =>
   status >= 200 && status < 300;
@@ -224,6 +225,15 @@ export const getRegisteredParticipants = async (
   options: { throwOnError: boolean } = { throwOnError: true },
 ): Promise<RegisteredParticipant[]> => {
   const { data, error } = await supabase.rpc('get_registered_users');
+  if (error && options.throwOnError) throw error;
+  return data;
+};
+
+export const notifyPaymentApproval = async (
+  supabase: SupabaseClient,
+  options: { throwOnError: boolean } = { throwOnError: true },
+): Promise<Database['public']['Tables']['payment_infos']['Row'][]> => {
+  const { data, error } = await supabase.rpc('notify_payment_approval');
   if (error && options.throwOnError) throw error;
   return data;
 };
