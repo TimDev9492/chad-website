@@ -2,7 +2,7 @@ import { goto } from '$app/navigation';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
-import type { UserAppData } from '../app';
+import type { RegisteredParticipant, UserAppData } from '../app';
 
 export const isHttpSuccess: (status: number) => boolean = (status: number) =>
   status >= 200 && status < 300;
@@ -217,4 +217,13 @@ export const formatWorkshopStart = (startTime: string) => {
   return format(startTime, "eee dd.MM. HH:mm 'Uhr'", {
     locale: de,
   });
+};
+
+export const getRegisteredParticipants = async (
+  supabase: SupabaseClient,
+  options: { throwOnError: boolean } = { throwOnError: true },
+): Promise<RegisteredParticipant[]> => {
+  const { data, error } = await supabase.rpc('get_registered_users');
+  if (error && options.throwOnError) throw error;
+  return data;
 };

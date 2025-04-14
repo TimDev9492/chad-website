@@ -1,5 +1,6 @@
 <script lang="ts">
   import { PARTICIPANT_LIMIT } from '$lib/content/constants';
+  import { getRegisteredParticipants } from '$lib/utils';
   import LinearProgress from '@smui/linear-progress';
   import type { SupabaseClient } from '@supabase/supabase-js';
   import { onMount } from 'svelte';
@@ -15,20 +16,17 @@
   let count = $state(0);
   let progress = $derived(count / PARTICIPANT_LIMIT);
 
-  const getParticipantCount = async () => {
-    const { count, error } = await supabase
-      .from('public_participants')
-      .select('public_id', { count: 'exact', head: true });
-    if (error) {
-      console.error('Error fetching participant count:', error);
-      loadError = true;
-      return -1;
-    }
-    return count!;
-  };
-
   onMount(async () => {
-    count = await getParticipantCount();
+    let participants;
+    try {
+      participants = await getRegisteredParticipants(supabase);
+    } catch (error) {
+      console.error(error);
+      loadError = true;
+      loading = false;
+      return;
+    }
+    count = participants.length;
     loading = false;
   });
 </script>

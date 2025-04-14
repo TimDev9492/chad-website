@@ -29,6 +29,9 @@ declare global {
 
 export type PaymentStatus = Database['public']['Enums']['payment_status'];
 
+export type RegisteredParticipant =
+  Database['public']['Functions']['get_registered_users']['Returns'];
+
 type FoodPreference = {
   description: string;
 };

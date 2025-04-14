@@ -3,9 +3,12 @@
   import RoundImage from '$lib/components/RoundImage.svelte';
   import { DEFAULT_AVATAR_URL } from '$lib/content/constants';
   import { raiseToast } from '$lib/toastStore';
+  import { getRegisteredParticipants } from '$lib/utils.js';
   import Button, { Icon } from '@smui/button';
   import Dialog, { Content } from '@smui/dialog';
   import { onMount } from 'svelte';
+  import type { Database } from '../../types/database.types.js';
+  import type { RegisteredParticipant } from '../../app.js';
 
   let { data } = $props();
   let { supabase, userAppData } = $derived(data);
@@ -60,14 +63,18 @@
   };
 
   const pullData = async () => {
-    const { data, error } = await supabase
-      .from('public_participants')
-      .select('*');
-    if (error) {
+    let registeredParticipants: RegisteredParticipant[] = [];
+    try {
+      registeredParticipants = await getRegisteredParticipants(supabase);
+    } catch (error) {
       console.error(error);
+      raiseToast({
+        level: 'error',
+        message: 'Fehler beim Laden der Teilnehmer!',
+      });
       return;
     }
-    participants = data.map((participant) => ({
+    participants = registeredParticipants.map((participant: any) => ({
       public_id: participant.public_id,
       first_name: participant.first_name,
       last_name: participant.last_name,

@@ -143,21 +143,18 @@ export type Database = {
       payment_infos: {
         Row: {
           created_at: string
-          has_paid: boolean
           payment_reference: number
           status: Database["public"]["Enums"]["payment_status"]
           user_id: string
         }
         Insert: {
           created_at?: string
-          has_paid?: boolean
           payment_reference?: number
           status?: Database["public"]["Enums"]["payment_status"]
           user_id: string
         }
         Update: {
           created_at?: string
-          has_paid?: boolean
           payment_reference?: number
           status?: Database["public"]["Enums"]["payment_status"]
           user_id?: string
@@ -536,6 +533,17 @@ export type Database = {
           metadata: Json
           thumbnail_url: string
           title: string
+        }[]
+      }
+      get_registered_users: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          public_id: string
+          first_name: string
+          last_name: string
+          ward_name: string
+          stake_name: string
+          avatar_url: string
         }[]
       }
       get_user_price: {
