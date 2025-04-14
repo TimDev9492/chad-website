@@ -116,12 +116,12 @@
         <div class="flex flex-col text-gray-600 chad-text-base">
           <span class="text-black chad-text-lg">Rechtliches</span>
           <a
-            href="about:blank"
-            target="_blank">Datenschutz</a
+            class="!text-gray-600"
+            href="/legal/privacy">Datenschutz</a
           >
           <a
-            href="about:blank"
-            target="_blank">Impressum</a
+            class="!text-gray-600"
+            href="/legal/imprint">Impressum</a
           >
         </div>
       </div>
