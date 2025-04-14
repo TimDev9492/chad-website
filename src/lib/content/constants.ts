@@ -6,3 +6,8 @@ export const BANK_ACCOUNT_DETAILS = {
   IBAN: 'DE12345678901234567890',
   BIC: 'DEUTDEDBFRA',
 };
+export const CONTACT = {
+  EMAIL: 'orga@chad25.com',
+  INSTAGRAM: 'https://www.instagram.com/chadtagung',
+  WHATSAPP: 'https://chat.whatsapp.com/HgaYsaSNQO8JhHXASsk4Tk',
+};

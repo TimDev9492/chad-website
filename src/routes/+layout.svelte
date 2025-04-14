@@ -8,7 +8,10 @@
   import { drawerStore } from '$lib/drawerStore';
   import LinearProgress from '@smui/linear-progress';
   import { navigating } from '$app/state';
-  import { PUBLIC_SUPPORT_EMAIL } from '$env/static/public';
+  import EmailIcon from '$lib/components/icons/EmailIcon.svelte';
+  import { CONTACT } from '$lib/content/constants';
+  import InstagramIcon from '$lib/components/icons/InstagramIcon.svelte';
+  import WhatsAppIcon from '$lib/components/icons/WhatsAppIcon.svelte';
 
   let { data, children } = $props();
   let { session, supabase, userAppData } = $derived(data);
@@ -86,15 +89,55 @@
     {@render children()}
   </main>
   <!-- footer -->
-  <footer class="flex justify-between items-center p-2 px-4 text-gray-700">
-    <div>Chad Tagung 2025</div>
-    <div>
-      Kontakt: <a
-        href={`mailto:${PUBLIC_SUPPORT_EMAIL}`}
-        class="text-blue-500">{PUBLIC_SUPPORT_EMAIL}</a
-      >
+  <footer class="flex justify-center p-8 bg-blue-100 footer">
+    <div class="w-full max-w-screen-sm flex flex-col gap-8">
+      <div class="w-full flex justify-evenly gap-8">
+        <div class="flex flex-col text-gray-600 chad-text-base">
+          <span class="text-black chad-text-lg">Kontakt</span>
+          <a
+            class="flex items-center gap-2"
+            href={`mailto:${CONTACT.EMAIL}`}
+          >
+            <EmailIcon class="h-[1em]" />{CONTACT.EMAIL}</a
+          >
+          <a
+            class="flex items-center gap-2 !text-gray-600"
+            href={CONTACT.INSTAGRAM}
+          >
+            <InstagramIcon class="h-[1em]" />@chadtagung</a
+          >
+          <a
+            class="flex items-center gap-2 !text-gray-600"
+            href={CONTACT.WHATSAPP}
+          >
+            <WhatsAppIcon class="h-[1em]" />WhatsApp</a
+          >
+        </div>
+        <div class="flex flex-col text-gray-600 chad-text-base">
+          <span class="text-black chad-text-lg">Rechtliches</span>
+          <a
+            href="about:blank"
+            target="_blank">Datenschutz</a
+          >
+          <a
+            href="about:blank"
+            target="_blank">Impressum</a
+          >
+        </div>
+      </div>
+
+      <div class="w-full flex justify-center text-center">
+        <div class="flex flex-col">
+          <span class="chad-text-sm text-gray-700"
+            >© 2025 Chad. All rights reserved.</span
+          >
+          <span class="chad-text-sm text-gray-500 text-balance"
+            >This is not an official website for The Church of Jesus Christ of
+            Latter-day Saints.</span
+          >
+        </div>
+      </div>
     </div>
   </footer>
 </div>
-
 <NotificationToast />

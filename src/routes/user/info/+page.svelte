@@ -578,7 +578,6 @@
       <div class="w-full flex flex-col gap-4">
         <span class="chad-text-base text-gray-600"
           >Hast du das <a
-            class="text-blue-500"
             href="https://www.bahn.de/angebot/regio/deutschland-ticket"
             target="_blank">Deutschland-Ticket?</a
           ></span
@@ -628,7 +627,6 @@
           {#snippet label()}
             <div class={disabledText('', waitingForResponse)}>
               Ich habe mein eigenes <a
-                class="text-blue-500"
                 href="https://www.churchofjesuschrist.org/study/manual/gospel-topics/endowment?lang=deu"
                 target="_blank">Endowment</a
               >

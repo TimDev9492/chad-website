@@ -69,7 +69,7 @@
       {#snippet helper()}
         <HelperText persistent>
           <a
-            class="text-blue-400 chad-text-base"
+            class="chad-text-base"
             href="/login/reset-password">Passwort vergessen?</a
           >
         </HelperText>

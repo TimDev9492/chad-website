@@ -2,8 +2,7 @@
   import SegmentedButton, { Segment } from '@smui/segmented-button';
   import { Label } from '@smui/common';
   import type { Database } from '../../../types/database.types.js';
-  import { PUBLIC_SUPPORT_EMAIL } from '$env/static/public';
-  import { BANK_ACCOUNT_DETAILS } from '$lib/content/constants.js';
+  import { BANK_ACCOUNT_DETAILS, CONTACT } from '$lib/content/constants.js';
 
   let { data } = $props();
   let { userAppData, countries, price } = $derived(data);
@@ -90,8 +89,7 @@
         und bestätigt werden. Dies kann einige Studen bis wenige Tage dauern.
         Falls du Fragen hast, oder glaubst, es ist etwas schief gelaufen,
         <a
-          class="text-blue-400"
-          href={`mailto:${PUBLIC_SUPPORT_EMAIL}\n` +
+          href={`mailto:${CONTACT.EMAIL}\n` +
             `?subject=${encodeURIComponent(`Problem mit Bezahlung ${userAppData.payment_reference}`)}\n` +
             `&body=${encodeURIComponent(`Hallo Chad-Team,
 
