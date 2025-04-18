@@ -8,6 +8,10 @@
   import { toastStore } from '$lib/toastStore';
   import PageFormWrapper from '$lib/components/PageFormWrapper.svelte';
   import HelperText from '@smui/textfield/helper-text';
+  import AuthProviderButtons from '$lib/components/AuthProviderButtons.svelte';
+
+  let { data } = $props();
+  let { supabase } = $derived(data);
 
   let waitingForResponse = $state(false);
   let email = $state('');
@@ -45,6 +49,10 @@
     <div class="chad-typography-gradient font-extrabold chad-text-subheading">
       Anmelden
     </div>
+    <AuthProviderButtons
+      {supabase}
+      disabled={waitingForResponse}
+    />
     <Divider />
     <IconInput
       iconName="email"

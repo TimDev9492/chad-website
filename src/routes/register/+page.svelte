@@ -7,6 +7,10 @@
   import Divider from '$lib/components/Divider.svelte';
   import { toastStore } from '$lib/toastStore';
   import PageFormWrapper from '$lib/components/PageFormWrapper.svelte';
+  import AuthProviderButtons from '$lib/components/AuthProviderButtons.svelte';
+
+  let { data } = $props();
+  let { supabase } = $derived(data);
 
   let waitingForResponse = $state(false);
   let email = $state('');
@@ -43,6 +47,10 @@
     <div class="chad-typography-gradient font-extrabold chad-text-subheading">
       Account erstellen
     </div>
+    <AuthProviderButtons
+      {supabase}
+      disabled={waitingForResponse}
+    />
     <Divider />
     <IconInput
       iconName="email"
