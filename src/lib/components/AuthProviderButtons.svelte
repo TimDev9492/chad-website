@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { PUBLIC_BASE_URL } from '$env/static/public';
   import Button from '@smui/button';
   import type { Provider, SupabaseClient } from '@supabase/supabase-js';
 
@@ -13,7 +14,12 @@
   let svgClasses = $derived('h-full' + (disabled ? ' grayscale' : ''));
   const signInWithAuthProvider = async (e: MouseEvent, provider: Provider) => {
     e.preventDefault();
-    await supabase.auth.signInWithOAuth({ provider });
+    await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${PUBLIC_BASE_URL}/login/auth`,
+      },
+    });
   };
 </script>
 
