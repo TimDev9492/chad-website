@@ -156,8 +156,6 @@ const webhookHandlers: Record<
           200,
           `Successfully updated public infos for user ${record.email}`,
         );
-      } else if (provider === 'facebook') {
-        // do nothing
       } else if (provider === 'email') {
         // do nothing
       } else {
