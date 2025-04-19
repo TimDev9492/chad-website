@@ -80,6 +80,97 @@ type DeletePayload = DatabaseWebhookPayload & {
   record: null;
 };
 
+const webhookHandlers: Record<
+  string,
+  (
+    supabase: SupabaseClient,
+    webhookPayload: DatabaseWebhookPayload,
+  ) => Promise<Response>
+> = {
+  'storage.objects': async (supabase, webhookPayload) => {
+    if (
+      (webhookPayload.record as StorageObjectRecord).bucket_id !== 'avatars'
+    ) {
+      return JsonError(
+        400,
+        'This webhook only operates on the `avatars` bucket',
+      );
+    }
+
+    if (webhookPayload.type === 'INSERT') {
+      return await handleInsert(supabase, webhookPayload as InsertPayload);
+    }
+    if (webhookPayload.type === 'UPDATE') {
+      return await rejectUpdate(supabase, webhookPayload as UpdatePayload);
+    }
+    if (webhookPayload.type === 'DELETE') {
+      return await rejectDelete(supabase, webhookPayload as DeletePayload);
+    }
+    return JsonError(400, 'Unsupported webhook type');
+  },
+  'auth.users': async (supabase, webhookPayload) => {
+    if (webhookPayload.type === 'UPDATE') {
+      return await rejectUpdate(supabase, webhookPayload as UpdatePayload);
+    }
+    if (webhookPayload.type === 'DELETE') {
+      return await rejectDelete(supabase, webhookPayload as DeletePayload);
+    }
+    if (webhookPayload.type === 'INSERT') {
+      const record = webhookPayload.record;
+
+      // get public id of user
+      const { data: userInfoData, error: userInfoError } = await supabase
+        .from('user_infos')
+        .select('public_id')
+        .eq('user_id', record.id)
+        .single();
+      if (userInfoError) {
+        return JsonError(500, 'Failed to get user public id', userInfoError);
+      }
+      const publicId = userInfoData.public_id;
+
+      const provider = record.raw_app_meta_data.provider;
+      if (provider === 'google') {
+        const { full_name: fullName, avatar_url: avatarUrl } =
+          record.raw_user_meta_data;
+        const nameParts = fullName.split(' ');
+        let lastName = nameParts.pop();
+        let firstName = nameParts.join(' ');
+        if (!firstName) {
+          firstName = lastName;
+          lastName = undefined;
+        }
+        const { error } = await supabase
+          .from('public_infos')
+          .update({
+            first_name: firstName,
+            last_name: lastName,
+            avatar_url: avatarUrl,
+          })
+          .eq('public_id', publicId);
+        if (error) {
+          return JsonError(500, 'Failed to update users public infos', error);
+        }
+
+        return JsonResponse(
+          200,
+          `Successfully updated public infos for user ${record.email}`,
+        );
+      } else if (provider === 'facebook') {
+        // do nothing
+      } else if (provider === 'email') {
+        // do nothing
+      } else {
+        return JsonError(
+          400,
+          `Unsupported provider '${provider}' for user ${record.email}`,
+        );
+      }
+    }
+    return JsonError(400, 'Unsupported webhook type');
+  },
+};
+
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
     return JsonError(405, 'Method Not Allowed');
@@ -90,33 +181,25 @@ Deno.serve(async (req) => {
   if (!isValid) return JsonError(401, 'Unauthorized');
 
   const webhookPayload = (await req.json()) as DatabaseWebhookPayload;
-  if (
-    webhookPayload.schema !== 'storage' ||
-    webhookPayload.table !== 'objects'
-  ) {
+
+  const handlerKey = `${webhookPayload.schema}.${webhookPayload.table}`;
+
+  console.log(`Invoked on '${handlerKey}'`);
+
+  if (!Object.keys(webhookHandlers).includes(handlerKey)) {
     return JsonError(
       400,
-      'This webhook only supports the `storage.objects` table',
+      `This webhook does not support the '${webhookHandlers.schema}.${webhookHandlers.table}' table`,
     );
   }
-  if ((webhookPayload.record as StorageObjectRecord).bucket_id !== 'avatars') {
-    return JsonError(400, 'This webhook only operates on the `avatars` bucket');
-  }
+
   // construct supabase client
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL') || '',
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '',
   );
-  if (webhookPayload.type === 'INSERT') {
-    return await handleInsert(supabase, webhookPayload as InsertPayload);
-  }
-  if (webhookPayload.type === 'UPDATE') {
-    return await handleUpdate(supabase, webhookPayload as UpdatePayload);
-  }
-  if (webhookPayload.type === 'DELETE') {
-    return await handleDelete(supabase, webhookPayload as DeletePayload);
-  }
-  return JsonError(400, 'Unsupported webhook type');
+
+  return await webhookHandlers[handlerKey](supabase, webhookPayload);
 });
 
 const handleInsert = async (
@@ -166,14 +249,14 @@ const handleInsert = async (
   );
 };
 
-const handleUpdate = async (
+const rejectUpdate = async (
   supabase: SupabaseClient,
   payload: UpdatePayload,
 ): Promise<Response> => {
   return JsonError(400, "This webhook doesn't support UPDATE events");
 };
 
-const handleDelete = async (
+const rejectDelete = async (
   supabase: SupabaseClient,
   payload: DeletePayload,
 ): Promise<Response> => {
