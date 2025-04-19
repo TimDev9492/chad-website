@@ -26,6 +26,7 @@
 <div class="w-full grid grid-cols-2 gap-2 [&>*]:h-[3em]">
   <div>
     <Button
+      type="button"
       variant="outlined"
       color="primary"
       {disabled}
@@ -56,6 +57,7 @@
   </div>
   <div>
     <Button
+      type="button"
       variant="outlined"
       color="primary"
       {disabled}
