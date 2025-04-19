@@ -6,7 +6,8 @@
   import { type PaymentStatus } from '../../app.js';
   import FormField from '@smui/form-field';
   import Checkbox from '@smui/checkbox';
-  import ParticipantBar from '$lib/components/ParticipantBar.svelte';
+  import { getRegisteredParticipants } from '$lib/utils.js';
+  import { PARTICIPANT_LIMIT } from '$lib/content/constants.js';
 
   let { data } = $props();
   let { session, supabase } = $derived(data);
@@ -55,6 +56,40 @@
     a.click();
     document.body.removeChild(a);
   };
+
+  const getWebsiteAccountCount = async () => {
+    const { count, error } = await supabase
+      .from('public_infos')
+      .select('*', { count: 'exact', head: true });
+    if (error) throw error;
+    return { count } as { count: number };
+  };
+
+  const getFormsFilledCount = async () => {
+    const { data, error } = await supabase
+      .from('public_infos')
+      .select('first_name, last_name');
+    if (error) throw error;
+    const filtered = data.filter(
+      ({ first_name, last_name }) => first_name && last_name,
+    );
+    return { count: filtered.length, total: data.length };
+  };
+
+  const getWaitingForPaymentCount = async () => {
+    const { data, error } = await supabase.rpc('get_payment_status_count', {
+      requested_status: 'PENDING_APPROVAL',
+    });
+    if (error) throw error;
+    return { count: data };
+  };
+
+  const getParticipantCount = async () => {
+    const registered = await getRegisteredParticipants(supabase, {
+      throwOnError: true,
+    });
+    return { count: registered.length, total: PARTICIPANT_LIMIT };
+  };
 </script>
 
 <div class="absolute w-full z-10">
@@ -77,18 +112,26 @@
       >
     </div>
     <div class="w-full grid grid-cols-2 landscape:grid-cols-4 gap-4">
-      <div class="w-full aspect-square chad-card chad-shadow">
-        user accounts
-      </div>
-      <div class="w-full aspect-square chad-card chad-shadow">
-        forms filled in
-      </div>
-      <div class="w-full aspect-square chad-card chad-shadow">
-        waiting for payment
-      </div>
-      <div class="w-full aspect-square chad-card chad-shadow flex items-end">
-        <ParticipantBar {supabase} />
-      </div>
+      {@render countCard(
+        'account_circle',
+        'Website Accounts',
+        getWebsiteAccountCount,
+      )}
+      {@render countCard(
+        'assignment',
+        'Formulare ausgefüllt',
+        getFormsFilledCount,
+      )}
+      {@render countCard(
+        'pending_actions',
+        'Warten auf Zahlungsbestätigung',
+        getWaitingForPaymentCount,
+      )}
+      {@render countCard(
+        'contact_emergency',
+        'Angemeldete Teilnehmer',
+        getParticipantCount,
+      )}
     </div>
     <div class="w-full grid grid-cols-1 landscape:grid-cols-2 gap-4">
       <div class="chad-card chad-shadow">
@@ -145,3 +188,36 @@
     </div>
   </div>
 </div>
+
+{#snippet countCard(
+  icon: string,
+  title: string,
+  countFunc: () => Promise<{ count: number; total?: number }>,
+)}
+  <div
+    class="w-full aspect-square chad-card chad-shadow flex flex-col justify-between"
+  >
+    <div class="material-icons text-6xl portrait:text-8xl text-gray-500">
+      {icon}
+    </div>
+    <div class="flex flex-col gap-2">
+      <div class="chad-text-subheading">
+        {#await countFunc()}
+          <span>Lade...</span>
+        {:then { count, total }}
+          <div class="flex items-end gap-1">
+            <span>{count}</span>
+            {#if total}
+              <span class="chad-text-base text-gray-400 pb-[0.1em]"
+                >/{total}</span
+              >
+            {/if}
+          </div>
+        {:catch error}
+          <span class="text-red-500">Fehler</span>
+        {/await}
+      </div>
+      <span class="chad-text-base text-gray-500 text-balance">{title}</span>
+    </div>
+  </div>
+{/snippet}

@@ -47,7 +47,7 @@
       opts['Anmeldung'].push(
         { icon: 'checklist', label: 'Schritte', href: '/user' },
         {
-          icon: 'manage_accounts',
+          icon: 'assignment',
           label: 'Anmeldeformular',
           href: '/user/info',
         },
