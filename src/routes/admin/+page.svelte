@@ -124,7 +124,7 @@
       )}
       {@render countCard(
         'pending_actions',
-        'Warten auf Zahlungsbestätigung',
+        'Unbestätigte Zahlungen',
         getWaitingForPaymentCount,
       )}
       {@render countCard(
@@ -195,15 +195,15 @@
   countFunc: () => Promise<{ count: number; total?: number }>,
 )}
   <div
-    class="w-full aspect-square chad-card chad-shadow flex flex-col justify-between"
+    class="w-full aspect-square chad-card chad-shadow flex flex-col justify-between overflow-hidden"
   >
-    <div class="material-icons text-6xl portrait:text-8xl text-gray-500">
+    <div class="material-icons chad-text-heading text-gray-500">
       {icon}
     </div>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 portrait:items-end">
       <div class="chad-text-subheading">
         {#await countFunc()}
-          <span>Lade...</span>
+          <span>...</span>
         {:then { count, total }}
           <div class="flex items-end gap-1">
             <span>{count}</span>
@@ -217,7 +217,10 @@
           <span class="text-red-500">Fehler</span>
         {/await}
       </div>
-      <span class="chad-text-base text-gray-500 text-balance">{title}</span>
+      <span
+        class="chad-text-base text-gray-500 text-balance portrait:text-right"
+        >{title}</span
+      >
     </div>
   </div>
 {/snippet}
