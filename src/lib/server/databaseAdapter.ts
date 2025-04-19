@@ -15,7 +15,7 @@ export const updateHasPaid = async (
   const { data, error } = await supabase
     .from('payment_infos')
     .update({
-      payment_status,
+      status: payment_status,
     })
     .eq('payment_reference', payment_reference)
     .select('user_id');
