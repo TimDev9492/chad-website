@@ -69,7 +69,7 @@
     />
   </div>
   <!-- header -->
-  <header class="w-full z-10">
+  <header class="w-full z-50">
     <div
       class="fixed top-0 left-0 w-full"
       id="chad-header"
