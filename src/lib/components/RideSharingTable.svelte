@@ -171,7 +171,7 @@
       >Ich will mitfahren</span
     >
   </div>
-  <div class="landscape:min-w-[60vw] w-full">
+  <div class="w-full">
     <DataTable
       table$aria-label="Mitfahrgelegenheiten"
       style="width: 100%;"

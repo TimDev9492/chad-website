@@ -204,9 +204,7 @@
           <div class="material-icons text-green-400 text-8xl">check_circle</div>
           <div class="chad-text-base font-medium">
             Deine Bezahlung wurde bereits bestätigt, damit bist du offiziell für
-            die Tagung angemeldet! Vielleicht möchtest du dich schonmal für ein
-            paar
-            <a href="/workshops">Workshops anmelden</a>?
+            die Tagung angemeldet!
           </div>
         </div>
       {/if}

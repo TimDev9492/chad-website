@@ -25,6 +25,27 @@
     <div class="chad-card chad-shadow w-full">
       <ParticipantBar {supabase} />
     </div>
+    <div class="chad-card chad-shadow w-full">
+      <div class="grid grid-cols-2 text-gray-500 gap-2 chad-text-lg">
+        <div class="flex items-center gap-2">
+          <div class="material-icons chad-text-subheading">home</div>
+          <span>Wo?</span>
+        </div>
+        <div>Talstraße 12, 61381 Friedrichsdorf</div>
+        <div class="flex items-center gap-2">
+          <div class="material-icons chad-text-subheading">calendar_month</div>
+          <span>Wann?</span>
+        </div>
+        <div>11. bis 15. August 2025</div>
+        <div class="flex items-center gap-2">
+          <div class="material-icons chad-text-subheading">paid</div>
+          <span>Tagungsbeitrag</span>
+        </div>
+        <div>
+          35€ <span class="chad-text-base text-gray-400">(+25€ Herberge)</span>
+        </div>
+      </div>
+    </div>
     <div class="chad-card chad-shadow p-4 landscape:p-8 w-full">
       <Carousel data={carouselData}>
         {#snippet slide(item: CarouselSlide)}
