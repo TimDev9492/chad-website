@@ -12,6 +12,7 @@
   import { CONTACT } from '$lib/content/constants';
   import InstagramIcon from '$lib/components/icons/InstagramIcon.svelte';
   import WhatsAppIcon from '$lib/components/icons/WhatsAppIcon.svelte';
+  import ProgressStepper from '$lib/components/ProgressStepper.svelte';
 
   let { data, children } = $props();
   let { session, supabase, userAppData } = $derived(data);
@@ -69,7 +70,7 @@
     />
   </div>
   <!-- header -->
-  <header class="w-full z-50">
+  <header class="w-full z-40">
     <div
       class="fixed top-0 left-0 w-full"
       id="chad-header"
@@ -141,3 +142,25 @@
   </footer>
 </div>
 <NotificationToast />
+<div class="stepper">
+  <ProgressStepper {data} />
+</div>
+
+<style>
+  .stepper {
+    position: fixed;
+    @media (orientation: landscape) {
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-right: 2rem;
+    }
+    @media (orientation: portrait) {
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 2rem;
+      width: 90vw;
+    }
+  }
+</style>
