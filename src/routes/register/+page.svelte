@@ -83,7 +83,7 @@
         <Label>Registrieren</Label>
       </Button>
       <a
-        class="chad-text-sm text-center"
+        class="chad-text-sm text-center text-blue-600"
         href="/login">Du hast bereits einen Account?</a
       >
     </span>

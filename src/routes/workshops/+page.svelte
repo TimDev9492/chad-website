@@ -254,7 +254,7 @@
         {/if}
       </div>
     </div>
-    <div class="portrait:hidden">
+    <div class="portrait:hidden min-w-[20em]">
       <div class="font-thin text-gray-500">Zeit Slots</div>
       <div class="relative">
         <List>

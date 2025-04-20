@@ -77,7 +77,7 @@
       {#snippet helper()}
         <HelperText persistent>
           <a
-            class="chad-text-base"
+            class="chad-text-base text-blue-500"
             href="/login/reset-password">Passwort vergessen?</a
           >
         </HelperText>
@@ -94,7 +94,7 @@
         <Label>Anmelden</Label>
       </Button>
       <a
-        class="chad-text-sm text-center"
+        class="chad-text-sm text-center text-blue-600"
         href="/register">Du hast noch keinen Account?</a
       >
     </span>
