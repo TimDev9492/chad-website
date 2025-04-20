@@ -44,7 +44,7 @@
       </div>
     {/each}
   </div>
-  <div class="portrait:hidden">
+  <div>
     <button
       onclick={scrollPrev}
       use:Ripple={{ surface: true }}
