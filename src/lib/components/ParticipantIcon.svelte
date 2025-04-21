@@ -91,7 +91,7 @@
   chip: string,
   imgLoading: boolean,
 )}
-  <div class="relative max-w-full flex flex-col items-center">
+  <div class="relative w-full max-w-full flex flex-col items-center">
     {#if imgLoading}
       <div class="size-full relative animate-pulse">
         {@render avatarSvg()}
