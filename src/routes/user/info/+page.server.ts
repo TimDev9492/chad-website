@@ -326,6 +326,7 @@ export const load: PageServerLoad = async ({ locals: { supabase, user } }) => {
     .schema('church_data')
     .from('stakes')
     .select('id, name, wards(id, name)');
+  const { data: defaultAvatarUrl } = await supabase.rpc('get_default_avatar_url') as string | null;
 
   return {
     userInfo: (user_info ??
@@ -344,5 +345,6 @@ export const load: PageServerLoad = async ({ locals: { supabase, user } }) => {
     foodPreferences: (user_info?.food_preferences.map(
       (pref: { description: string }) => pref.description,
     ) ?? []) as string[],
+    defaultAvatarUrl: defaultAvatarUrl as string | null,
   };
 };

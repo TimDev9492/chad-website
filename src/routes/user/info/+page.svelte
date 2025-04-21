@@ -38,6 +38,7 @@
     genders,
     accomodations,
     meansOfTransport,
+    defaultAvatarUrl,
   } = data;
   let { supabase } = $derived(data);
 
@@ -45,6 +46,7 @@
    * Constant Variables
    */
   const MIN_AGE = 18;
+  const CUSTOM_PROFILE_PICTURE_REQUIRED = true;
 
   type Country = Database['public']['Tables']['countries']['Row'];
   type Ward = { id: number; name: string };
@@ -239,6 +241,18 @@
     method="POST"
     class="max-w-screen-md flex flex-col gap-4 w-full"
     use:enhance={(form_element) => {
+      // custom profile picture check
+      if (CUSTOM_PROFILE_PICTURE_REQUIRED) {
+        if (imageSrc === defaultAvatarUrl) {
+          form_element.cancel();
+          raiseToast({
+            level: 'error',
+            message: 'Du musst ein neues Profilbild setzen!',
+          });
+          return;
+        }
+      }
+
       // populate form data
       const formData = form_element.formData;
       formData.set('first_name', _firstName ?? '');
@@ -313,7 +327,7 @@
       <span class="chad-text-lg font-bold">Persönliche Daten</span>
       <div class="flex flex-col gap-2">
         <span class="chad-text-base text-gray-600"
-          >Lade ein Bild von dir hoch!</span
+          >Lade ein Bild von dir hoch!*</span
         >
         <div class="w-full flex justify-center">
           <div class="h-48 relative">
