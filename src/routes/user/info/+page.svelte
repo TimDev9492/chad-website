@@ -139,7 +139,9 @@
     _dateOfBirth == null ? false : getAgeByBirthdate(_dateOfBirth) >= MIN_AGE,
   );
   // ward selection
-  let notAMember = $state(userAppData.ward_id == null);
+  let notAMember = $state(
+    userAppData.phone_number !== null && userAppData.ward_id == null,
+  );
 
   let unsubscribe: () => void | null;
   onMount(() => {
@@ -251,7 +253,7 @@
       formData.set('postal_code', _postalCode ?? '');
       formData.set('country', _countryOfResidency?.iso_code ?? '');
       formData.set('date_of_birth', _dateOfBirth ?? '');
-      formData.set('ward_id', `${notAMember ? null : _ward?.id}`);
+      formData.set('ward_id', `${(notAMember ? null : _ward?.id) ?? null}`);
       formData.set('food_preferences', JSON.stringify(_foodPreferences));
       formData.set(
         'breakfast_preferences',
