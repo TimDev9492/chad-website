@@ -11,6 +11,7 @@
     classes,
     label,
     disabled,
+    withPlaceholders = false,
   }: {
     countries: Country[];
     selectedCountry: Country | null;
@@ -18,7 +19,12 @@
     classes?: string;
     label?: string;
     disabled: boolean;
+    withPlaceholders?: boolean;
   } = $props();
+
+  let countryChoices = $derived(
+    countries.filter((country) => !country.is_placeholder || withPlaceholders),
+  );
 </script>
 
 <Select
@@ -31,7 +37,7 @@
   class={classes}
   variant="outlined"
 >
-  {#each countries as country (country.iso_code)}
+  {#each countryChoices as country (country.iso_code)}
     <Option value={country}>{displayTransform(country)}</Option>
   {/each}
 </Select>

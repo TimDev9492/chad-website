@@ -36,6 +36,7 @@
       value shouldn't have any text, or the floating label will overlap it.
     -->
   <CountrySelect
+    withPlaceholders={true}
     {disabled}
     {countries}
     bind:selectedCountry
@@ -50,7 +51,7 @@
     invalid={!validPhoneSuffix}
     bind:value={phoneNumber}
     label="Nummer"
-    type="number"
+    type="tel"
     variant="outlined"
     style="width: 100%;"
   />

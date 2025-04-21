@@ -411,6 +411,7 @@
       <div class="w-full flex flex-col gap-4">
         <span class="chad-text-base text-gray-600">Adresse</span>
         <CountrySelect
+          withPlaceholders={true}
           disabled={waitingForResponse}
           {countries}
           label="Land"

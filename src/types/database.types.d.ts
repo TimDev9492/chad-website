@@ -34,6 +34,7 @@ export type Database = {
           currency_iso_code: string
           currency_symbol: string
           flag_emoji: string
+          is_placeholder: boolean
           iso_code: string
           name: string
           price_base: number
@@ -44,6 +45,7 @@ export type Database = {
           currency_iso_code?: string
           currency_symbol?: string
           flag_emoji: string
+          is_placeholder?: boolean
           iso_code: string
           name: string
           price_base?: number
@@ -54,6 +56,7 @@ export type Database = {
           currency_iso_code?: string
           currency_symbol?: string
           flag_emoji?: string
+          is_placeholder?: boolean
           iso_code?: string
           name?: string
           price_base?: number
@@ -492,6 +495,63 @@ export type Database = {
       }
     }
     Views: {
+      participants: {
+        Row: {
+          accomodation: string | null
+          agrees_to_recordings: boolean | null
+          breakfast_friday: boolean | null
+          breakfast_thursday: boolean | null
+          breakfast_tuesday: boolean | null
+          breakfast_wednesday: boolean | null
+          city: string | null
+          country_of_residency: string | null
+          date_of_birth: string | null
+          email: string | null
+          first_name: string | null
+          food_preferences: string | null
+          gender: string | null
+          has_deutschland_ticket: boolean | null
+          has_endowment: boolean | null
+          is_temple_staff: boolean | null
+          last_name: string | null
+          mode_of_transport: string | null
+          other_remarks: string | null
+          payment_reference: number | null
+          payment_status: Database["public"]["Enums"]["payment_status"] | null
+          phone_number: string | null
+          postal_code: number | null
+          room_mate_preferences: string | null
+          stake_name: string | null
+          street_name_and_number: string | null
+          wants_to_attend_baptism: boolean | null
+          wants_to_provide_temple_staff: boolean | null
+          wants_to_visit_temple: boolean | null
+          ward_name: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_infos_accomodation_fkey"
+            columns: ["accomodation"]
+            isOneToOne: false
+            referencedRelation: "accomodations"
+            referencedColumns: ["name"]
+          },
+          {
+            foreignKeyName: "user_infos_gender_fkey"
+            columns: ["gender"]
+            isOneToOne: false
+            referencedRelation: "genders"
+            referencedColumns: ["name"]
+          },
+          {
+            foreignKeyName: "user_infos_mode_of_transport_fkey"
+            columns: ["mode_of_transport"]
+            isOneToOne: false
+            referencedRelation: "means_of_transport"
+            referencedColumns: ["name"]
+          },
+        ]
+      }
       public_participants: {
         Row: {
           avatar_url: string | null
@@ -535,6 +595,12 @@ export type Database = {
           title: string
         }[]
       }
+      get_payment_status_count: {
+        Args: {
+          requested_status: Database["public"]["Enums"]["payment_status"]
+        }
+        Returns: number
+      }
       get_registered_users: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -549,6 +615,15 @@ export type Database = {
       get_user_price: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      notify_payment_approval: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          created_at: string
+          payment_reference: number
+          status: Database["public"]["Enums"]["payment_status"]
+          user_id: string
+        }[]
       }
     }
     Enums: {

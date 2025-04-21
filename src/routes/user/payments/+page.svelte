@@ -141,7 +141,7 @@
         {#if countries.length && selectedCountry}
           <SegmentedButton
             class="mt-8"
-            segments={countries}
+            segments={countries.filter((country) => !country.is_placeholder)}
             singleSelect
             bind:selected={selectedCountry}
             key={(segment) => segment.iso_code}
