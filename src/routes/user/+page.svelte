@@ -26,9 +26,10 @@
     {:else}
       <div class="material-icons text-red-400">cancel</div>
     {/if}
-    <span
+    <a
+      {href}
       class="font-thin chad-text-base text-nowrap overflow-hidden text-ellipsis"
-      >{text}</span
+      >{text}</a
     >
     <IconButton
       class="material-icons text-gray-400"
