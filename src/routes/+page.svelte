@@ -1,6 +1,9 @@
 <script lang="ts">
   import Carousel from '$lib/components/Carousel.svelte';
+  import Divider from '$lib/components/Divider.svelte';
+  import InstagramIcon from '$lib/components/icons/InstagramIcon.svelte';
   import ParticipantBar from '$lib/components/ParticipantBar.svelte';
+  import { CONTACT } from '$lib/content/constants.js';
   import { carouselData, type CarouselSlide } from '$lib/content/mainPage';
   import Ripple from '@smui/ripple';
 
@@ -44,6 +47,16 @@
         <div>
           35€ <span class="chad-text-base text-gray-400">(+25€ Herberge)</span>
         </div>
+        <div class="col-span-2 my-4">
+          <Divider />
+        </div>
+        <a
+          href={CONTACT.INSTAGRAM}
+          class="flex items-center gap-2 col-span-2 justify-center"
+        >
+          <InstagramIcon class="w-8" />
+          <span class="chad-instagram-gradient">Instagram</span>
+        </a>
       </div>
     </div>
     <div class="chad-card chad-shadow p-4 landscape:p-8 w-full">
