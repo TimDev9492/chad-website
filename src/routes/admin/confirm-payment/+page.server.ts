@@ -36,9 +36,36 @@ export const actions = {
     if (data!.length === 0) {
       return fail(404, { message: 'Payment reference not found' });
     }
+
+    type ConfirmedUserData = {
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone: string;
+      paymentReference: string;
+    }
+    let confirmedUserData: ConfirmedUserData | null = null;
+    const { data: infos, error } = await supabase
+      .from('user_infos')
+      .select('public_infos(first_name, last_name), email, phone_number, payment_infos!inner(payment_reference)')
+      .eq('payment_infos.payment_reference', paymentRef)
+      .single();
+    if (error) {
+      console.error('Error retrieving confirmed user data: ', error);
+    } else {
+      confirmedUserData = {
+        firstName: infos.public_infos.first_name,
+        lastName: infos.public_infos.last_name,
+        email: infos.email,
+        phone: infos.phone_number,
+        paymentReference: paymentRef,
+      };
+    }
+
     return {
       sucess: true,
       message: `Successfully confirmed payment!`,
+      confirmedUserData,
     };
   },
 } satisfies Actions;

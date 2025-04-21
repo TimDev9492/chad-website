@@ -66,6 +66,19 @@ input[type='tel'] {
   }
 }
 
+.chad-instagram-gradient {
+  text-align: center;
+  background: linear-gradient(
+    45deg,
+    #f9ce34,
+    #ee2a7b,
+    #6228d7
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .chad-typography-gradient-alt {
   background: linear-gradient(
     45deg,
@@ -78,7 +91,7 @@ input[type='tel'] {
 }
 
 .chad-shadow {
-  box-shadow: 0 0 2em rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 2em rgba(0, 0, 0, 0.2);
 }
 
 .chad-card {
