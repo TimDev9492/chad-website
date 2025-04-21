@@ -50,7 +50,7 @@
     invalid={!validPhoneSuffix}
     bind:value={phoneNumber}
     label="Nummer"
-    type="tel"
+    type="number"
     variant="outlined"
     style="width: 100%;"
   />
