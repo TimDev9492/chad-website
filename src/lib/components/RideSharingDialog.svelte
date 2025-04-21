@@ -12,7 +12,7 @@
     supabase,
     publicId,
     open = $bindable(false),
-    lookingForRides = $bindable(false),
+    wantsToProvide = $bindable(true),
     fromLocation = $bindable(''),
     toLocation = $bindable(''),
     fromSeats = $bindable(null),
@@ -23,7 +23,7 @@
     supabase: SupabaseClient;
     publicId: string;
     open: boolean;
-    lookingForRides?: boolean;
+    wantsToProvide?: boolean;
     fromLocation?: string;
     toLocation?: string;
     fromSeats?: number | null;
@@ -89,7 +89,7 @@
     const { error } = await supabase.from('ride_sharing').upsert([
       {
         public_id: publicId,
-        is_providing: !lookingForRides,
+        is_providing: wantsToProvide,
         from: fromLocation || null,
         from_seat_amount: fromSeats || null,
         to: toLocation || null,
@@ -130,30 +130,31 @@
       closed={!loading}
       aria-label="Lädt..."
     />
-    <Title>Mitfahrgelgenheit eintragen</Title>
+    <Title>Mitfahrgelgenheit anbieten</Title>
     <Content>
-      <div class="flex flex-col items-center gap-4 p-2">
-        <div class="flex justify-center items-center">
+      <form class="flex flex-col items-center gap-4 p-2">
+        <!-- <div class="flex justify-center items-center">
           <span
-            class={'text-center chad-text-base' +
-              (lookingForRides || loading ? 'text-gray-500' : 'text-black')}
-            >Ich kann mitnehmen</span
+            class={'text-center chad-text-base ' +
+              (wantsToProvide || loading ? 'text-gray-500' : 'text-black')}
+            >Ich will mitfahren</span
           >
           <Switch
             disabled={loading}
-            bind:checked={lookingForRides}
+            bind:checked={wantsToProvide}
             icons={false}
           />
           <span
-            class={!lookingForRides || loading ? 'text-gray-500' : 'text-black'}
-            >Ich will mitfahren</span
+            class={'text-center chad-text-base ' +
+              (!wantsToProvide || loading ? 'text-gray-500' : 'text-black')}
+            >Ich kann mitnehmen</span
           >
-        </div>
+        </div> -->
         <div class="flex gap-2">
           <Textfield
             disabled={loading}
             bind:value={fromLocation}
-            label="Abfahrtsort"
+            label="Hinfahrt aus"
             variant="outlined"
           />
           <Textfield
@@ -168,7 +169,7 @@
           <Textfield
             disabled={loading}
             bind:value={toLocation}
-            label="Ankunftsort"
+            label="Rückfahrt nach"
             variant="outlined"
           />
           <Textfield
@@ -195,14 +196,17 @@
           </Textfield>
         </div>
         <Button
-          onclick={addEntry}
+          onclick={(e: MouseEvent) => {
+            e.preventDefault();
+            addEntry();
+          }}
           disabled={loading}
           color="primary"
           variant="raised"
         >
           <Label>Speichern</Label>
         </Button>
-      </div>
+      </form>
     </Content>
     <Actions>
       <Button>

@@ -15,15 +15,17 @@
   });
 </script>
 
-<Snackbar
-  bind:this={snackbar}
-  class={level}
->
-  <Label>{content}</Label>
-  <Actions>
-    <IconButton
-      class="material-icons"
-      title="Dismiss">close</IconButton
-    >
-  </Actions>
-</Snackbar>
+<div class="z-[1000]">
+  <Snackbar
+    bind:this={snackbar}
+    class={level}
+  >
+    <Label>{content}</Label>
+    <Actions>
+      <IconButton
+        class="material-icons"
+        title="Dismiss">close</IconButton
+      >
+    </Actions>
+  </Snackbar>
+</div>

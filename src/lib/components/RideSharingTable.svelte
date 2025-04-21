@@ -106,7 +106,7 @@
       from_seat_amount: ownEntry.from_seat_amount,
       to_seat_amount: ownEntry.to_seat_amount,
       contact_details: ownEntry.contact_details,
-      is_providing: !ownEntry.is_providing,
+      is_providing: ownEntry.is_providing,
     };
     entryDialogOpen = true;
   };
@@ -156,10 +156,10 @@
       color="secondary"
       variant="raised"
     >
-      <Label>Eintragen</Label>
+      <Label>Anbieten</Label>
     </Button>
   {/if}
-  <div class="flex items-center justify-center text-center chad-text-base">
+  <!-- <div class="flex items-center justify-center text-center chad-text-base">
     <span class={lookingForRides ? 'text-gray-500' : 'text-black'}
       >Ich will mitnehmen</span
     >
@@ -170,7 +170,7 @@
     <span class={!lookingForRides ? 'text-gray-500' : 'text-black'}
       >Ich will mitfahren</span
     >
-  </div>
+  </div> -->
   <div class="w-full">
     <DataTable
       table$aria-label="Mitfahrgelegenheiten"
@@ -339,7 +339,7 @@
   bind:fromLocation={entryDialogData.from}
   bind:fromSeats={entryDialogData.from_seat_amount}
   bind:contactDetails={entryDialogData.contact_details}
-  bind:lookingForRides={entryDialogData.is_providing}
+  bind:wantsToProvide={entryDialogData.is_providing}
 />
 <div
   class="fixed z-50"
