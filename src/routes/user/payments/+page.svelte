@@ -11,6 +11,7 @@
   import Button from '@smui/button';
   import { notifyPaymentApproval } from '$lib/utils.js';
   import { raiseToast } from '$lib/toastStore.js';
+  import { openDialog } from '$lib/dialogStore.js';
 
   let { data } = $props();
   let { userAppData, countries, price, supabase, participantCount, hasPaid } =
@@ -33,6 +34,7 @@
   );
 
   let approvalNotificationLoading = $state(false);
+  let paymentNotified = $state(false);
   const notifyApproval = async () => {
     approvalNotificationLoading = true;
     try {
@@ -43,10 +45,19 @@
           message: 'Deine Zahlung wurde bereits eingereicht.',
         });
       } else {
+        paymentNotified = true;
         raiseToast({
           level: 'success',
-          message:
-            'Deine Zahlung wurde erfolgreich eingereicht! Innerhalb der nächsten 24 Stunden solltest du angemeldet sein.',
+          message: 'Deine Zahlung wurde erfolgreich eingereicht!',
+        });
+        openDialog({
+          title: '⚠️ Du bist noch nicht angemeldet!',
+          content: signUpInfo,
+          actions: [
+            {
+              label: 'OK',
+            },
+          ],
         });
       }
     } catch (error) {
@@ -62,6 +73,14 @@
 
   const currencySymbolFallback = '€';
 </script>
+
+{#snippet signUpInfo()}
+  <span>
+    Deine Zahlung muss noch bestätigt werden. Dies kann ein paar Stunden bis
+    wenige Tage dauern. Sobald du fertig angemeldet bist, erhälst du eine
+    E-Mail. Bei Fragen oder Bedenken, {@render mailHelpLink('kontaktiere uns')}!
+  </span>
+{/snippet}
 
 <div class="size-full flex justify-center p-4">
   <div class="size-full max-w-screen-lg flex flex-col gap-4 justify-center">
@@ -153,7 +172,7 @@
             {/snippet}
           </SegmentedButton>
         {/if}
-        {#if userAppData.payment_status === 'UNPAID'}
+        {#if userAppData.payment_status === 'UNPAID' && !paymentNotified}
           <div class="my-4">
             <Button
               variant="raised"
@@ -176,25 +195,7 @@
           Die Zahlung muss von einem Mitglied aus dem Orga-Team manuell geprüft
           und bestätigt werden. Dies kann einige Studen bis wenige Tage dauern.
           Falls du Fragen hast, oder glaubst, es ist etwas schief gelaufen,
-          <a
-            class="text-blue-400"
-            href={`mailto:${CONTACT.EMAIL}\n` +
-              `?subject=${encodeURIComponent(`Problem mit Bezahlung ${userAppData.payment_reference}`)}\n` +
-              `&body=${encodeURIComponent(`Hallo Chad-Team,
-
-          ich habe folgendes Problem mit meiner Bezahlung:
-          
-          --- PROBLEM BESCHREIBEN ---
-          
-          Hier sind meine Daten:
-
-          Vorname: ${userAppData.first_name}
-          Nachname: ${userAppData.last_name}
-          E-Mail: ${userAppData.email}
-          Telefonnummer: ${userAppData.phone_number}
-          Zahlungsreferenz: ${userAppData.payment_reference}`)}`}
-            >schreib uns gerne eine Mail</a
-          >!
+          {@render mailHelpLink('schreib uns gerne eine Mail')}!
         </div>
         <ParticipantBar {supabase} />
       {:else}
@@ -211,3 +212,24 @@
     </div>
   </div>
 </div>
+
+{#snippet mailHelpLink(text: string)}
+  <a
+    class="text-blue-400"
+    href={`mailto:${CONTACT.EMAIL}\n` +
+      `?subject=${encodeURIComponent(`Problem mit Bezahlung ${userAppData.payment_reference}`)}\n` +
+      `&body=${encodeURIComponent(`Hallo Chad-Team,
+
+          ich habe folgendes Problem mit meiner Bezahlung:
+          
+          --- PROBLEM BESCHREIBEN ---
+          
+          Hier sind meine Daten:
+
+          Vorname: ${userAppData.first_name}
+          Nachname: ${userAppData.last_name}
+          E-Mail: ${userAppData.email}
+          Telefonnummer: ${userAppData.phone_number}
+          Zahlungsreferenz: ${userAppData.payment_reference}`)}`}>{text}</a
+  >
+{/snippet}

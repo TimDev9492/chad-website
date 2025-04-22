@@ -13,6 +13,7 @@
   import InstagramIcon from '$lib/components/icons/InstagramIcon.svelte';
   import WhatsAppIcon from '$lib/components/icons/WhatsAppIcon.svelte';
   import ProgressStepper from '$lib/components/ProgressStepper.svelte';
+  import AppDialog from '$lib/components/AppDialog.svelte';
 
   let { data, children } = $props();
   let { session, supabase, userAppData } = $derived(data);
@@ -60,6 +61,7 @@
   {userAppData}
   {supabase}
 />
+<AppDialog />
 
 <!-- divide page into 3 rows: header, main content, and footer -->
 <div class="relative min-h-full grid grid-rows-[auto_1fr] w-[100vw]">

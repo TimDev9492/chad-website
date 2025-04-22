@@ -29,6 +29,8 @@
   import type { BreakfastPreferences } from '../../../app.js';
   import Select, { Option } from '@smui/select';
   import ParticipantBar from '$lib/components/ParticipantBar.svelte';
+  import { openDialog } from '$lib/dialogStore.js';
+  import { goto } from '$app/navigation';
 
   let { data } = $props();
   const {
@@ -40,7 +42,7 @@
     meansOfTransport,
     defaultAvatarUrl,
   } = data;
-  let { supabase } = $derived(data);
+  let { supabase, hasPaid } = $derived(data);
 
   /**
    * Constant Variables
@@ -302,6 +304,24 @@
           level: success ? 'success' : 'error',
           message: (result as any).data?.message,
         });
+        if (success && !hasPaid) {
+          openDialog({
+            title: '⚠️ Du bist noch nicht angemeldet!',
+            content: signUpInfo,
+            actions: [
+              {
+                label: 'Schließen',
+              },
+              {
+                label: 'Zur Bezahlung',
+                action: () =>
+                  goto('/user/payments', {
+                    noScroll: false,
+                  }),
+              },
+            ],
+          });
+        }
       };
     }}
   >
@@ -730,7 +750,10 @@
   </form>
 </div>
 
-<style>
-  .topic-section {
-  }
-</style>
+{#snippet signUpInfo()}
+  <span>
+    Du bist erst dann angemeldet, wenn deine Zahlung bestätigt wurde. Dafür
+    musst du den Tagungsbeitrag überweisen. Sobald die Zahlung eingegangen ist,
+    erhältst du eine E-Mail als Bestätigung.
+  </span>
+{/snippet}

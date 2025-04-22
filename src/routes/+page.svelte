@@ -5,6 +5,7 @@
   import ParticipantBar from '$lib/components/ParticipantBar.svelte';
   import { CONTACT } from '$lib/content/constants.js';
   import { carouselData, type CarouselSlide } from '$lib/content/mainPage';
+  import { dialogStore, openDialog } from '$lib/dialogStore.js';
   import Ripple from '@smui/ripple';
 
   let { data } = $props();
@@ -16,6 +17,7 @@
 </script>
 
 <div class="size-full flex flex-col items-center landscape:p-8 portrait:p-4">
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     class="flex flex-col items-center max-w-screen-lg w-full gap-8 portrait:gap-4"
   >
@@ -55,7 +57,7 @@
           class="flex items-center gap-2 col-span-2 justify-center"
         >
           <InstagramIcon class="w-8" />
-          <span class="chad-instagram-gradient">Instagram</span>
+          <span class="chad-instagram-gradient font-bold">Instagram</span>
         </a>
       </div>
     </div>
