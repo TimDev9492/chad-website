@@ -167,6 +167,208 @@ const webhookHandlers: Record<
     }
     return JsonError(400, 'Unsupported webhook type');
   },
+  'public.payment_infos': async (supabase, webhookPayload) => {
+    if (webhookPayload.type === 'UPDATE') {
+      const oldRecord = webhookPayload.old_record;
+      const record = webhookPayload.record;
+
+      if (oldRecord.status === 'CONFIRMED' || record.status !== 'CONFIRMED') {
+        return JsonResponse(200, 'Nothing to do.');
+      }
+
+      const { data, error } = await supabase
+        .from('user_infos')
+        .select('email')
+        .eq('user_id', record.user_id)
+        .single();
+      if (error) {
+        return JsonError(500, 'Failed to get user email', error);
+      }
+      const { email } = data;
+
+      // send confirmation email using resend
+      const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY') || '';
+
+      console.log(`Sending confirmation email to ${email} using Resend API...`);
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: 'CHAD Team <no-reply@chad25.com>',
+          to: [email],
+          subject: 'Deine Anmeldung war erfolgreich!',
+          html: `
+              <!doctype html>
+              <html lang="en">
+                <head>
+                  <meta charset="UTF-8" />
+                  <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1.0"
+                  />
+                  <title>Anmeldebestätigung</title>
+                  <style>
+                    body {
+                      font-family: Arial, sans-serif;
+                      margin: 0;
+                      padding: 0;
+                      background-color: #f9f9f9;
+                      color: #333333;
+                      line-height: 1.6;
+                    }
+
+                    .container {
+                      max-width: 600px;
+                      margin: 0 auto;
+                      background-color: #ffffff;
+                    }
+
+                    .header {
+                      background-color: #6198e7;
+                      padding: 20px;
+                      color: white;
+                      text-align: center;
+                    }
+
+                    .content {
+                      padding: 30px;
+                      border-left: 1px solid #eeeeee;
+                      border-right: 1px solid #eeeeee;
+                    }
+
+                    .content h2 {
+                      color: #6198e7;
+                      margin-top: 0;
+                    }
+
+                    .content p {
+                      margin-bottom: 20px;
+                    }
+
+                    .button {
+                      display: inline-block;
+                      background-color: #efb8d4;
+                      color: white;
+                      padding: 12px 25px;
+                      text-decoration: none;
+                      border-radius: 5px;
+                      margin-top: 15px;
+                    }
+
+                    .button:hover {
+                      background-color: #e593be;
+                    }
+
+                    .footer {
+                      background-color: #ff914d;
+                      padding: 20px;
+                      text-align: center;
+                      color: #333333;
+                    }
+
+                    .footer a {
+                      color: #eeeeee;
+                      text-decoration: none;
+                      margin: 0 10px;
+                    }
+
+                    .footer a:hover {
+                      text-decoration: underline;
+                    }
+
+                    .footer p {
+                      color: #eeeeee;
+                    }
+
+                    .divider {
+                      height: 1px;
+                      background-color: #eeeeee;
+                      margin: 15px 0;
+                    }
+
+                    @media only screen and (max-width: 620px) {
+                      .container {
+                        width: 100%;
+                      }
+                    }
+                  </style>
+                </head>
+                <body>
+                  <div class="container">
+                    <div class="header">
+                      <h1>CHAD Tagung 2025</h1>
+                    </div>
+
+                    <div class="content">
+                      <h2>Du bist erfolgreich angemeldet!</h2>
+                      <p>Hallo,</p>
+                      <p>
+                        Deine Zahlung ist erfolgreich eingegangen. Du bist nun für die Tagung
+                        angemeldet. Wir freuen uns auf dich!
+                      </p>
+
+                      <div class="divider"></div>
+
+                      <h3 style="color: #ff914d">Nächste Schritte</h3>
+                      <p>
+                        Wenn du möchtest, kannst du dich für Workshops anmelden, oder
+                        Musikwünsche für den Tanzabend einschicken. Das geht alles einfach
+                        über unsere Website.
+                      </p>
+
+                      <a
+                        href="https://www.chad25.com"
+                        class="button"
+                        >Zur Website</a
+                      >
+                    </div>
+
+                    <div class="footer">
+                      <div>
+                        <a href="mailto:orga@chad25.com">E-Mail</a>
+                        <a href="https://www.instagram.com/chadtagung">Instagram</a>
+                      </div>
+
+                      <p style="margin-top: 15px; font-size: 12px">
+                        © 2025 Chad. All rights reserved.
+                      </p>
+                    </div>
+                  </div>
+                </body>
+              </html>`,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+
+        console.log('Email sent successfully:', data);
+        return JsonResponse(
+          200,
+          `Successfully sent confirmation email to ${email}`,
+        );
+      } else {
+        const error = await res.json();
+
+        console.error('Error sending email:', error);
+        return JsonError(
+          500,
+          `Failed to send confirmation email to ${email}`,
+          JSON.stringify(error),
+        );
+      }
+    }
+    if (webhookPayload.type === 'DELETE') {
+      return await rejectDelete(supabase, webhookPayload as DeletePayload);
+    }
+    if (webhookPayload.type === 'INSERT') {
+      return await rejectInsert(supabase, webhookPayload as InsertPayload);
+    }
+    return JsonError(400, 'Unsupported webhook type');
+  },
 };
 
 Deno.serve(async (req) => {
@@ -245,6 +447,13 @@ const handleInsert = async (
     200,
     `Successfully deleted ${filesToDelete.length} file${filesToDelete.length === 1 ? '' : 's'}!`,
   );
+};
+
+const rejectInsert = async (
+  supabase: SupabaseClient,
+  payload: InsertPayload,
+): Promise<Response> => {
+  return JsonError(400, "This webhook doesn't support INSERT events");
 };
 
 const rejectUpdate = async (
