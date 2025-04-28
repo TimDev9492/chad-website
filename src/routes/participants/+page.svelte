@@ -7,8 +7,6 @@
   import Button, { Icon } from '@smui/button';
   import Dialog, { Content } from '@smui/dialog';
   import { onMount } from 'svelte';
-  import type { Database } from '../../types/database.types.js';
-  import type { RegisteredParticipant } from '../../app.js';
 
   let { data } = $props();
   let { supabase, userAppData } = $derived(data);

@@ -5,7 +5,6 @@
   import ParticipantBar from '$lib/components/ParticipantBar.svelte';
   import { CONTACT } from '$lib/content/constants.js';
   import { carouselData, type CarouselSlide } from '$lib/content/mainPage';
-  import { dialogStore, openDialog } from '$lib/dialogStore.js';
   import Ripple from '@smui/ripple';
 
   let { data } = $props();
