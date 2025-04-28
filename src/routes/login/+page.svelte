@@ -9,6 +9,7 @@
   import PageFormWrapper from '$lib/components/PageFormWrapper.svelte';
   import HelperText from '@smui/textfield/helper-text';
   import AuthProviderButtons from '$lib/components/AuthProviderButtons.svelte';
+  import { page } from '$app/state';
 
   let { data } = $props();
   let { supabase } = $derived(data);
@@ -52,6 +53,7 @@
     <AuthProviderButtons
       {supabase}
       disabled={waitingForResponse}
+      baseUrl={page.url.origin}
     />
     <Divider />
     <IconInput

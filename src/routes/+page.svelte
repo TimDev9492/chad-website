@@ -46,7 +46,7 @@
           <span>Tagungsbeitrag</span>
         </div>
         <div>
-          35€ <span class="chad-text-base text-gray-400">(+25€ Herberge)</span>
+          75€ <span class="chad-text-base text-gray-400">(+25€ Herberge)</span>
         </div>
         <div class="col-span-2 my-4">
           <Divider />

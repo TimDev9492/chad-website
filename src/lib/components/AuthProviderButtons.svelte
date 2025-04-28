@@ -6,9 +6,11 @@
   let {
     supabase,
     disabled = false,
+    baseUrl = PUBLIC_BASE_URL,
   }: {
     supabase: SupabaseClient;
     disabled?: boolean;
+    baseUrl?: string;
   } = $props();
 
   let svgClasses = $derived('h-full' + (disabled ? ' grayscale' : ''));
@@ -17,7 +19,7 @@
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${PUBLIC_BASE_URL}/login/auth`,
+        redirectTo: `${baseUrl}/login/auth`,
       },
     });
   };
