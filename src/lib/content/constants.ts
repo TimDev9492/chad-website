@@ -33,3 +33,5 @@ export const DEFAULT_FOOD_PREFERENCES = [
     icon: 'no_meals',
   },
 ];
+
+export const COMING_SOON_ROUTES = ['/dance-event', '/workshops'];

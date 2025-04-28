@@ -37,7 +37,6 @@
       .update({ avatar_url: DEFAULT_AVATAR_URL })
       .eq('public_id', public_id)
       .select();
-    console.log({ data, error });
     if (error) {
       console.error(error);
       raiseToast({

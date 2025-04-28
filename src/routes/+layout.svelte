@@ -9,16 +9,21 @@
   import LinearProgress from '@smui/linear-progress';
   import { navigating } from '$app/state';
   import EmailIcon from '$lib/components/icons/EmailIcon.svelte';
-  import { CONTACT } from '$lib/content/constants';
+  import { COMING_SOON_ROUTES, CONTACT } from '$lib/content/constants';
   import InstagramIcon from '$lib/components/icons/InstagramIcon.svelte';
   import WhatsAppIcon from '$lib/components/icons/WhatsAppIcon.svelte';
   import ProgressStepper from '$lib/components/ProgressStepper.svelte';
   import AppDialog from '$lib/components/AppDialog.svelte';
+  import { page } from '$app/state';
+  import ComingSoon from '$lib/components/ComingSoon.svelte';
 
   let { data, children } = $props();
   let { session, supabase, userAppData } = $derived(data);
 
   let loadingBarOpen = $derived(navigating && navigating.complete !== null);
+  let comingSoonSplashScreen = $derived(
+    COMING_SOON_ROUTES.includes(page.url.pathname),
+  );
 
   const headerResize = () => {
     const header = document.getElementById('chad-header');
@@ -89,7 +94,11 @@
     class="size-full overflow-x-hidden pt-32"
     id="chad-content"
   >
-    {@render children()}
+    {#if comingSoonSplashScreen && userAppData.role !== 'admin'}
+      <ComingSoon />
+    {:else}
+      {@render children()}
+    {/if}
   </main>
   <!-- footer -->
   <footer class="flex justify-center p-8 bg-blue-100 footer">
