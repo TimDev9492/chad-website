@@ -108,6 +108,7 @@
   }
 
   .tooltip {
+    cursor: default;
     position: absolute;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.5);
