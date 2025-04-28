@@ -260,7 +260,7 @@ export const actions: Actions = {
           avatar_url: undefined,
           role: undefined,
           payment_reference: undefined,
-          has_paid: undefined,
+          payment_status: undefined,
         },
         {
           throwOnError: true,
@@ -310,9 +310,9 @@ export const load: PageServerLoad = async ({ locals: { supabase, user } }) => {
     .single();
   const { data: user_info } = await userInfoQuery;
   const { data: genders } = await supabase.from('genders').select('name');
-  const { data: accomodations } = await supabase
-    .from('accomodations')
-    .select('name, discount');
+  const { data: accomodations } = await supabase.rpc(
+    'get_available_accomodations',
+  );
   const { data: meansOfTransport } = await supabase
     .from('means_of_transport')
     .select('name');
@@ -326,7 +326,9 @@ export const load: PageServerLoad = async ({ locals: { supabase, user } }) => {
     .schema('church_data')
     .from('stakes')
     .select('id, name, wards(id, name)');
-  const { data: defaultAvatarUrl } = await supabase.rpc('get_default_avatar_url') as string | null;
+  const { data: defaultAvatarUrl } = await supabase.rpc(
+    'get_default_avatar_url',
+  );
 
   return {
     userInfo: (user_info ??

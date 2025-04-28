@@ -13,16 +13,19 @@ export type Database = {
         Row: {
           created_at: string
           discount: number
+          limited: boolean
           name: string
         }
         Insert: {
           created_at?: string
           discount?: number
+          limited?: boolean
           name: string
         }
         Update: {
           created_at?: string
           discount?: number
+          limited?: boolean
           name?: string
         }
         Relationships: []
@@ -581,6 +584,13 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      get_available_accomodations: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          name: string
+          discount: number
+        }[]
+      }
       get_conflicting_workshops: {
         Args: { user_public_id: string; new_workshop_id: string }
         Returns: {
@@ -594,6 +604,10 @@ export type Database = {
           thumbnail_url: string
           title: string
         }[]
+      }
+      get_default_avatar_url: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_payment_status_count: {
         Args: {

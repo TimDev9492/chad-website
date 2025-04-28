@@ -563,8 +563,11 @@
         >Wir werden dieses Jahr in einem Hotel in Bad Homburg (in der Nähe des
         Bahnhofs) und in der Tempelherberge direkt in Friedrichsdorf
         untergebracht werden. Die Einteilung erfolgt nach Bedarf und dem
-        Vorhandensein eines Fahrzeuges.<br />Der Rabatt, wenn du nicht in der
-        Herberge oder dem Hotel untergebracht wirst beträgt 25€.
+        Vorhandensein eines Fahrzeuges.<br />
+        {#if accomodations.findIndex((acc) => acc.limited) !== -1}
+          Der Rabatt, wenn du nicht in der Herberge oder dem Hotel untergebracht
+          wirst beträgt 25€.
+        {/if}
       </span>
       <div class="w-full flex flex-col gap-4">
         <span class="chad-text-base text-gray-600"
