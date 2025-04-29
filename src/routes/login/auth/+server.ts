@@ -6,8 +6,9 @@ export const GET: RequestHandler = async (event) => {
     url,
     locals: { supabase },
   } = event;
+
   const code = url.searchParams.get('code') as string;
-  const next = url.searchParams.get('next') ?? '/';
+  const next = url.searchParams.get('next') ?? '/user';
 
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
@@ -18,6 +19,11 @@ export const GET: RequestHandler = async (event) => {
       console.error('Error exchanging code for session', error);
     }
 
-    redirect(303, '/auth/auth-code-error');
+    return redirect(303, '/login/auth/error');
   }
+
+  return new Response(null, {
+    status: 400,
+    statusText: 'Bad Request',
+  });
 };

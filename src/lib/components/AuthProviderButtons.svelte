@@ -16,6 +16,8 @@
   let svgClasses = $derived('h-full' + (disabled ? ' grayscale' : ''));
   const signInWithAuthProvider = async (e: MouseEvent, provider: Provider) => {
     e.preventDefault();
+    console.log({ baseUrl });
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
