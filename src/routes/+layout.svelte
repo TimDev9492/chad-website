@@ -66,6 +66,7 @@
   />
   <link
     rel="preload"
+    as="font"
     href="/fonts/MADEWaffleSoft.ttf.woff"
     type="tonf/woff"
     crossorigin="anonymous"
