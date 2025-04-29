@@ -28,7 +28,7 @@
     {/if}
     <a
       {href}
-      class="font-thin chad-text-base text-nowrap overflow-hidden text-ellipsis"
+      class="chad-text-base text-nowrap overflow-hidden text-ellipsis text-blue-500 hover:underline"
       >{text}</a
     >
     <IconButton
