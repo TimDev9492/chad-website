@@ -27,7 +27,6 @@
       main: [{ icon: 'home', label: 'Startseite', href: '/' }],
       Anmeldung: [],
       Programm: [
-        // { icon: 'calendar_month', label: 'Programmplan', href: '/program' },
         { icon: 'nightlife', label: 'Tanzabend', href: '/dance-event' },
         { icon: 'event', label: 'Workshops', href: '/workshops' },
         { icon: 'pin_drop', label: 'Anreise', href: '/locations' },
@@ -72,7 +71,7 @@
       opts.footer.push({
         icon: 'logout',
         label: 'Abmelden',
-        href: '',
+        href: '/',
         onclick: () => logout(supabase),
       });
 
