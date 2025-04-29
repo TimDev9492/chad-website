@@ -32,10 +32,6 @@ const supabase: Handle = async ({ event, resolve }) => {
             event.cookies.set(name, value, {
               ...options,
               path: '/',
-              secure: true,
-              httpOnly: true,
-              sameSite: 'lax',
-              maxAge: 60 * 60 * 24 * 7, // 1 week
             });
           });
         },
