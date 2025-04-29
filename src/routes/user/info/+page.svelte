@@ -670,6 +670,7 @@
           {#snippet label()}
             <div class={disabledText('', waitingForResponse)}>
               Ich habe mein eigenes <a
+                class="text-blue-500 hover:underline"
                 href="https://www.churchofjesuschrist.org/study/manual/gospel-topics/endowment?lang=deu"
                 target="_blank">Endowment</a
               >
