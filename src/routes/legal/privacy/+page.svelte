@@ -81,17 +81,28 @@
         >https://www.spotify.com/de/legal/privacy-policy/</a
       >
     </p>
-    <hr />
-    <h2 id="6-hosting-ber-cloudflare-pages">
-      6. Hosting über Cloudflare Pages
-    </h2>
+    <h3 id="d-cloudflare-web-analytics">d) Cloudflare Web Analytics</h3>
     <p>
-      Unsere Website wird über <strong>Cloudflare Pages</strong> gehostet
-      (Cloudflare Inc., USA). Cloudflare speichert IP-Adressen und technische
-      Verbindungsdaten zur Sicherheit und Auslieferung der Website.<br />Mehr
+      Wir verwenden <strong>Cloudflare Web Analytics</strong>, um anonymisierte
+      Informationen über die Nutzung unserer Website zu erfassen. Cloudflare
+      speichert dabei keine personenbezogenen Daten wie IP-Adressen, sondern
+      aggregiert Nutzungsdaten datenschutzfreundlich. Es werden keine Cookies
+      gesetzt.<br />
+      Mehr Infos:
+      <a href="https://www.cloudflare.com/web-analytics/"
+        >https://www.cloudflare.com/web-analytics/</a
+      >
+    </p>
+
+    <hr />
+    <h2 id="6-hosting-ber-cloudflare-pages">6. Hosting über Vercel</h2>
+    <p>
+      Unsere Website wird über <strong>Vercel (Vercel Inc., USA)</strong>
+      gehostet. Vercel speichert IP-Adressen und technische Verbindungsdaten, um
+      die Auslieferung und Sicherheit der Website zu gewährleisten.<br />Mehr
       Infos:
-      <a href="https://www.cloudflare.com/privacypolicy/"
-        >https://www.cloudflare.com/privacypolicy/</a
+      <a href="https://vercel.com/legal/privacy-policy"
+        >https://vercel.com/legal/privacy-policy</a
       >
     </p>
     <hr />
