@@ -32,6 +32,7 @@
         { icon: 'event', label: 'Workshops', href: '/workshops' },
         { icon: 'pin_drop', label: 'Anreise', href: '/locations' },
       ],
+      Account: [],
       footer: [],
     };
 
@@ -56,6 +57,15 @@
           icon: 'airport_shuttle',
           label: 'Mitfahrgelegenheiten',
           href: '/ride-sharing',
+        },
+      );
+
+      opts['Account'].push(
+        { icon: 'email', label: 'E-Mail ändern', href: '/user/update-email' },
+        {
+          icon: 'password',
+          label: 'Passwort ändern',
+          href: '/user/update-password',
         },
       );
 

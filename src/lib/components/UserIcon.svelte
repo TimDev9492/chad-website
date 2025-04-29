@@ -57,9 +57,17 @@
     anchorCorner="BOTTOM_LEFT"
   >
     <List>
+      <Item onSMUIAction={() => goto('/user/update-email')}>
+        <Icon class="material-icons">email</Icon>
+        <Text class="ml-2">E-Mail ändern</Text>
+      </Item>
+      <Item onSMUIAction={() => goto('/user/update-password')}>
+        <Icon class="material-icons">password</Icon>
+        <Text class="ml-2">Passwort ändern</Text>
+      </Item>
       <Item onSMUIAction={() => goto('/user/info')}>
-        <Icon class="material-icons">settings</Icon>
-        <Text class="ml-2">Einstellungen</Text>
+        <Icon class="material-icons">assignment</Icon>
+        <Text class="ml-2">Anmeldeformular</Text>
       </Item>
       <Separator />
       <Item
