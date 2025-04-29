@@ -43,7 +43,7 @@
   });
 </script>
 
-<div class="size-full flex flex-col justify-center items-center gap-4">
+<div class="size-full flex flex-col justify-center items-center gap-4 p-4">
   <form
     method="POST"
     class="chad-card chad-shadow flex flex-col items-center gap-4"
@@ -69,7 +69,7 @@
       class="chad-card chad-shadow flex flex-col items-center gap-2 chad-text-base"
     >
       <span class="text-2xl pb-4">Angemeldeter Nutzer:</span>
-      <div class="w-full grid grid-cols-2">
+      <div class="w-full grid landscape:grid-cols-2 portrait:gird-cols-1">
         {@render valueRow(
           'Name',
           `${form.confirmedUserData.firstName} ${form.confirmedUserData.lastName}`,
@@ -102,7 +102,7 @@
         console.error(error);
       }
     }}
-    class={'w-full flex justify-between gap-2 items-center text-gray-700 rounded-full px-2' +
+    class={'w-full flex justify-between gap-2 items-center text-gray-700 rounded-full landscape:px-2 portrait:mb-2' +
       (clipboard ? ' cursor-pointer' : '')}
   >
     <code>{value}</code>
