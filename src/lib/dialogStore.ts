@@ -8,8 +8,8 @@ type ActionButtonData = {
 
 export type DialogData = {
   title?: string;
-  content: Snippet;
-  actions: ActionButtonData[];
+  content: Snippet | string;
+  actions?: ActionButtonData[];
 };
 
 export const dialogStore = writable<DialogData | null>(null);

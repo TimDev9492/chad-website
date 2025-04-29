@@ -26,10 +26,14 @@
       <Title id="simple-title">{dialogData!.title}</Title>
     {/if}
     <Content id="simple-content">
-      {@render dialogData!.content()}
+      {#if typeof dialogData!.content === 'string'}
+        <span>{dialogData!.content}</span>
+      {:else}
+        {@render dialogData!.content()}
+      {/if}
     </Content>
     <Actions>
-      {#if dialogData!.actions.length}
+      {#if dialogData!.actions?.length}
         {#each dialogData!.actions as actionData}
           <Button onclick={() => actionData.action?.()}>
             <Label>{actionData.label}</Label>

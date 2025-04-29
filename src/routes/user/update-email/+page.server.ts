@@ -20,7 +20,7 @@ export const actions: Actions = {
       return {
         success: true,
         message:
-          'Schaue in dein altes E-Mail Password um die Adresse zu ändern!',
+          'Schaue in dein altes E-Mail Postfach um die Adresse zu ändern!',
       };
     }
   },

@@ -16,6 +16,7 @@
   import AppDialog from '$lib/components/AppDialog.svelte';
   import { page } from '$app/state';
   import ComingSoon from '$lib/components/ComingSoon.svelte';
+  import { openDialog } from '$lib/dialogStore';
 
   let { data, children } = $props();
   let { session, supabase, userAppData } = $derived(data);
@@ -33,6 +34,15 @@
     if (!content) return;
     content.style.paddingTop = `${headerHeight}px`;
   };
+
+  $effect(() => {
+    const urlMessage = page.url.searchParams.get('message');
+    if (!urlMessage) return;
+    openDialog({
+      content: urlMessage,
+      actions: [],
+    });
+  });
 
   onMount(() => {
     const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
