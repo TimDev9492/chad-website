@@ -146,6 +146,10 @@
             class="!text-gray-600"
             href="/legal/imprint">Impressum</a
           >
+          <a
+            class="!text-gray-600"
+            href="/legal/terms-of-use">Nutzungsbedingungen</a
+          >
         </div>
       </div>
 
@@ -184,5 +188,9 @@
       margin-bottom: 2rem;
       width: 90vw;
     }
+  }
+
+  footer a:hover {
+    text-decoration: underline;
   }
 </style>
