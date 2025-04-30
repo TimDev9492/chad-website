@@ -35,4 +35,4 @@ export const DEFAULT_FOOD_PREFERENCES = [
   },
 ];
 
-export const COMING_SOON_ROUTES = ['/dance-events', '/workshops'];
+export const COMING_SOON_ROUTES = ['/dance-event', '/workshops'];
