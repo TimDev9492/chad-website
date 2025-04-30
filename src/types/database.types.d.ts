@@ -326,6 +326,66 @@ export type Database = {
           },
         ]
       }
+      song_suggestions: {
+        Row: {
+          album: string
+          artists: string[]
+          cover_image_url: string
+          created_at: string
+          duration: number
+          id: string
+          name: string
+          popularity: number
+          release_date: string
+          spotify_id: string
+          spotify_url: string
+          submitted_by: string | null
+        }
+        Insert: {
+          album: string
+          artists: string[]
+          cover_image_url?: string
+          created_at?: string
+          duration: number
+          id?: string
+          name: string
+          popularity: number
+          release_date: string
+          spotify_id: string
+          spotify_url: string
+          submitted_by?: string | null
+        }
+        Update: {
+          album?: string
+          artists?: string[]
+          cover_image_url?: string
+          created_at?: string
+          duration?: number
+          id?: string
+          name?: string
+          popularity?: number
+          release_date?: string
+          spotify_id?: string
+          spotify_url?: string
+          submitted_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "song_suggestions_submitted_by_fkey"
+            columns: ["submitted_by"]
+            isOneToOne: false
+            referencedRelation: "public_infos"
+            referencedColumns: ["public_id"]
+          },
+          {
+            foreignKeyName: "song_suggestions_submitted_by_fkey"
+            columns: ["submitted_by"]
+            isOneToOne: false
+            referencedRelation: "public_participants"
+            referencedColumns: ["public_id"]
+          },
+        ]
+      }
       user_infos: {
         Row: {
           accomodation: string | null
@@ -468,6 +528,7 @@ export type Database = {
           event_duration: number
           event_start: string
           id: string
+          leader: string
           metadata: Json
           thumbnail_url: string
           title: string
@@ -479,6 +540,7 @@ export type Database = {
           event_duration?: number
           event_start: string
           id?: string
+          leader?: string
           metadata?: Json
           thumbnail_url?: string
           title: string
@@ -490,6 +552,7 @@ export type Database = {
           event_duration?: number
           event_start?: string
           id?: string
+          leader?: string
           metadata?: Json
           thumbnail_url?: string
           title?: string
@@ -589,6 +652,7 @@ export type Database = {
         Returns: {
           name: string
           discount: number
+          limited: boolean
         }[]
       }
       get_conflicting_workshops: {
@@ -600,6 +664,7 @@ export type Database = {
           event_duration: number
           event_start: string
           id: string
+          leader: string
           metadata: Json
           thumbnail_url: string
           title: string

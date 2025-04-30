@@ -1,5 +1,8 @@
 <script lang="ts">
-  import SpotifySearch from '$lib/components/SpotifySearch.svelte';
+  import SongSuggestions from '$lib/components/SongSuggestions.svelte';
+
+  let { data } = $props();
+  let { supabase, userAppData } = $derived(data);
 </script>
 
 <div class="size-full flex flex-col items-center p-4 landscape:p-8">
@@ -31,7 +34,7 @@
       >
     </div>
     <div
-      class="w-full chad-card chad-shadow flex flex-col items-center py-16 portrait:pt-20"
+      class="w-full chad-card chad-shadow flex flex-col items-center pt-16 portrait:pt-20"
     >
       <span class="bubble-font uppercase flex chad-text-heading relative">
         <span class="text-[#b7bce2]">Lied</span>
@@ -71,8 +74,11 @@
           {@render doubleNote('#f4b0e5')}
         </div>
       </span>
-      <div class="w-full pb-64">
-        <SpotifySearch />
+      <div class="w-full min-h-96">
+        <SongSuggestions
+          {supabase}
+          {userAppData}
+        />
       </div>
     </div>
   </div>

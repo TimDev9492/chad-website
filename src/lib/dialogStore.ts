@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 
 type ActionButtonData = {
   label: string;
-  action?: () => void;
+  action?: (() => Promise<void>) | (() => undefined) | (() => void);
 };
 
 export type DialogData = {

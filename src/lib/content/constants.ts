@@ -1,5 +1,7 @@
 export const DEFAULT_AVATAR_URL =
   'https://przfigmcivbydgrusirj.supabase.co/storage/v1/object/public/avatars//default.jpg';
+export const DEFAULT_SONG_COVER_URL =
+  'https://przfigmcivbydgrusirj.supabase.co/storage/v1/object/public/images//cover-fallback.png';
 export const PARTICIPANT_LIMIT = 250;
 export const BANK_ACCOUNT_DETAILS = {
   ACCOUNT_HOLDER: 'Chad e.V.',
@@ -33,4 +35,4 @@ export const DEFAULT_FOOD_PREFERENCES = [
   },
 ];
 
-export const COMING_SOON_ROUTES = ['/dance-event', '/workshops'];
+export const COMING_SOON_ROUTES = ['/dance-events', '/workshops'];

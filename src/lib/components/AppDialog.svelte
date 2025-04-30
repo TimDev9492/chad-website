@@ -35,7 +35,7 @@
     <Actions>
       {#if dialogData!.actions?.length}
         {#each dialogData!.actions as actionData}
-          <Button onclick={() => actionData.action?.()}>
+          <Button onclick={async () => await actionData.action?.()}>
             <Label>{actionData.label}</Label>
           </Button>
         {/each}

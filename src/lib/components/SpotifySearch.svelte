@@ -3,20 +3,20 @@
   import { Text } from '@smui/list';
   import CircularProgress from '@smui/circular-progress';
   import type { SongSearchResult } from '../../app';
+  import { DEFAULT_SONG_COVER_URL } from '$lib/content/constants';
+  import { openDialog } from '$lib/dialogStore';
+  import { formatSecondsSmartFormat } from '$lib/utils';
+
+  let {
+    onSubmit,
+    pullData,
+  }: {
+    onSubmit?: (song: SongSearchResult) => Promise<void>;
+    pullData?: () => Promise<void>;
+  } = $props();
 
   let value: SongSearchResult | undefined = $state();
-
-  const formatSecondsSmartFormat = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-
-    if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-    } else {
-      return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-    }
-  };
+  let selectedSong: SongSearchResult | null = $state(null);
 
   const searchItems = async (
     input: string,
@@ -55,6 +55,42 @@
   };
 </script>
 
+{#snippet confirmSelectedSong()}
+  {#if selectedSong !== null}
+    <div class="flex gap-4 h-16">
+      <img
+        class="h-full chad-shadow"
+        src={selectedSong.coverImageUrl.length
+          ? selectedSong.coverImageUrl
+          : DEFAULT_SONG_COVER_URL}
+        alt={selectedSong.name}
+      />
+      <div class="h-full flex flex-col justify-between py-2">
+        <span class="chad-text-lg font-bold">{selectedSong.name}</span>
+        <div class="chad-text-sm">
+          <span class="italic">{selectedSong.artists.join(', ')}</span>
+          <span> • </span>
+          <span>{formatSecondsSmartFormat(selectedSong.duration)}</span>
+        </div>
+      </div>
+    </div>
+  {:else}
+    <div class="flex gap-4 h-16">
+      <img
+        class="h-full chad-shadow"
+        src={DEFAULT_SONG_COVER_URL}
+        alt="Song Cover"
+      />
+      <div class="h-full flex flex-col justify-between py-2">
+        <span class="chad-text-lg font-bold">Kein Song ausgewählt</span>
+        <div class="chad-text-sm">
+          <span class="italic">Unbekannter Künstler</span>
+        </div>
+      </div>
+    </div>
+  {/if}
+{/snippet}
+
 <div class="w-full">
   <Autocomplete
     class="w-full"
@@ -62,9 +98,32 @@
     getOptionLabel={(song: SongSearchResult | undefined) =>
       song !== undefined ? song.name : ''}
     bind:value
-    showMenuWithNoInput={true}
+    selectOnExactMatch={true}
     label="Spotify Suche"
     textfield$style="width: 100%;"
+    onSMUIAutocompleteSelected={(e) => {
+      selectedSong = e.detail;
+      openDialog({
+        title: 'Ergebnis',
+        content: confirmSelectedSong,
+        actions: [
+          {
+            label: 'Abbrechen',
+            action: () => (value = undefined),
+          },
+          {
+            label: 'Einschicken',
+            action: async () => {
+              value = undefined;
+              // Do something with the selected song.
+              const songToSubmit = $state.snapshot(selectedSong);
+              await onSubmit?.(songToSubmit!);
+              await pullData?.();
+            },
+          },
+        ],
+      });
+    }}
   >
     {#snippet loading()}
       <Text
@@ -86,19 +145,13 @@
     {#snippet match(song: SongSearchResult)}
       <div class="size-full flex justify-between">
         <div class="h-full flex p-1 gap-2">
-          {#if song.coverImageUrl.length}
-            <img
-              class="h-full object-contain"
-              src={song.coverImageUrl}
-              alt={song.name}
-            />
-          {:else}
-            <div
-              class="h-full aspect-square bg-gray-200 flex justify-center items-center"
-            >
-              <div class="material-icons text-gray-400">music_note</div>
-            </div>
-          {/if}
+          <img
+            class="h-full object-contain"
+            src={song.coverImageUrl.length
+              ? song.coverImageUrl
+              : DEFAULT_SONG_COVER_URL}
+            alt={song.name}
+          />
           <div class="flex flex-col justify-evenly">
             <div class="font-bold">{song.name}</div>
             <div class="font-thin italic text-sm">

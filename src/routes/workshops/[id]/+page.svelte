@@ -3,20 +3,6 @@
 
   let { data } = $props();
   let { workshop } = $derived(data);
-
-  /*
-  workshop: {
-    capacity: number;
-    created_at: string;
-    description: string;
-    event_duration: number;
-    event_start: string;
-    id: string;
-    metadata: Json;
-    thumbnail_url: string;
-    title: string;
-  }
-  */
 </script>
 
 <div class="size-full flex flex-col items-center p-4">
@@ -57,7 +43,7 @@
     <div class="flex flex-col gap-2">
       <span class="chad-text-lg font-bold">Leitung</span>
       <span class="chad-text-base">
-        Der Workshop wird von IRGENDWEM gehalten.
+        Dieser Workshop wird von <strong>{workshop.leader}</strong> gehalten.
       </span>
     </div>
   </div>

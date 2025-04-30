@@ -1,5 +1,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { UserAppData, Workshop, WorkshopsByTime } from '../app';
+import type {
+  SongSearchResult,
+  UserAppData,
+  Workshop,
+  WorkshopsByTime,
+} from '../app';
 import type { Database } from '../types/database.types';
 
 export const getUserAppData = async (
@@ -101,4 +106,37 @@ export const getWorkshopDetails = async (
   if (error) throw error;
 
   return data.length ? data[0] : null;
+};
+
+export type SongSuggestion =
+  Database['public']['Tables']['song_suggestions']['Row'];
+
+export const getSongSuggestions = async (
+  supabase: SupabaseClient,
+  options: { throwOnError: boolean } = { throwOnError: true },
+): Promise<SongSuggestion[]> => {
+  const { data, error } = await supabase.from('song_suggestions').select('*');
+  if (error && options.throwOnError) throw error;
+  return data as SongSuggestion[];
+};
+
+export const submitSongSuggestion = async (
+  supabase: SupabaseClient,
+  songInfo: SongSearchResult,
+  publicId: string,
+  options: { throwOnError: boolean } = { throwOnError: true },
+): Promise<void> => {
+  const { error } = await supabase.from('song_suggestions').insert({
+    spotify_id: songInfo.id,
+    name: songInfo.name,
+    artists: songInfo.artists,
+    album: songInfo.album,
+    duration: songInfo.duration,
+    popularity: songInfo.popularity,
+    release_date: songInfo.releaseDate,
+    cover_image_url: songInfo.coverImageUrl,
+    spotify_url: songInfo.spotifyUrl,
+    submitted_by: publicId,
+  });
+  if (error && options.throwOnError) throw error;
 };

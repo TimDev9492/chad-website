@@ -73,7 +73,7 @@
         <div class="font-bold chad-text-lg">{workshop.title}</div>
         <div class="font-normal chad-text-base">
           <LeadingIcon class="material-icons mr-2">school</LeadingIcon>
-          <span>Leitung: Bischof</span>
+          <span>Leitung: {workshop.leader}</span>
         </div>
         <div class="text-gray-500 font-light line-clamp-3 chad-text-base">
           {workshop.description}
