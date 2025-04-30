@@ -11,7 +11,6 @@
   import EmailIcon from '$lib/components/icons/EmailIcon.svelte';
   import { COMING_SOON_ROUTES, CONTACT } from '$lib/content/constants';
   import InstagramIcon from '$lib/components/icons/InstagramIcon.svelte';
-  import WhatsAppIcon from '$lib/components/icons/WhatsAppIcon.svelte';
   import ProgressStepper from '$lib/components/ProgressStepper.svelte';
   import AppDialog from '$lib/components/AppDialog.svelte';
   import { page } from '$app/state';
@@ -128,12 +127,6 @@
             href={CONTACT.INSTAGRAM}
           >
             <InstagramIcon class="h-[1em]" />@chadtagung</a
-          >
-          <a
-            class="flex items-center gap-2 !text-gray-600"
-            href={CONTACT.WHATSAPP}
-          >
-            <WhatsAppIcon class="h-[1em]" />WhatsApp</a
           >
         </div>
         <div class="flex flex-col text-gray-600 chad-text-base">
