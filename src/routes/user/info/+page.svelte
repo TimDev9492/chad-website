@@ -346,9 +346,14 @@
     <div class="chad-card chad-shadow w-full flex flex-col gap-8">
       <span class="chad-text-lg font-bold">Persönliche Daten</span>
       <div class="flex flex-col gap-2">
-        <span class="chad-text-base text-gray-600"
-          >Lade ein Bild von dir hoch!*</span
+        <span class="chad-text-base text-gray-600">
+          Lade ein Bild von dir hoch!*
+          <br />
+          <span class="chad-text-sm text-gray-400"
+            >Das Bild können nur angemeldete Mitglieder der Tagung sehen</span
+          ></span
         >
+
         <div class="w-full flex justify-center">
           <div class="h-48 relative">
             <img
@@ -563,11 +568,18 @@
         >Wir werden dieses Jahr in einem Hotel in Bad Homburg (in der Nähe des
         Bahnhofs) und in der Tempelherberge direkt in Friedrichsdorf
         untergebracht werden. Die Einteilung erfolgt nach Bedarf und dem
-        Vorhandensein eines Fahrzeuges.<br />
-        {#if accomodations.findIndex((acc) => acc.limited) !== -1}
-          Der Rabatt, wenn du nicht in der Herberge oder dem Hotel untergebracht
-          wirst beträgt 25€.
-        {/if}
+        Vorhandensein eines Fahrzeuges.
+        <br />
+        Der Rabatt, wenn du nicht in der Herberge oder dem Hotel untergebracht wirst
+        beträgt 25€.
+        <br />
+        <br />
+        <span class="text-red-500 chad-text-base"
+          >Wichtig: Aus organisatorischen Gründen können wir nur einer
+          begrenzten Anzahl an Leuten (aktuell 30 Personen) diesen Rabatt
+          anbieten! Ist diese Anzahl überschritten, musst du leider den vollen
+          Preis bezahlen. Danke für dein Verständnis!</span
+        >
       </span>
       <div class="w-full flex flex-col gap-4">
         <span class="chad-text-base text-gray-600"
