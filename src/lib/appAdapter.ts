@@ -111,13 +111,30 @@ export const getWorkshopDetails = async (
 export type SongSuggestion =
   Database['public']['Tables']['song_suggestions']['Row'];
 
-export const getSongSuggestions = async (
+export type LikedSongSuggestion = SongSuggestion & {
+  song_suggestion_likes: Database['public']['Tables']['song_suggestion_likes']['Row']['public_id'][];
+};
+
+export const getSongSuggestionsWithLikes = async (
   supabase: SupabaseClient,
   options: { throwOnError: boolean } = { throwOnError: true },
-): Promise<SongSuggestion[]> => {
-  const { data, error } = await supabase.from('song_suggestions').select('*');
+): Promise<LikedSongSuggestion[]> => {
+  const { data, error } = await supabase
+    .from('song_suggestions')
+    .select('*, song_suggestion_likes(public_id)');
   if (error && options.throwOnError) throw error;
-  return data as SongSuggestion[];
+  if (!data) return [];
+  return data
+    .map((suggestion) => ({
+      ...suggestion,
+      song_suggestion_likes: suggestion.song_suggestion_likes.map(
+        (like: { public_id: string }) => like.public_id,
+      ),
+    }))
+    .sort(
+      (a: LikedSongSuggestion, b: LikedSongSuggestion) =>
+        b.song_suggestion_likes.length - a.song_suggestion_likes.length,
+    ) as LikedSongSuggestion[];
 };
 
 export const submitSongSuggestion = async (
@@ -138,5 +155,44 @@ export const submitSongSuggestion = async (
     spotify_url: songInfo.spotifyUrl,
     submitted_by: publicId,
   });
+  if (error && options.throwOnError) throw error;
+};
+
+export const deleteSongSuggestion = async (
+  supabase: SupabaseClient,
+  songId: string,
+  options: { throwOnError: boolean } = { throwOnError: true },
+): Promise<void> => {
+  const { error } = await supabase
+    .from('song_suggestions')
+    .delete()
+    .eq('id', songId);
+  if (error && options.throwOnError) throw error;
+};
+
+export const likeSong = async (
+  supabase: SupabaseClient,
+  songId: string,
+  publicId: string,
+  options: { throwOnError: boolean } = { throwOnError: true },
+): Promise<void> => {
+  const { error } = await supabase.from('song_suggestion_likes').insert({
+    public_id: publicId,
+    song_id: songId,
+  });
+  if (error && options.throwOnError) throw error;
+};
+
+export const unlikeSong = async (
+  supabase: SupabaseClient,
+  songId: string,
+  publicId: string,
+  options: { throwOnError: boolean } = { throwOnError: true },
+): Promise<void> => {
+  const { error } = await supabase
+    .from('song_suggestion_likes')
+    .delete()
+    .eq('public_id', publicId)
+    .eq('song_id', songId);
   if (error && options.throwOnError) throw error;
 };

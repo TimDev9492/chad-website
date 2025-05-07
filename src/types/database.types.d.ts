@@ -326,6 +326,46 @@ export type Database = {
           },
         ]
       }
+      song_suggestion_likes: {
+        Row: {
+          created_at: string
+          public_id: string
+          song_id: string
+        }
+        Insert: {
+          created_at?: string
+          public_id: string
+          song_id: string
+        }
+        Update: {
+          created_at?: string
+          public_id?: string
+          song_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "song_suggestion_likes_public_id_fkey"
+            columns: ["public_id"]
+            isOneToOne: false
+            referencedRelation: "public_infos"
+            referencedColumns: ["public_id"]
+          },
+          {
+            foreignKeyName: "song_suggestion_likes_public_id_fkey"
+            columns: ["public_id"]
+            isOneToOne: false
+            referencedRelation: "public_participants"
+            referencedColumns: ["public_id"]
+          },
+          {
+            foreignKeyName: "song_suggestion_likes_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "song_suggestions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       song_suggestions: {
         Row: {
           album: string
