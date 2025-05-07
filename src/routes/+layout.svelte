@@ -113,51 +113,59 @@
   <!-- footer -->
   <footer class="flex justify-center p-8 bg-blue-100 footer">
     <div class="w-full max-w-screen-sm flex flex-col gap-8">
-      <div class="w-full flex justify-evenly gap-8">
-        <div class="flex flex-col text-gray-600 chad-text-base">
+      <div class="w-full grid grid-cols-2 portrait:grid-cols-1 gap-8">
+        <div
+          class="flex flex-col text-gray-600 chad-text-base portrait:items-center"
+        >
           <span class="text-black chad-text-lg">Kontakt</span>
-          <a
-            class="flex items-center gap-2"
-            href={`mailto:${CONTACT.EMAIL}`}
-          >
-            <EmailIcon class="h-[1em]" />
-            <span>{CONTACT.EMAIL}</span>
-          </a>
-          <a
-            class="flex items-center gap-2 !text-gray-600"
-            href={CONTACT.INSTAGRAM}
-          >
-            <InstagramIcon class="h-[1em]" />
-            <span>@chadtagung</span>
-          </a>
-          <a
-            class="flex items-center gap-2 !text-gray-600"
-            href="/team"
-          >
-            <div class="material-icons text-black chad-text-base">groups</div>
-            <span>Unser Team</span>
-          </a>
+          <div class="flex flex-col">
+            <a
+              class="flex items-center gap-2"
+              href={`mailto:${CONTACT.EMAIL}`}
+            >
+              <EmailIcon class="h-[1em]" />
+              <span>{CONTACT.EMAIL}</span>
+            </a>
+            <a
+              class="flex items-center gap-2 !text-gray-600"
+              href={CONTACT.INSTAGRAM}
+            >
+              <InstagramIcon class="h-[1em]" />
+              <span>@chadtagung</span>
+            </a>
+            <a
+              class="flex items-center gap-2 !text-gray-600"
+              href="/team"
+            >
+              <div class="material-icons text-black chad-text-base">groups</div>
+              <span>Unser Team</span>
+            </a>
+          </div>
         </div>
-        <div class="flex flex-col text-gray-600 chad-text-base">
+        <div
+          class="flex flex-col text-gray-600 chad-text-base portrait:items-center"
+        >
           <span class="text-black chad-text-lg">Rechtliches</span>
-          <a
-            class="!text-gray-600"
-            href="/legal/privacy"
-          >
-            <span>Datenschutz</span>
-          </a>
-          <a
-            class="!text-gray-600"
-            href="/legal/imprint"
-          >
-            <span>Impressum</span>
-          </a>
-          <a
-            class="!text-gray-600"
-            href="/legal/terms-of-use"
-          >
-            <span>Nutzungsbedingungen</span>
-          </a>
+          <div class="flex flex-col">
+            <a
+              class="!text-gray-600"
+              href="/legal/privacy"
+            >
+              <span>Datenschutz</span>
+            </a>
+            <a
+              class="!text-gray-600"
+              href="/legal/imprint"
+            >
+              <span>Impressum</span>
+            </a>
+            <a
+              class="!text-gray-600"
+              href="/legal/terms-of-use"
+            >
+              <span>Nutzungsbedingungen</span>
+            </a>
+          </div>
         </div>
       </div>
 
