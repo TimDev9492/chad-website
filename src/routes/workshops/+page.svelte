@@ -280,7 +280,7 @@
       </div>
     </div>
     <div
-      class="landscape:hidden fixed bottom-0 left-0 w-full bg-white border-t-2 border-gray-300"
+      class="landscape:hidden fixed bottom-0 left-0 w-full bg-white border-t-2 border-gray-300 z-50"
     >
       <TabBar
         tabs={Object.keys(groupedWorkshops ?? {})}

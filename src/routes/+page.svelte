@@ -30,7 +30,9 @@
       <ParticipantBar {supabase} />
     </div>
     <div class="chad-card chad-shadow w-full">
-      <div class="grid grid-cols-2 text-gray-500 gap-2 chad-text-lg">
+      <div
+        class="grid grid-cols-2 text-gray-500 gap-2 text-lg portrait:text-sm"
+      >
         <div class="flex items-center gap-2">
           <div class="material-icons chad-text-subheading">home</div>
           <span>Wo?</span>
@@ -46,7 +48,9 @@
           <span>Tagungsbeitrag</span>
         </div>
         <div>
-          75€ <span class="chad-text-base text-gray-400">(+25€ Herberge)</span>
+          75€ <span class="text-base portrait:text-xs text-gray-400"
+            >(+25€ Herberge)</span
+          >
         </div>
         <div class="col-span-2 my-4">
           <Divider />

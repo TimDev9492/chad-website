@@ -5,7 +5,7 @@
   let { infosProvided, hasPaid } = $derived(data);
 </script>
 
-<div class="size-full flex justify-center items-center">
+<div class="size-full flex justify-center items-center p-4">
   <div
     class="chad-card chad-shadow portrait:max-w-[90vw] landscape:max-w-[60vw] flex flex-col items-center gap-4"
   >
