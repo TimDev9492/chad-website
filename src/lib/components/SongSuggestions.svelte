@@ -120,6 +120,7 @@
             suggestion.song_suggestion_likes.includes(
               userAppData.public_id ?? '',
             ),
+            userAppData.public_id != null,
           )}
         </div>
       </div>
@@ -153,12 +154,13 @@
   song: LikedSongSuggestion,
   deletable: boolean,
   liked: boolean,
+  likable: boolean,
 )}
   <div class="h-full flex items-center gap-2">
     <button
       use:Ripple={{ surface: true }}
       onclick={async () => {
-        await toggleLike(song.id);
+        if (likable) await toggleLike(song.id);
       }}
       class={'flex items-center gap-1 rounded-full p-2 relative ' +
         (liked ? 'text-pink-400 bg-pink-200' : 'text-gray-300 bg-gray-100')}
