@@ -120,29 +120,44 @@
             class="flex items-center gap-2"
             href={`mailto:${CONTACT.EMAIL}`}
           >
-            <EmailIcon class="h-[1em]" />{CONTACT.EMAIL}</a
-          >
+            <EmailIcon class="h-[1em]" />
+            <span>{CONTACT.EMAIL}</span>
+          </a>
           <a
             class="flex items-center gap-2 !text-gray-600"
             href={CONTACT.INSTAGRAM}
           >
-            <InstagramIcon class="h-[1em]" />@chadtagung</a
+            <InstagramIcon class="h-[1em]" />
+            <span>@chadtagung</span>
+          </a>
+          <a
+            class="flex items-center gap-2 !text-gray-600"
+            href="/team"
           >
+            <div class="material-icons text-black chad-text-base">groups</div>
+            <span>Unser Team</span>
+          </a>
         </div>
         <div class="flex flex-col text-gray-600 chad-text-base">
           <span class="text-black chad-text-lg">Rechtliches</span>
           <a
             class="!text-gray-600"
-            href="/legal/privacy">Datenschutz</a
+            href="/legal/privacy"
           >
+            <span>Datenschutz</span>
+          </a>
           <a
             class="!text-gray-600"
-            href="/legal/imprint">Impressum</a
+            href="/legal/imprint"
           >
+            <span>Impressum</span>
+          </a>
           <a
             class="!text-gray-600"
-            href="/legal/terms-of-use">Nutzungsbedingungen</a
+            href="/legal/terms-of-use"
           >
+            <span>Nutzungsbedingungen</span>
+          </a>
         </div>
       </div>
 
@@ -183,7 +198,7 @@
     }
   }
 
-  footer a:hover {
+  footer a:hover span {
     text-decoration: underline;
   }
 </style>

@@ -7,7 +7,8 @@
   import Button, { Icon } from '@smui/button';
   import Dialog, { Content } from '@smui/dialog';
   import { onMount } from 'svelte';
-  import type { RegisteredParticipants } from '../../app';
+  import type { RegisteredParticipants } from '../../app.js';
+  import { teamImageMentions, teamMentions } from '$lib/content/team.js';
 
   let { data } = $props();
   let { supabase, userAppData } = $derived(data);
@@ -92,80 +93,38 @@
   });
 </script>
 
-<Dialog
-  class="z-[500]"
-  bind:open
-  aria-labelledby="avatar closeup"
-  aria-describedby="avatar closeup"
-  surface$class="landscape:!max-h-[90vh] landscape:!w-[80vh] portait:!w-[90vw]"
->
-  <Content>
-    {#if userAppData.role === 'admin'}
-      <div class="w-full flex justify-center mb-2">
-        <Button
-          variant="outlined"
-          style="color: red;"
-          href="/participants"
-          onclick={() => deleteProfilePicture(dialogParticipant.public_id)}
-        >
-          <Icon class="material-icons">delete</Icon>Profilbild löschen</Button
-        >
-      </div>
-    {/if}
-    <div class="w-full aspect-square flex flex-grow">
-      <RoundImage
-        alt="avatar closeup"
-        src={dialogParticipant.avatar_url}
-      />
-    </div>
+<div class="size-full flex justify-center p-8">
+  <div class="max-w-screen-lg flex flex-col items-center gap-16">
     <div
-      class="flex portrait:flex-col items-center gap-4 pt-4 landscape:flex-row landscape:justify-between"
+      class="chad-typography-gradient font-extrabold chad-text-heading text-wrap text-center pb-1 rich-font"
     >
-      <div class="flex flex-col portrait:text-center">
-        <span class="font-bold chad-text-lg">Name</span>
-        <span class="chad-text-base"
-          >{dialogParticipant.first_name} {dialogParticipant.last_name}</span
-        >
-      </div>
-      <div class="flex flex-col portrait:text-center">
-        <span class="font-bold chad-text-lg">Gemeinde</span>
-        <span class="chad-text-base">{dialogParticipant.ward_name}</span>
-      </div>
-      <div class="flex flex-col portrait:text-center">
-        <span class="font-bold chad-text-lg">Pfahl</span>
-        <span class="chad-text-base">{dialogParticipant.stake_name}</span>
-      </div>
+      CHAD Team
     </div>
-  </Content>
-</Dialog>
-
-<div class="size-full flex flex-col justify-center items-center gap-8 p-8">
-  <div
-    class="chad-typography-gradient font-extrabold chad-text-heading text-wrap text-center pb-1"
-  >
-    Angemeldete Teilnehmer
-  </div>
-  <div
-    class="grid landscape:min-w-[800px] landscape:w-[50vw]
-    landscape:grid-cols-5 portrait:w-full portrait:grid-cols-3
-    items-center justify-items-center gap-4"
-  >
-    {#if participants}
-      {#each participants as participant}
-        <div class="size-full">
-          <ParticipantIcon
-            {participant}
-            onclick={(participant) => {
-              dialogParticipant = participant;
-              open = true;
-            }}
+    <div class="flex flex-wrap justify-center gap-8">
+      {#each teamImageMentions as teamImageMention}
+        <div class="flex flex-col items-center w-32">
+          <RoundImage
+            src={teamImageMention.imgSrc}
+            alt={teamImageMention.memberName}
           />
+          <span class="chad-text-base mt-2">{teamImageMention.memberName}</span>
+          <span class="text-center chad-text-sm text-gray-500"
+            >{teamImageMention.category}</span
+          >
         </div>
       {/each}
-    {:else}
-      {#each { length: 5 }}
-        <ParticipantIcon participant={null} />
+    </div>
+    <div class="grid grid-cols-2 portrait:grid-cols-1 gap-8">
+      {#each teamMentions as teamMention}
+        <div>
+          <span class="chad-text-base font-bold">{teamMention.category}</span>
+          <ul class="list-decimal list-inside">
+            {#each teamMention.members as member}
+              <li class="text-gray-600">{member}</li>
+            {/each}
+          </ul>
+        </div>
       {/each}
-    {/if}
+    </div>
   </div>
 </div>
