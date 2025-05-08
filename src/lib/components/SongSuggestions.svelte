@@ -108,7 +108,7 @@
     {#each songSuggestions as suggestion}
       <div class="relative my-2">
         {@render suggestionCell(suggestion)}
-        <div class="absolute -right-4 top-1/2 -translate-y-1/2 bg-white">
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 bg-white">
           {@render actionRow(
             suggestion,
             userAppData.role === 'admin' ||
