@@ -5,10 +5,20 @@
   import ParticipantBar from '$lib/components/ParticipantBar.svelte';
   import { CONTACT } from '$lib/content/constants.js';
   import { carouselData, type CarouselSlide } from '$lib/content/mainPage';
+  import CircularProgress from '@smui/circular-progress';
   import Ripple from '@smui/ripple';
+  import { onMount } from 'svelte';
 
   let { data } = $props();
   let { supabase } = $derived(data);
+
+  let videoLoaded = $state(false);
+  let videoElement = $state<HTMLElement | undefined>();
+
+  onMount(() => {
+    // @ts-ignore
+    videoLoaded = videoElement ? videoElement.readyState > 3 : false;
+  });
 
   const nextSignupRoute = $derived.by(() => {
     return '/login';
@@ -64,6 +74,26 @@
         </a>
       </div>
     </div>
+    <div class="w-full chad-shadow relative">
+      <video
+        bind:this={videoElement}
+        onloadeddata={() => (videoLoaded = true)}
+        class="w-full"
+        preload="none"
+        src="/videos/chad-promotional.mp4"
+        autoplay={true}
+        muted={true}
+        loop={true}
+      >
+      </video>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <CircularProgress
+          class="size-24"
+          indeterminate
+          closed={videoLoaded}
+        />
+      </div>
+    </div>
     <div class="chad-card chad-shadow p-4 landscape:p-8 w-full">
       <Carousel data={carouselData}>
         {#snippet slide(item: CarouselSlide)}
@@ -87,17 +117,22 @@
         {/snippet}
       </Carousel>
     </div>
-    <div class="w-full">
+    <div class="w-full chad-shadow">
       <img
-        src="https://placehold.co/1280x720?text=Moodboard+Wide"
+        src="/images/moodboard-wide.jpg"
         alt="Moodboard Wide"
         class="size-full object-contain portrait:hidden"
       />
       <img
-        src="https://placehold.co/480x720?text=Moodboard+Narrow"
+        src="/images/moodboard-wide.jpg"
         alt="Moodboard Wide"
         class="size-full object-contain landscape:hidden"
       />
+      <!-- <img
+        src="https://placehold.co/480x720?text=Moodboard+Narrow"
+        alt="Moodboard Wide"
+        class="size-full object-contain landscape:hidden"
+      /> -->
     </div>
   </div>
 </div>
