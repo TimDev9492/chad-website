@@ -1,5 +1,6 @@
 <script lang="ts">
   import SongSuggestions from '$lib/components/SongSuggestions.svelte';
+  import DanceEventDescription from '$lib/content/DanceEventDescription.svelte';
 
   let { data } = $props();
   let { supabase, userAppData } = $derived(data);
@@ -18,20 +19,7 @@
       />
     </div>
     <div class="chad-card chad-shadow w-full">
-      <span
-        >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius
-        molestias quas perferendis exercitationem repellat tempora dolore enim,
-        id impedit quia quibusdam nobis animi recusandae, ducimus asperiores
-        laudantium eveniet, reprehenderit quos? Natus maxime similique at, quo
-        rem aut quas perferendis soluta. Quia iure ratione, deserunt optio
-        soluta quae minima nesciunt, suscipit consequatur laborum excepturi
-        laboriosam neque dolores exercitationem a nulla quod facere. Tempore
-        quis quibusdam minus expedita at quasi tenetur veritatis eos amet
-        dignissimos in nihil itaque, necessitatibus, odio vero ducimus molestias
-        alias pariatur. Odio reiciendis excepturi possimus provident repellat.
-        Ipsam sint similique laudantium unde tenetur fuga, praesentium ullam
-        atque accusamus.</span
-      >
+      <DanceEventDescription />
     </div>
     <div
       class="w-full chad-card chad-shadow flex flex-col items-center pt-16 portrait:pt-20"
