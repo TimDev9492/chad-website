@@ -1,9 +1,11 @@
+import { CHECKOUT_DATA } from '$lib/server/constants';
 import { getRegisteredParticipants } from '$lib/utils';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
-  const PRICE_FALLBACK = 60;
+  const PRICE_FALLBACK = 100;
   let participantCount = -1;
+  let checkoutLink = CHECKOUT_DATA.defaultLink;
 
   const { data: countriesData, error: countriesError } = await supabase
     .from('countries')
@@ -14,6 +16,7 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
       countries: [],
       price: PRICE_FALLBACK,
       participantCount,
+      checkoutLink,
     };
   }
   const { data: userPriceData, error: userPriceError } =
@@ -29,11 +32,16 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
       countries: [],
       price: PRICE_FALLBACK,
       participantCount,
+      checkoutLink,
     };
   }
   return {
     countries: countriesData,
     price: userPriceData,
     participantCount,
+    checkoutLink:
+      userPriceData < CHECKOUT_DATA.cutoff
+        ? CHECKOUT_DATA.discountLink
+        : CHECKOUT_DATA.defaultLink,
   };
 };

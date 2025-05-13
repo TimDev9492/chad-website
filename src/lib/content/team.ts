@@ -89,7 +89,7 @@ export const teamMentions: TeamMention[] = [
   },
   {
     category: 'Schlafplätze',
-    members: ['Ehepaar?', 'Sebastian'],
+    members: ['Sebastian'],
   },
   {
     category: 'Missionsarbeit & Interreligiöses',

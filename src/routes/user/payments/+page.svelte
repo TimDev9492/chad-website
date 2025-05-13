@@ -2,20 +2,24 @@
   import SegmentedButton, { Segment } from '@smui/segmented-button';
   import { Icon, Label } from '@smui/common';
   import type { Database } from '../../../types/database.types.js';
-  import {
-    BANK_ACCOUNT_DETAILS,
-    CONTACT,
-    PARTICIPANT_LIMIT,
-  } from '$lib/content/constants.js';
+  import { CONTACT, PARTICIPANT_LIMIT } from '$lib/content/constants.js';
   import ParticipantBar from '$lib/components/ParticipantBar.svelte';
   import Button from '@smui/button';
   import { notifyPaymentApproval } from '$lib/utils.js';
   import { raiseToast } from '$lib/toastStore.js';
   import { openDialog } from '$lib/dialogStore.js';
+  import Ripple from '@smui/ripple';
 
   let { data } = $props();
-  let { userAppData, countries, price, supabase, participantCount, hasPaid } =
-    $derived(data);
+  let {
+    userAppData,
+    countries,
+    price,
+    checkoutLink,
+    supabase,
+    participantCount,
+    hasPaid,
+  } = $derived(data);
 
   let selectedCountry = $state<
     Database['public']['Tables']['countries']['Row'] | null
@@ -121,8 +125,7 @@
         <ParticipantBar {supabase} />
       {:else if !hasPaid}
         <div class="font-medium chad-text-base text-center">
-          Um dich für die Tagung anzumelden, musst du folgenden Betrag auf das
-          angegebene Konto überweisen!
+          Um dich für die Tagung anzumelden, musst du diesen Betrag überweisen!
         </div>
         <div
           class="chad-typography-gradient font-extrabold chad-text-giga py-4"
@@ -131,32 +134,27 @@
             ? `${selectedCountry.currency_symbol}`
             : currencySymbolFallback}
         </div>
-        <div class="chad-text-lg font-bold">Kontoverbindung:</div>
-        <div
-          class="chad-card bg-gradient-to-br from-[#FFB800] to-[#FF6A00] shadow-xl shadow-[#FF6A00] portrait:min-w-[80%]"
+        {@render userPaymentReference()}
+        <button
+          onclick={() => {
+            openDialog({
+              content: dialogContent,
+              actions: [
+                {
+                  label: 'Weiter',
+                  action: () => (window.open(checkoutLink), '_blank'),
+                },
+              ],
+            });
+          }}
+          use:Ripple={{ surface: true }}
+          class="mt-4 !text-black rounded-full p-8 rich-font bg-gradient-to-br from-[#FFB800] to-[#FF6A00] shadow-xl shadow-[#FF6A00]"
         >
-          <div
-            class="landscape:grid landscape:grid-cols-[auto_1fr] landscape:gap-x-8 landscape:items-center portrait:flex portrait:flex-col"
-          >
-            <div class="font-bold chad-text-lg">Kontoinhaber:</div>
-            <code class="font-medium chad-text-base portrait:mb-2"
-              >{BANK_ACCOUNT_DETAILS.ACCOUNT_HOLDER}</code
-            >
-            <div class="font-bold chad-text-lg">IBAN:</div>
-            <code class="font-medium chad-text-base portrait:mb-2"
-              >{BANK_ACCOUNT_DETAILS.IBAN}</code
-            >
-            <div class="font-bold chad-text-lg">BIC:</div>
-            <code class="font-medium chad-text-base portrait:mb-2"
-              >{BANK_ACCOUNT_DETAILS.BIC}</code
-            >
-            <div class="font-bold chad-text-lg">Verwendungszweck:</div>
-            <code class="font-medium chad-text-base"
-              >{userAppData.payment_reference} - {userAppData.first_name}
-              {userAppData.last_name}</code
-            >
+          <div class="flex items-center gap-4 tracking-widest">
+            <div class="material-icons chad-text-subheading">payments</div>
+            <span class="chad-text-subheading uppercase">Bezahlen</span>
           </div>
-        </div>
+        </button>
         {#if countries.length && selectedCountry}
           <SegmentedButton
             class="mt-8"
@@ -180,13 +178,14 @@
               disabled={approvalNotificationLoading}
               onclick={notifyApproval}
             >
-              <Icon class="material-icons">payments</Icon>Ich habe überwiesen
+              <Icon class="material-icons">credit_score</Icon>Ich habe
+              überwiesen
             </Button>
           </div>
         {:else}
           <div class="flex gap-2 items-center text-green-500">
             <div class="material-icons">info</div>
-            <span class="text-balance content"
+            <span class="content text-center text-balance"
               >Du hast angegeben, dass du bereits überwiesen hast.
             </span>
           </div>
@@ -230,6 +229,37 @@
           Nachname: ${userAppData.last_name}
           E-Mail: ${userAppData.email}
           Telefonnummer: ${userAppData.phone_number}
-          Zahlungsreferenz: ${userAppData.payment_reference}`)}`}>{text}</a
+          Anmelde-Code: ${userAppData.payment_reference}`)}`}>{text}</a
   >
+{/snippet}
+
+{#snippet userPaymentReference()}
+  <div class="flex flex-col items-center gap-2 chad-text-lg">
+    <span>Dein Anmelde-Code:</span>
+    <code class="font-bold">{userAppData.payment_reference}</code>
+    <Button
+      variant="raised"
+      color="secondary"
+      onclick={async () => {
+        await navigator.clipboard.writeText(
+          userAppData.payment_reference ?? 'ERROR',
+        );
+        raiseToast({
+          level: 'info',
+          message: 'Anmelde-Code kopiert!',
+        });
+      }}
+    >
+      <Icon class="material-icons">content_copy</Icon>Kopieren
+    </Button>
+  </div>
+{/snippet}
+
+{#snippet dialogContent()}
+  <div class="flex flex-col items-center gap-4">
+    <span class="chad-text-lg text-center text-balance"
+      >Bei der Bezahlung musst du deinen Anmelde-Code angeben!</span
+    >
+    {@render userPaymentReference()}
+  </div>
 {/snippet}
