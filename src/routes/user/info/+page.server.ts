@@ -267,11 +267,24 @@ export const actions: Actions = {
           useDynamicPublicId: true,
         },
       );
-    } catch (userInfoError) {
+    } catch (userInfoError: any) {
       console.error(userInfoError);
+      let errorDescription = null;
+      if (userInfoError.code == 23505) {
+        // unique constraint violated
+        let constraintMessageParts = userInfoError.message.split('"');
+        let constraintName = null;
+        if (constraintMessageParts.length >= 2) {
+          constraintName = constraintMessageParts[1];
+        }
+        if (constraintName === 'user_info_phone_number_key') {
+          errorDescription = 'Diese Telefonnummer ist bereits vergeben!';
+        }
+      }
       return fail(400, {
         success: false,
-        message: 'Speichern der Nutzerdaten fehlgeschlagen!',
+        message:
+          errorDescription || 'Speichern der Nutzerdaten fehlgeschlagen!',
       });
     }
 

@@ -15,9 +15,13 @@
   let videoLoaded = $state(false);
   let videoElement = $state<HTMLElement | undefined>();
 
-  onMount(() => {
+  const checkVideoState = () => {
     // @ts-ignore
-    videoLoaded = videoElement ? videoElement.readyState > 3 : false;
+    videoLoaded = videoElement ? videoElement.readyState >= 3 : false;
+  };
+
+  onMount(() => {
+    setTimeout(checkVideoState, 200);
   });
 
   const nextSignupRoute = $derived.by(() => {
@@ -77,7 +81,10 @@
     <div class="w-full chad-shadow relative">
       <video
         bind:this={videoElement}
-        onloadeddata={() => (videoLoaded = true)}
+        onloadeddata={checkVideoState}
+        onplaying={checkVideoState}
+        oncanplaythrough={checkVideoState}
+        ontimeupdate={checkVideoState}
         class="w-full"
         preload="none"
         src="/videos/chad-promotional.mp4"
