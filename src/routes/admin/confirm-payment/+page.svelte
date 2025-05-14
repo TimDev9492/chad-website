@@ -48,7 +48,7 @@
     method="POST"
     class="chad-card chad-shadow flex flex-col items-center gap-4"
   >
-    <div class="text-2xl font-medium">Verwendungszweck</div>
+    <div class="text-2xl font-medium">Anmelde-Code</div>
     <Textfield
       input$name="payment_reference"
       type="number"
