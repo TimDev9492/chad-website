@@ -18,7 +18,7 @@
     'UNPAID',
   ] as const;
   const paymentStatusDescription: Record<PaymentStatus, string> = {
-    CONFIRMED: 'Angemeldet / Zahlung Bestätigt',
+    CONFIRMED: 'Angemeldet / Zahlung bestätigt',
     PENDING_APPROVAL: 'Benutzer, die auf Zahlungsbestätigung warten',
     UNPAID: 'Benutzer, die noch nicht überwiesen haben',
   } as const;

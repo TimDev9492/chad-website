@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
       'Teilnahme Taufe',
       'Aufnahmen erlaubt',
       'Sonstiges',
-      'Verwendungszweck Überweisung',
+      'Anmelde-Code Überweisung',
       'Zahlungsstatus',
     ];
 
