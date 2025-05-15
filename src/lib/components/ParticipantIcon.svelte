@@ -51,11 +51,7 @@
       )}
       <span class="-translate-y-1/4 text-nowrap w-full">
         {#if participant.ward_name}
-          {@render info(
-            'church',
-            `${participant.ward_name.replace('Gemeinde ', '')}`,
-            'body2',
-          )}
+          {@render info('church', `Gemeinde ${participant.ward_name}`, 'body2')}
           {@render info('', `Pfahl ${participant.stake_name}`, 'caption')}
         {/if}
       </span>
