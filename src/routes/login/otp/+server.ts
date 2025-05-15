@@ -31,6 +31,8 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
     if (!error) {
       redirectTo.searchParams.delete('next');
       redirect(303, redirectTo);
+    } else {
+      console.error('Error with OTP login: ', error);
     }
   }
 
