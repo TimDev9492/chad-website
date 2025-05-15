@@ -40,6 +40,11 @@ export const teamImageMentions: TeamImageMention[] = [
     memberName: 'Saria',
     imgSrc: '/images/team/team-saria.jpg',
   },
+  {
+    category: 'Geistige Klassen und Missionsarbeit',
+    memberName: 'Jana',
+    imgSrc: '/images/team/team-jana.jpg',
+  },
 ];
 
 export const teamMentions: TeamMention[] = [
