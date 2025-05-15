@@ -15,7 +15,7 @@
     method="POST"
     class="flex flex-col justify-evenly items-center gap-2"
   >
-    <span class="mb-8"
+    <span class="mb-8 text-center text-balance"
       >Möglicherweise ist dein Bestätigungslink nicht mehr gültig.</span
     >
     <IconInput
