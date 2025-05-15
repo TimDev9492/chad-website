@@ -56,8 +56,8 @@ export const teamMentions: TeamMention[] = [
     members: ['Maya', 'Maraly'],
   },
   {
-    category: 'Tempel & Ahnenforschung',
-    members: ['Naemi', 'Mai'],
+    category: 'Tempel & Familienforschung',
+    members: ['Naemi', 'Max'],
   },
   {
     category: 'Geistige Klassen & Schriftstudium',
