@@ -45,6 +45,11 @@ export const teamImageMentions: TeamImageMention[] = [
     memberName: 'Jana',
     imgSrc: '/images/team/team-jana.jpg',
   },
+  {
+    category: 'Öffentlichkeitsarbeit und Tanzabende',
+    memberName: 'Ana',
+    imgSrc: '/images/team/team-ana.jpg',
+  },
 ];
 
 export const teamMentions: TeamMention[] = [
@@ -62,7 +67,7 @@ export const teamMentions: TeamMention[] = [
   },
   {
     category: 'Tempel & Familienforschung',
-    members: ['Naemi', 'Max'],
+    members: ['Naemi', 'Maxy'],
   },
   {
     category: 'Geistige Klassen & Schriftstudium',
