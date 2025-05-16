@@ -8,8 +8,8 @@
     <h2 id="1-verantwortliche-stelle">1. Verantwortliche Stelle</h2>
     <p>Verantwortlich für die Datenverarbeitung auf dieser Website:</p>
     <p>
-      <strong>Tim Kluge</strong><br /><strong
-        >Rheinstraße 9, 61206 Wöllstadt</strong
+      <strong>Raphael Erdle</strong><br /><strong
+        >Feldstraße 129, 63071 Offenbach am Main</strong
       ><br /><strong>E-Mail:</strong> chad-website@timdev.de
     </p>
     <hr />

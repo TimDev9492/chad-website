@@ -7,13 +7,15 @@
     <h1 id="impressum">Impressum</h1>
     <p>Angaben gemäß § 5 TMG:</p>
     <p>
-      <strong>Tim Kluge</strong><br /><strong>Rheinstraße 9</strong><br
-      /><strong>61206 Wöllstadt</strong><br /><strong>Deutschland</strong>
+      <strong>Raphael Erdle</strong><br /><strong>Feldstraße 129</strong><br
+      /><strong>63071 Offenbach am Main</strong><br /><strong
+        >Deutschland</strong
+      >
     </p>
     <p>E-Mail: chad-website@timdev.de</p>
     <p>
       Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:<br /><strong
-        >Tim Kluge</strong
+        >Raphael Erdle</strong
       >
     </p>
     <hr />

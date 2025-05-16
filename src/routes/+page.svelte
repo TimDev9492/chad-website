@@ -10,7 +10,7 @@
   import { onMount } from 'svelte';
 
   let { data } = $props();
-  let { supabase } = $derived(data);
+  let { user, infosProvided, hasPaid, supabase } = $derived(data);
 
   let videoLoaded = $state(false);
   let videoElement = $state<HTMLElement | undefined>();
@@ -25,7 +25,10 @@
   });
 
   const nextSignupRoute = $derived.by(() => {
-    return '/login';
+    let signupRoute = '/user/payments';
+    if (!infosProvided) signupRoute = '/user/info';
+    if (user == null) signupRoute = '/login';
+    return signupRoute;
   });
 </script>
 
