@@ -14,7 +14,7 @@
     <div class="w-full flex flex-grow justify-center">
       <img
         class="max-w-full max-h-[60vh] aspect-video object-cover chad-shadow"
-        src="https://placehold.co/1280x720"
+        src="/images/dance-event-banner.jpg"
         alt="Tanzabend"
       />
     </div>

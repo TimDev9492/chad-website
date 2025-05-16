@@ -35,11 +35,19 @@
       </div>
     {/if}
     <div class="w-full mt-16">
-      <div class="chad-card chad-shadow flex flex-col items-center">
+      <div class="chad-card chad-shadow flex flex-col items-center gap-4">
         <span
-          class="chad-text-subheading landscape:text-6xl chad-typography-gradient font-extrabold pb-4"
+          class="chad-text-subheading landscape:text-6xl chad-typography-gradient font-extrabold pb-2"
           >Parkmöglichkeiten</span
         >
+        <img
+          src="/images/parking0000.jpg"
+          alt="Parkmöglichkeiten 1"
+        />
+        <img
+          src="/images/parking0001.jpg"
+          alt="Parkmöglichkeiten 2"
+        />
         <iframe
           class="w-full h-[60vh]"
           title="Parkmöglichkeiten"
