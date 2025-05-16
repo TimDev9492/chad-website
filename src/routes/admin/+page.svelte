@@ -66,14 +66,13 @@
   };
 
   const getFormsFilledCount = async () => {
-    const { data, error } = await supabase
-      .from('public_infos')
-      .select('first_name, last_name');
+    const { data: count, error } = await supabase.rpc('get_forms_filled_count');
     if (error) throw error;
-    const filtered = data.filter(
-      ({ first_name, last_name }) => first_name && last_name,
-    );
-    return { count: filtered.length, total: data.length };
+    const { count: total, error: publicInfosError } = await supabase
+      .from('public_infos')
+      .select('*', { count: 'exact', head: true });
+    if (publicInfosError) throw error;
+    return { count, total };
   };
 
   const getWaitingForPaymentCount = async () => {
