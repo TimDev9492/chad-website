@@ -50,6 +50,21 @@ export const teamImageMentions: TeamImageMention[] = [
     memberName: 'Ana',
     imgSrc: '/images/team/team-ana.jpg',
   },
+  {
+    category: 'Öffentlichkeitsarbeit und Workshops',
+    memberName: 'In-Chol',
+    imgSrc: '/images/team/team-inchol.jpg',
+  },
+  {
+    category: 'Dienstprojekte und Workshops',
+    memberName: 'Maraly',
+    imgSrc: '/images/team/team-maraly.jpg',
+  },
+  {
+    category: 'Organisation Schlafplätze',
+    memberName: 'Sebastian',
+    imgSrc: '/images/team/team-sebastian.jpg',
+  },
 ];
 
 export const teamMentions: TeamMention[] = [
